@@ -123,26 +123,7 @@ class FrontController extends BasePublicController
           return $this->response->setStatusCode(400,$meserror);
         }else{
   
-            if(isset($request->license_copy) && $request->license_copy){
-              $imageData = base64_decode($request->license_copy); 
-              $photo = imagecreatefromstring($imageData); // <-- **Change is here**
-              $time_upload = time(); 
-              $name = 'image_'.$request->license_number.'_'.$time_upload.'.jpg';
-              $path = 'assets/media/'.$name;
-              imagejpeg($photo,$path,100);
-            }else{
-              $path = 'null';
-            }
-
-            if(isset($request->photo) && $request->photo){
-              $imagepro = base64_decode($request->photo); 
-              $prophoto = imagecreatefromstring($imagepro); // <-- **Change is here**
-              $proname = 'image_'.$request->first_name.'_'.$time_upload.'.jpg';
-              $propath = 'assets/media/'.$proname;
-              imagejpeg($prophoto,$propath,100);
-            }else{
-              $propath = 'assets/media/profile.jpg';
-            }
+          
             $role_id = '';
             $roledetails = $roles->all();
             foreach ($roledetails as $roledetail) {
@@ -158,170 +139,16 @@ class FrontController extends BasePublicController
                return $this->response->setStatusCode(400,'Not allowed as Usertype');
             }
 
-            if(isset($request->address) && $request->address){
-                $address = $request->address;
-            }else{
-                $address = '';
-            }
-
-            if(isset($request->shop_name) && $request->shop_name){
-                $shop_name = $request->shop_name;
-            }else{
-                $shop_name = '';
-            }
-
             $user = $this->user->createWithRoles($request->all(), $role_id);
-            $user = json_decode($user, true);
-            $user_Detail = array('user_id' => $user['id'],
-                            'phone' => $request->phone,
-                            'shop_name'  =>  $shop_name,
-                            'address' => $address
-                            );
-           $details = $this->user_details->create($user_Detail);
           return response($details)->header('Content-Type', 'application/json');
       }
     }
 
-    public function updateuserinfo(Request $request){
-      $validator = Validator::make($request->all(), [
-          'license_number' => 'required',
-          'license_copy' => 'required',
-          'license_expire' => 'required'
-      ]);
-        if ($validator->fails()) {
-            $errors = $validator->errors();
-            foreach ($errors->all() as $message) {
-                $meserror =$message;
-            }
-            $this->response->setContent(array('message'=> $message));
-          return $this->response->setStatusCode(400,$meserror);
-        }else{
-            $imageData = base64_decode($request->license_copy); 
-            $photo = imagecreatefromstring($imageData); // <-- **Change is here**
-            $time_upload = time(); 
-            $name = 'image_'.$request->license_number.'_'.$time_upload.'.jpg';
-            $path = 'assets/media/'.$name;
-            imagejpeg($photo,$path,100);
-
-            if(isset($request->photo) && $request->photo){
-              $imagepro = base64_decode($request->photo); 
-              $time_upload = time();
-              $prophoto = imagecreatefromstring($imagepro); // <-- **Change is here**
-              $proname = 'image_'.$request->first_name.'_'.$time_upload.'.jpg';
-              $propath = 'assets/media/'.$proname;
-              imagejpeg($prophoto,$propath,100);
-            }else{
-              $propath = 'assets/media/profile.jpg';
-            }
-
-           $shop_image = '';
-           $shop_name = '';
-
-           if(ucfirst($request->role) == 'Dispensary'){
-
-              if(isset($request->shop_name) && $request->shop_name){
-                $shop_name = $request->shop_name;
-              }else{
-                  $this->response->setContent(array('message'=> 'Shop name required'));
-                 return $this->response->setStatusCode(400,'Shop name required');
-              }
-
-              if(isset($request->shop_image) && $request->shop_image){
-                $shop_image = $request->shop_image;
-              }else{
-                $shop_image = '';
-              }
-
-            }
-
-            if(isset($request->description) && $request->description){
-                $description = $request->description;
-            }else{
-                $description = '';
-            }
-
-            $user_Detail = array(
-                            'license_number' => $request->license_number,
-                            'license_copy' => $path,
-                            'photo' => $propath,
-                            'license_expire' => $request->license_expire,
-                            'shop_name' => $shop_name,
-                            'shop_image' => $shop_image,
-                            'description' => $description
-                            );
-           $find_user = $this->user_details->findByAttributes(array('user_id'=>$request->user_id));
-           $details = $this->user_details->update($find_user,$user_Detail);
-          return response($details)->header('Content-Type', 'application/json');
-      }
-    }
+   
 
     public function update(Request $request){
             
-            $find_user = $this->user_details->findByAttributes(array('user_id'=>$request->user_id));
-
-            if(isset($request->license_copy) && $request->license_copy){
-                $imageData = base64_decode($request->license_copy); 
-                $photo = imagecreatefromstring($imageData); // <-- **Change is here**
-                $time_upload = time(); 
-                $name = 'image_'.$request->license_number.'_'.$time_upload.'.jpg';
-                $path = 'assets/media/'.$name;
-                imagejpeg($photo,$path,100);
-            }else{
-                $path = $find_user->license_copy;
-            }
-            
-            if(isset($request->photo) && $request->photo){
-              $imagepro = base64_decode($request->photo); 
-              $time_upload = time();
-              $prophoto = imagecreatefromstring($imagepro); // <-- **Change is here**
-              $proname = 'image_'.$request->first_name.'_'.$time_upload.'.jpg';
-              $propath = 'assets/media/'.$proname;
-              imagejpeg($prophoto,$propath,100);
-            }else{
-              $propath = $find_user->photo;
-            }
-
-           $shop_image = '';
-           $shop_name = '';
-
-           if(ucfirst($request->role) == 'Dispensary'){
-
-              if(isset($request->shop_name) && $request->shop_name){
-                $shop_name = $request->shop_name;
-              }else{
-                $shop_name = $find_user->shop_name; 
-              }
-
-              if(isset($request->shop_image) && $request->shop_image){
-                $shopimageData = base64_decode($request->shop_image); 
-                $shopphoto = imagecreatefromstring($shopimageData); // <-- **Change is here**
-                $time_upload = time(); 
-                $shopimgname = 'image_'.$time_upload.'.jpg';
-                $shop_image = 'assets/media/'.$shopimgname;
-                imagejpeg($shopphoto,$shop_image,100);
-              }else{
-                $shop_image = $find_user->shop_image;
-              }
-
-            }
-
-            if(isset($request->latitude) && $request->latitude){
-                $latitude = $request->latitude;
-            }else{
-                $latitude = $find_user->latitude; 
-            }
-
-            if(isset($request->longitude) && $request->longitude){
-                $longitude = $request->longitude;
-            }else{
-                $longitude = $find_user->longitude; 
-            }
-
-            if(isset($request->description) && $request->description){
-                $description = $request->description;
-            }else{
-                $description = $find_user->description;
-            }
+            $find_user = $this->user->find($request->user_id);
 
             if(isset($request->phone) && $request->phone){
                 $phone = $request->phone;
@@ -335,56 +162,13 @@ class FrontController extends BasePublicController
                 $address = $find_user->address;
             }
 
-            if(isset($request->address2) && $request->address2){
-                $address2 = $request->address2;
-            }else{
-                $address2 = $find_user->address2;
-            }
-
-            if(isset($request->state) && $request->state){
-                $state = $request->state;
-            }else{
-                $state = $find_user->state;
-            }
-
-            if(isset($request->city) && $request->city){
-                $city = $request->city;
-            }else{
-                $city = $find_user->city;
-            }
-
-            if(isset($request->pincode) && $request->pincode){
-                $pincode = $request->pincode;
-            }else{
-                $pincode = $find_user->pincode;
-            }
-
-            if(isset($request->country) && $request->country){
-                $country = $request->country;
-            }else{
-                $country = $find_user->country;
-            }
-
+           
             $user_Detail = array(
-                            'license_number' => $request->license_number,
-                            'license_copy' => $path,
-                            'longitude'  => $longitude,
-                            'latitude'  => $latitude,
-                            'address'  => $address,
-                            'address2' => $address2,
-                            'pincode' => $pincode,
-                            'city' => $city,
-                            'state' => $state,
-                            'country' => $country,
-                            'photo' => $propath,
-                            'phone' => $phone,
-                            'license_expire' => $request->license_expire,
-                            'shop_name' => $shop_name,
-                            'shop_image' => $shop_image,
-                            'description' => $description
+                            'address' => $address,
+                            'phone' => $phone
                           );
            
-           $details = $this->user_details->update($find_user,$user_Detail);
+           $details = $this->user->update($find_user,$user_Detail);
           return response($details)->header('Content-Type', 'application/json');
     }
 
