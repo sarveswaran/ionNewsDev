@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Auth\Guard;
 use Modules\User\Repositories\UserRepository;
 use Modules\User\Events\UserHasBegunResetProcess;
-use Modules\Contact\Repositories\User_DetailsRepository;
 use Modules\User\Repositories\RoleRepository;
 use Modules\User\Services\UserResetter;
 use Modules\Services\Repositories\UsertypeRepository;
@@ -20,14 +19,12 @@ use Log;
 class FrontController extends BasePublicController
 {
     protected $guard;
-    public function __construct(Response $response,Guard $guard,UserRepository $user,
-      User_DetailsRepository $user_Details)
+    public function __construct(Response $response,Guard $guard,UserRepository $user)
     {
        parent::__construct();
        $this->response = $response;
        $this->guard = $guard;
        $this->user = $user;
-       $this->user_details = $user_Details;
        //$this->middleware('auth:api');
       // $this->middleware('oauth');
     }
@@ -90,16 +87,10 @@ class FrontController extends BasePublicController
       }
 
     public function userDetails(Request $request){
-      //Auth::setToken($request->header('Authorization'));   
       $authicated_user = Auth::user(); 
-      $user_details = $this->user_details->findByAttributes(['user_id' => $authicated_user->id]);
-      $user_details['email'] = $authicated_user->email;
-      $user_details['first_name'] = $authicated_user->first_name;
-      $user_details['last_name'] = $authicated_user->last_name;
-      $user_details['role'] = $authicated_user->role;
-
+ 
       if($authicated_user){
-            return response($user_details)->header('Content-Type', 'application/json'); 
+            return response($authicated_user)->header('Content-Type', 'application/json'); 
       }else{
            return $this->response->setStatusCode(401,'Invaid token');
       }
