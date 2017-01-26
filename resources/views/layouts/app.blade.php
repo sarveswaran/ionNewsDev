@@ -24,7 +24,7 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
      </a>
-    <a class="navbar-brand" href="#">Vite Box</a>
+    <a class="navbar-brand" href="#">Brigadepoll</a>
    </div>
    <div id="slidemenu">
     <ul class="nav navbar-nav">
