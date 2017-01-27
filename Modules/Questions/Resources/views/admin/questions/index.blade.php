@@ -29,6 +29,7 @@
                         <table class="data-table table table-bordered table-hover">
                             <thead>
                             <tr>
+                                <th>{{ trans('questions::questions.form.question') }}</th>
                                 <th>{{ trans('core::core.table.created at') }}</th>
                                 <th data-sortable="false">{{ trans('core::core.table.actions') }}</th>
                             </tr>
@@ -37,6 +38,11 @@
                             <?php if (isset($questions)): ?>
                             <?php foreach ($questions as $questions): ?>
                             <tr>
+                                <td>
+                                    <a href="{{ route('admin.questions.questions.edit', [$questions->id]) }}">
+                                        {{ $questions->question }}
+                                    </a>
+                                </td>
                                 <td>
                                     <a href="{{ route('admin.questions.questions.edit', [$questions->id]) }}">
                                         {{ $questions->created_at }}
@@ -54,6 +60,7 @@
                             </tbody>
                             <tfoot>
                             <tr>
+                                <th>{{ trans('questions::questions.form.question') }}</th>
                                 <th>{{ trans('core::core.table.created at') }}</th>
                                 <th>{{ trans('core::core.table.actions') }}</th>
                             </tr>

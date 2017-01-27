@@ -29,9 +29,9 @@ class QuestionsController extends AdminBaseController
      */
     public function index()
     {
-        //$questions = $this->questions->all();
+        $questions = $this->questions->all();
 
-        return view('questions::admin.questions.index', compact(''));
+        return view('questions::admin.questions.index', compact('questions'));
     }
 
     /**
