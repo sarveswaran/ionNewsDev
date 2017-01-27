@@ -11,5 +11,5 @@ class Questions extends Model
 
     protected $table = 'questions__questions';
     //public $translatedAttributes = [];
-    protected $fillable = [];
+    protected $fillable = ['question', 'answer_1', 'answer_2', 'answer_3', 'answer_4', 'answer_5'];
 }
