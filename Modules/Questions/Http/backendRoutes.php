@@ -103,7 +103,41 @@ $router->group(['prefix' =>'/questions'], function (Router $router) {
         'uses' => 'CommentsController@destroy',
         'middleware' => 'can:questions.comments.destroy'
     ]);
+    $router->bind('vote', function ($id) {
+        return app('Modules\Questions\Repositories\VoteRepository')->find($id);
+    });
+    $router->get('votes', [
+        'as' => 'admin.questions.vote.index',
+        'uses' => 'VoteController@index',
+        'middleware' => 'can:questions.votes.index'
+    ]);
+    $router->get('votes/create', [
+        'as' => 'admin.questions.vote.create',
+        'uses' => 'VoteController@create',
+        'middleware' => 'can:questions.votes.create'
+    ]);
+    $router->post('votes', [
+        'as' => 'admin.questions.vote.store',
+        'uses' => 'VoteController@store',
+        'middleware' => 'can:questions.votes.create'
+    ]);
+    $router->get('votes/{vote}/edit', [
+        'as' => 'admin.questions.vote.edit',
+        'uses' => 'VoteController@edit',
+        'middleware' => 'can:questions.votes.edit'
+    ]);
+    $router->put('votes/{vote}', [
+        'as' => 'admin.questions.vote.update',
+        'uses' => 'VoteController@update',
+        'middleware' => 'can:questions.votes.edit'
+    ]);
+    $router->delete('votes/{vote}', [
+        'as' => 'admin.questions.vote.destroy',
+        'uses' => 'VoteController@destroy',
+        'middleware' => 'can:questions.votes.destroy'
+    ]);
 // append
+
 
 
 

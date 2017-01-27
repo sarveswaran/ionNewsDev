@@ -65,7 +65,17 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender
                         $this->auth->hasAccess('questions.comments.index')
                     );
                 });
+                $item->item(trans('questions::votes.title.votes'), function (Item $item) {
+                    $item->icon('fa fa-copy');
+                    $item->weight(0);
+                    $item->append('admin.questions.vote.create');
+                    $item->route('admin.questions.vote.index');
+                    $item->authorize(
+                        $this->auth->hasAccess('questions.votes.index')
+                    );
+                });
 // append
+
 
 
 
