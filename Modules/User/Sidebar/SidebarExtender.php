@@ -65,14 +65,14 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender
                 $item->icon('fa fa-user');
                 $item->route('admin.account.profile.edit');
             });
-            // $group->item(trans('user::users.api-keys'), function (Item $item) {
-            //     $item->weight(1);
-            //     $item->icon('fa fa-key');
-            //     $item->route('admin.account.api.index');
-            //     $item->authorize(
-            //         $this->auth->hasAccess('account.api-keys.index')
-            //     );
-            // });
+            $group->item(trans('user::users.api-keys'), function (Item $item) {
+                $item->weight(1);
+                $item->icon('fa fa-key');
+                $item->route('admin.account.api.index');
+                $item->authorize(
+                    $this->auth->hasAccess('account.api-keys.index')
+                );
+            });
         });
 
         return $menu;

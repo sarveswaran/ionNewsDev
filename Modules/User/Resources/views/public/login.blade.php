@@ -5,11 +5,8 @@
 @stop
 
 @section('content')
-    <div style="text-align: center;">
-        <img src="../images/logonow.png">
-    </div>
-    <div class="login-logo" style="font-family: serif;font-weight: normal;margin-bottom:10px;">
-        <!-- <a href="{{ url('/') }}">{{ setting('core::site-name') }}</a> -->
+    <div class="login-logo">
+        <a href="{{ url('/') }}">{{ setting('core::site-name') }}</a>
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">

@@ -36,7 +36,7 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender
         $menu->group(trans('core::sidebar.content'), function (Group $group) {
             $group->item(trans('page::pages.title.pages'), function (Item $item) {
                 $item->icon('fa fa-file');
-                $item->weight(10);
+                $item->weight(1);
                 $item->route('admin.page.page.index');
                 $item->badge(function (Badge $badge, PageRepository $page) {
                     $badge->setClass('bg-green');

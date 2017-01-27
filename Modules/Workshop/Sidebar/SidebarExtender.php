@@ -36,22 +36,22 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender
             $group->authorize(
                 $this->auth->hasAccess('workshop.sidebar.group')
             );
-            // $group->item(trans('workshop::workshop.modules'), function (Item $item) {
-            //     $item->icon('fa fa-cogs');
-            //     $item->weight(100);
-            //     $item->route('admin.workshop.modules.index');
-            //     $item->authorize(
-            //         $this->auth->hasAccess('workshop.modules.index')
-            //     );
-            // });
-            // $group->item(trans('workshop::workshop.themes'), function (Item $item) {
-            //     $item->icon('fa fa-cogs');
-            //     $item->weight(101);
-            //     $item->route('admin.workshop.themes.index');
-            //     $item->authorize(
-            //         $this->auth->hasAccess('workshop.themes.index')
-            //     );
-            // });
+            $group->item(trans('workshop::workshop.modules'), function (Item $item) {
+                $item->icon('fa fa-cogs');
+                $item->weight(100);
+                $item->route('admin.workshop.modules.index');
+                $item->authorize(
+                    $this->auth->hasAccess('workshop.modules.index')
+                );
+            });
+            $group->item(trans('workshop::workshop.themes'), function (Item $item) {
+                $item->icon('fa fa-cogs');
+                $item->weight(101);
+                $item->route('admin.workshop.themes.index');
+                $item->authorize(
+                    $this->auth->hasAccess('workshop.themes.index')
+                );
+            });
         });
 
         return $menu;
