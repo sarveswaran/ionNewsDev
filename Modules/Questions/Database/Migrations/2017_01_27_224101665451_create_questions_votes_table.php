@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateQuestionsLikesTable extends Migration
+class CreateQuestionsVotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,15 +12,15 @@ class CreateQuestionsLikesTable extends Migration
      */
     public function up()
     {
-        Schema::create('questions__likes', function (Blueprint $table) {
+        Schema::create('questions__votes', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
             // Your fields
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('question_id')->unsigned();
             $table->foreign('question_id')->references('id')->on('questions__questions')->onDelete('cascade');
-            $table->integer('count');
-            $table->integer('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->integer('answer_id');
             $table->timestamps();
         });
     }
@@ -32,6 +32,6 @@ class CreateQuestionsLikesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('questions__likes');
+        Schema::dropIfExists('questions__votes');
     }
 }

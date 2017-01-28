@@ -11,5 +11,5 @@ class Comments extends Model
 
     protected $table = 'questions__comments';
     //public $translatedAttributes = [];
-    protected $fillable = [];
+    protected $fillable = ['question_id', 'user_id', 'comment'];
 }

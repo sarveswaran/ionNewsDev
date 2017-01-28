@@ -19,7 +19,14 @@ return [
         'edit' => 'questions::comments.edit resource',
         'destroy' => 'questions::comments.destroy resource',
     ],
+    'questions.votes' => [
+        'index' => 'questions::votes.list resource',
+        'create' => 'questions::votes.create resource',
+        'edit' => 'questions::votes.edit resource',
+        'destroy' => 'questions::votes.destroy resource',
+    ],
 // append
+
 
 
 
