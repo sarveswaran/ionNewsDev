@@ -17,14 +17,16 @@
  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="slide-nav">
   <div class="container">
    <div class="navbar-header">
-   	<a class="back" href=""><img src="images/11.png" width="35" height="40"></a>
+   	<a class="back" href=""><i class="fa fa-chevron-left" area-hidden="true"></i></a>
     <a class="navbar-toggle"> 
       <span class="sr-only">Toggle navigation</span>
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
      </a>
-    <a class="navbar-brand" href="#">Brigadepoll</a>
+    <a class="navbar-brand" href="#"><span><img src="file/11.png" style="float: left;"><p style= "margin-top: 12px;
+    margin-left: 10px;float: left;font-family: serif;">BRIGADE POLL</p></span></a>
+
    </div>
    <div id="slidemenu">
     <ul class="nav navbar-nav">
@@ -59,10 +61,10 @@
    
  <div class="container">
  	<div class="row row_data">
- 		<div class="col-md-4 hidden-xs">
+ 		<div class="col-md-2 hidden-xs">
  			<h2>Adds 1</h2>
  		</div>
- 		<div class="col-md-4 col-xs-12">
+ 		<div class="col-md-8 col-xs-12">
  			<div class="quo_container">
  				<p>1. Lorem ipsum dolor sit ametLorem ipsum dolor sit amet</p>
 	 			<ul>
@@ -183,7 +185,7 @@
 	 			<a href="" class="btn btn_vote">Vote</a>
  			</div>
  		</div>
- 		<div class="col-md-4 hidden-xs">
+ 		<div class="col-md-2 hidden-xs">
  			<h2>Adds 2</h2>
  		</div>
 
