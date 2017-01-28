@@ -17,7 +17,7 @@
  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="slide-nav">
   <div class="container">
    <div class="navbar-header">
-   	<a class="back" href=""><img src="images/5.png" width="40"></a>
+   	<a class="back" href=""><img src="images/11.png" width="35" height="40"></a>
     <a class="navbar-toggle"> 
       <span class="sr-only">Toggle navigation</span>
       <span class="icon-bar"></span>
