@@ -19,7 +19,8 @@ class CreateQuestionsLikesTable extends Migration
             $table->integer('question_id')->unsigned();
             $table->foreign('question_id')->references('id')->on('questions__questions')->onDelete('cascade');
             $table->integer('count');
-            $table->json('users');
+            $table->integer('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }
