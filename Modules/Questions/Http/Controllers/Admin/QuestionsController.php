@@ -43,7 +43,11 @@ class QuestionsController extends AdminBaseController
      */
     public function create()
     {
-        $categories = $this->category->all();
+        $categoriesFromDB = $this->category->all();
+
+        foreach ($categoriesFromDB as $category) {
+            $categories[$category->id] = $category->name;
+        }
         return view('questions::admin.questions.create', compact('categories'));
     }
 
@@ -69,7 +73,11 @@ class QuestionsController extends AdminBaseController
      */
     public function edit(Questions $questions)
     {
-        $categories = $this->category->all();
+        $categoriesFromDB = $this->category->all();
+
+        foreach ($categoriesFromDB as $category) {
+            $categories[$category->id] = $category->name;
+        }
         return view('questions::admin.questions.edit', compact('questions', 'categories'));
     }
 
