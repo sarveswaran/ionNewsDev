@@ -136,7 +136,41 @@ $router->group(['prefix' =>'/questions'], function (Router $router) {
         'uses' => 'VoteController@destroy',
         'middleware' => 'can:questions.votes.destroy'
     ]);
+    $router->bind('category', function ($id) {
+        return app('Modules\Questions\Repositories\CategoryRepository')->find($id);
+    });
+    $router->get('categories', [
+        'as' => 'admin.questions.category.index',
+        'uses' => 'CategoryController@index',
+        'middleware' => 'can:questions.categories.index'
+    ]);
+    $router->get('categories/create', [
+        'as' => 'admin.questions.category.create',
+        'uses' => 'CategoryController@create',
+        'middleware' => 'can:questions.categories.create'
+    ]);
+    $router->post('categories', [
+        'as' => 'admin.questions.category.store',
+        'uses' => 'CategoryController@store',
+        'middleware' => 'can:questions.categories.create'
+    ]);
+    $router->get('categories/{category}/edit', [
+        'as' => 'admin.questions.category.edit',
+        'uses' => 'CategoryController@edit',
+        'middleware' => 'can:questions.categories.edit'
+    ]);
+    $router->put('categories/{category}', [
+        'as' => 'admin.questions.category.update',
+        'uses' => 'CategoryController@update',
+        'middleware' => 'can:questions.categories.edit'
+    ]);
+    $router->delete('categories/{category}', [
+        'as' => 'admin.questions.category.destroy',
+        'uses' => 'CategoryController@destroy',
+        'middleware' => 'can:questions.categories.destroy'
+    ]);
 // append
+
 
 
 

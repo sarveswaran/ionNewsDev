@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Modules\Questions\Entities\Questions;
 use Modules\Questions\Repositories\QuestionsRepository;
+use Modules\Questions\Repositories\CategoryRepository;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
 
 class QuestionsController extends AdminBaseController
@@ -15,11 +16,12 @@ class QuestionsController extends AdminBaseController
      */
     private $questions;
 
-    public function __construct(QuestionsRepository $questions)
+    public function __construct(QuestionsRepository $questions, CategoryRepository $category)
     {
         parent::__construct();
 
         $this->questions = $questions;
+        $this->category = $category;
     }
 
     /**
@@ -41,7 +43,8 @@ class QuestionsController extends AdminBaseController
      */
     public function create()
     {
-        return view('questions::admin.questions.create');
+        $categories = $this->category->all();
+        return view('questions::admin.questions.create', compact('categories'));
     }
 
     /**
@@ -66,7 +69,8 @@ class QuestionsController extends AdminBaseController
      */
     public function edit(Questions $questions)
     {
-        return view('questions::admin.questions.edit', compact('questions'));
+        $categories = $this->category->all();
+        return view('questions::admin.questions.edit', compact('questions', 'categories'));
     }
 
     /**

@@ -6,6 +6,12 @@
 	    {!! $errors->first('question', '<span class="help-block">:message</span>') !!}
 	</div>
 
+	<div class="form-group{{ $errors->has('category_id') ? ' has-error' : '' }}">
+        {!! Form::label("category_id", trans('properties::propertystatuses.title.propertystatuses')) !!}
+        {!! Form::select('category_id', $categories, null, ['class' => 'form-control']) !!}
+        {!! $errors->first('category_id', '<span class="help-block">:message</span>') !!}
+    </div>
+
 	<div class='form-group{{ $errors->has('answer_1') ? ' has-error' : '' }}'>
 	    {!! Form::label('answer_1', trans('questions::questions.form.answer_1')) !!}
 	    {!! Form::text('answer_1', old('answer_1'), ['class' => 'form-control', 'placeholder' => trans('questions::questions.form.answer_1')]) !!}

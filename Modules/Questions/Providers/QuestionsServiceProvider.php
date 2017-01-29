@@ -90,7 +90,20 @@ class QuestionsServiceProvider extends ServiceProvider
                 return new \Modules\Questions\Repositories\Cache\CacheVoteDecorator($repository);
             }
         );
+        $this->app->bind(
+            'Modules\Questions\Repositories\CategoryRepository',
+            function () {
+                $repository = new \Modules\Questions\Repositories\Eloquent\EloquentCategoryRepository(new \Modules\Questions\Entities\Category());
+
+                if (! config('app.cache')) {
+                    return $repository;
+                }
+
+                return new \Modules\Questions\Repositories\Cache\CacheCategoryDecorator($repository);
+            }
+        );
 // add bindings
+
 
 
 

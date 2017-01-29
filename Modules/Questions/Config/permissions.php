@@ -25,7 +25,14 @@ return [
         'edit' => 'questions::votes.edit resource',
         'destroy' => 'questions::votes.destroy resource',
     ],
+    'questions.categories' => [
+        'index' => 'questions::categories.list resource',
+        'create' => 'questions::categories.create resource',
+        'edit' => 'questions::categories.edit resource',
+        'destroy' => 'questions::categories.destroy resource',
+    ],
 // append
+
 
 
 
