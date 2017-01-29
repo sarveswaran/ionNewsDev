@@ -7,6 +7,10 @@
 			float: left;
 			color: #ffffff;
 			/*left: 0px;*/
+			padding: 5px 15px;
+		}
+		.navbar-brand img{
+			width: 30px;
 		}
 		.navbar-inverse .navbar-brand{
 			color: #ffffff;
@@ -135,6 +139,9 @@
 			#slide-nav .navbar-form .btn {
 			    width: 100%
 			}
+			a.back{
+				display: block;
+			}
 		}
 		@media (min-width:768px) { 
 			#page-content {
@@ -173,6 +180,8 @@
 			float: left;
 			padding: 15px 0px;
 			color: #ffffff;
+			display: block;
+			display: none;
 		}
 		.container-fluid{
 			padding-left: 0px;
@@ -212,4 +221,7 @@
 		    position: absolute;
 		    bottom: 20px;
 		    right: 10px;
+		}
+		#slidemenu{
+			float: right;
 		}
