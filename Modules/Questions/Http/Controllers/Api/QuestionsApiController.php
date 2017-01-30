@@ -9,15 +9,18 @@ use Modules\Questions\Entities\Questions;
 use Modules\Questions\Repositories\QuestionsRepository;
 use Modules\Questions\Entities\Vote;
 use Modules\Questions\Repositories\VoteRepository;
-use Modules\Questions\Http\Requests\Vote;
+use Modules\Questions\Repositories\CategoryRepository;
+use Modules\Questions\Http\Requests\VoteRequest;
+use Log;
 
 class QuestionsApiController extends Controller
 {
 
-    public function __construct(QuestionsRepository $questions, VoteRepository $vote)
+    public function __construct(QuestionsRepository $questions, VoteRepository $vote, CategoryRepository $categoryRepository)
     {
         $this->questions = $questions;
         $this->vote = $vote;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -36,10 +39,10 @@ class QuestionsApiController extends Controller
      *
      * @return Response
      */
-    public function vote(Vote $request)
+    public function vote(VoteRequest $request)
     {
         $vote = $this->vote->create($request->all());
-        return Response::json(['vote' => $vote]);
+        return Response::json($vote);
     }
 
     /**
@@ -49,7 +52,8 @@ class QuestionsApiController extends Controller
      */
     public function create()
     {
-        
+        $question = $this->questions->create($request->all());
+        return Response::json($question);
     }
 
     /**
@@ -58,9 +62,22 @@ class QuestionsApiController extends Controller
      * @param  File     $file
      * @return Response
      */
-    public function edit(File $file)
+    public function categoryQuestions($category)
     {
-        
+        $questions = $this->questions->getByAttributes(['category_id' => $category]);
+        return Response::json($questions);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  File     $file
+     * @return Response
+     */
+    public function listOfCategories()
+    {
+        $categories = $this->categoryRepository->all();
+        return Response::json($categories);
     }
 
     /**
@@ -70,7 +87,7 @@ class QuestionsApiController extends Controller
      * @param  UpdateMediaRequest $request
      * @return Response
      */
-    public function update(File $file, UpdateMediaRequest $request)
+    public function update()
     {
 
     }
@@ -82,7 +99,7 @@ class QuestionsApiController extends Controller
      * @internal param int $id
      * @return Response
      */
-    public function destroy(File $file)
+    public function destroy()
     {
         
     }

@@ -18,3 +18,13 @@ $router->post('comment', [
     'uses' => 'CommentsApiController@comment',
     'middleware' => 'auth'
 ]);
+
+$router->get('questions/category/{category}', [
+    'as' => 'api.get.questions.category',
+    'uses' => 'QuestionsApiController@categoryQuestions'
+]);
+
+$router->get('category/list', [
+    'as' => 'api.get.category.list',
+    'uses' => 'QuestionsApiController@listOfCategories'
+]);
