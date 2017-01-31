@@ -100,7 +100,7 @@ class FrontController extends BasePublicController
       $validator = Validator::make($request->all(), [
           'email' => 'required|unique:users',
           'password' => 'required',
-          'phone' => 'required|unique:contact__user_details',
+          'phone' => 'required|unique:users',
           'first_name' => 'required',
           'role' => 'required',
           'last_name' => 'required'
@@ -130,8 +130,8 @@ class FrontController extends BasePublicController
                return $this->response->setStatusCode(400,'Not allowed as Usertype');
             }
 
-            $user = $this->user->createWithRoles($request->all(), $role_id);
-          return response($details)->header('Content-Type', 'application/json');
+            $user = $this->user->createWithRoles($request->all(), $role_id,true);
+          return response($user)->header('Content-Type', 'application/json');
       }
     }
 
