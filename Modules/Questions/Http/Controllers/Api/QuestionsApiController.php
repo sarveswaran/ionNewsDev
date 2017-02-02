@@ -2,6 +2,7 @@
 
 namespace Modules\Questions\Http\Controllers\Api;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Response;
@@ -11,6 +12,7 @@ use Modules\Questions\Entities\Vote;
 use Modules\Questions\Repositories\VoteRepository;
 use Modules\Questions\Repositories\CategoryRepository;
 use Modules\Questions\Http\Requests\VoteRequest;
+use Modules\Questions\Http\Requests\CreateQuestionRequestByUser;
 use Log;
 
 class QuestionsApiController extends Controller
@@ -41,8 +43,16 @@ class QuestionsApiController extends Controller
      */
     public function vote(VoteRequest $request)
     {
+        $request['user_id'] = Auth::user()->id;
         $vote = $this->vote->create($request->all());
-        return Response::json($vote);
+
+        $votes = $this->vote->getByAttributes(['question_id' => $request->question_id])->groupBy('answer_id');
+
+        foreach ($votes as $key => $value) {
+            $votes[$key] = count($value);
+        }
+
+        return Response::json($votes);
     }
 
     /**
@@ -50,8 +60,10 @@ class QuestionsApiController extends Controller
      *
      * @return Response
      */
-    public function create()
+    public function create(CreateQuestionRequestByUser $request)
     {
+        $request['user_id'] = Auth::user()->id;
+        $request['answer_5'] = 'Nota';
         $question = $this->questions->create($request->all());
         return Response::json($question);
     }
@@ -64,7 +76,7 @@ class QuestionsApiController extends Controller
      */
     public function categoryQuestions($category)
     {
-        $questions = $this->questions->getByAttributes(['category_id' => $category]);
+        $questions = $this->questions->findByAttributes(['category_id' => $category])->paginate();
         return Response::json($questions);
     }
 

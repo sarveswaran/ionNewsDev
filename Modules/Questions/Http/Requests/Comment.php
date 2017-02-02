@@ -15,7 +15,6 @@ class Comment extends FormRequest
     {
         return [
             'question_id' => 'required|numeric',
-            'user_id' => 'required|numeric',
             'comment' => 'required'
         ];
     }

@@ -14,7 +14,6 @@ class VoteRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|numeric',
             'question_id' => 'required|numeric',
             'answer_id' => 'required|numeric'
         ];

@@ -19,8 +19,7 @@ class CreateQuestionRequestByUser extends FormRequest
             'answer_2' => 'required', 
             'answer_3' => 'required', 
             'answer_4' => 'required', 
-            'answer_5' => 'required', 
-            'category_id' => 'required'
+            'category_id' => 'required|numeric'
         ];
     }
 
