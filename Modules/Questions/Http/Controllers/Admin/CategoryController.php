@@ -29,9 +29,9 @@ class CategoryController extends AdminBaseController
      */
     public function index()
     {
-        //$categories = $this->category->all();
+        $categories = $this->category->all();
 
-        return view('questions::admin.categories.index', compact(''));
+        return view('questions::admin.categories.index', compact('categories'));
     }
 
     /**
