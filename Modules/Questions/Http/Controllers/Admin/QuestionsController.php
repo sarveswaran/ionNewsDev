@@ -59,6 +59,7 @@ class QuestionsController extends AdminBaseController
      */
     public function store(Request $request)
     {
+        print_r($request->all());die;
         $this->questions->create($request->all());
 
         return redirect()->route('admin.questions.questions.index')
