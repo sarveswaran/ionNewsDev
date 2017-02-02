@@ -2,6 +2,7 @@
 
 use Illuminate\Routing\Router;
 
+Route::group(['middleware' => 'cors'], function(Router $router){
 $router->get('questions', [
     'as' => 'api.get.questions',
     'uses' => 'QuestionsApiController@index'
@@ -28,3 +29,4 @@ $router->get('category/list', [
     'as' => 'api.get.category.list',
     'uses' => 'QuestionsApiController@listOfCategories'
 ]);
+}];
