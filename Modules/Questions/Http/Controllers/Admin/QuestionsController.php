@@ -8,6 +8,8 @@ use Modules\Questions\Entities\Questions;
 use Modules\Questions\Repositories\QuestionsRepository;
 use Modules\Questions\Repositories\CategoryRepository;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
+use Modules\User\Contracts\Authentication;
+use Auth;
 
 class QuestionsController extends AdminBaseController
 {
@@ -16,12 +18,13 @@ class QuestionsController extends AdminBaseController
      */
     private $questions;
 
-    public function __construct(QuestionsRepository $questions, CategoryRepository $category)
+    public function __construct(QuestionsRepository $questions, CategoryRepository $category,Authentication $authe)
     {
         parent::__construct();
 
         $this->questions = $questions;
         $this->category = $category;
+        $this->authe =$authe;
     }
 
     /**
@@ -32,7 +35,6 @@ class QuestionsController extends AdminBaseController
     public function index()
     {
         $questions = $this->questions->all();
-
         return view('questions::admin.questions.index', compact('questions'));
     }
 
@@ -59,7 +61,8 @@ class QuestionsController extends AdminBaseController
      */
     public function store(Request $request)
     {
-        print_r($request->all());die;
+        $request->merge(['user_id'] => $this->authe->id()]);
+        
         $this->questions->create($request->all());
 
         return redirect()->route('admin.questions.questions.index')
