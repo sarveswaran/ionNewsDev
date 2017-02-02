@@ -61,7 +61,7 @@ class QuestionsController extends AdminBaseController
      */
     public function store(Request $request)
     {
-        $request->merge(['user_id'] => $this->authe->id()]);
+        $request->merge(['user_id' => $this->authe->id()]);
         
         $this->questions->create($request->all());
 
