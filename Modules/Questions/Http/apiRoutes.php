@@ -29,4 +29,4 @@ $router->get('category/list', [
     'as' => 'api.get.category.list',
     'uses' => 'QuestionsApiController@listOfCategories'
 ]);
-}];
+});
