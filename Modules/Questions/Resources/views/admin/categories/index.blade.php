@@ -29,8 +29,8 @@
                         <table class="data-table table table-bordered table-hover">
                             <thead>
                             <tr>
-                                <th>{{ trans('questions::categories.table.name') }}</th>
-                                <th>{{ trans('questions::categories.table.slug') }}</th>
+                                <th>{{ trans('category name') }}</th>
+                                <th>{{ trans('slug') }}</th>
                                 <th>{{ trans('core::core.table.created at') }}</th>
                                 <th data-sortable="false">{{ trans('core::core.table.actions') }}</th>
                             </tr>
@@ -66,8 +66,8 @@
                             </tbody>
                             <tfoot>
                             <tr>
-                                <th>{{ trans('questions::categories.table.name') }}</th>
-                                <th>{{ trans('questions::categories.table.slug') }}</th>
+                                <th>{{ trans('category name') }}</th>
+                                <th>{{ trans('slug') }}</th>
                                 <th>{{ trans('core::core.table.created at') }}</th>
                                 <th>{{ trans('core::core.table.actions') }}</th>
                             </tr>

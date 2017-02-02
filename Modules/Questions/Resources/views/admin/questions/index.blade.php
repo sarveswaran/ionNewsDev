@@ -29,7 +29,12 @@
                         <table class="data-table table table-bordered table-hover">
                             <thead>
                             <tr>
-                                <th>{{ trans('questions::questions.form.question') }}</th>
+                                <th>{{ trans('question') }}</th>
+                                <th>{{ trans('answer_1') }}</th>
+                                <th>{{ trans('answer_2') }}</th>
+                                <th>{{ trans('answer_3') }}</th>
+                                <th>{{ trans('answer_4') }}</th>
+                                <th>{{ trans('answer_5') }}</th>
                                 <th>{{ trans('core::core.table.created at') }}</th>
                                 <th data-sortable="false">{{ trans('core::core.table.actions') }}</th>
                             </tr>
@@ -42,6 +47,21 @@
                                     <a href="{{ route('admin.questions.questions.edit', [$questions->id]) }}">
                                         {{ $questions->question }}
                                     </a>
+                                </td>
+                                 <td>  
+                                        {{ $questions->answer_1 }}
+                                </td>
+                                <td>  
+                                        {{ $questions->answer_2 }}
+                                </td>
+                                <td>  
+                                        {{ $questions->answer_3 }}
+                                </td>
+                                <td>  
+                                        {{ $questions->answer_4 }}
+                                </td>
+                                <td>  
+                                        {{ $questions->answer_5 }}
                                 </td>
                                 <td>
                                     <a href="{{ route('admin.questions.questions.edit', [$questions->id]) }}">
@@ -60,7 +80,12 @@
                             </tbody>
                             <tfoot>
                             <tr>
-                                <th>{{ trans('questions::questions.form.question') }}</th>
+                                <th>{{ trans('question') }}</th>
+                                <th>{{ trans('answer_1') }}</th>
+                                <th>{{ trans('answer_2') }}</th>
+                                <th>{{ trans('answer_3') }}</th>
+                                <th>{{ trans('answer_4') }}</th>
+                                <th>{{ trans('answer_5') }}</th>
                                 <th>{{ trans('core::core.table.created at') }}</th>
                                 <th>{{ trans('core::core.table.actions') }}</th>
                             </tr>
