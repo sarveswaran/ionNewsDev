@@ -99,9 +99,10 @@ class QuestionsApiController extends Controller
      * @param  UpdateMediaRequest $request
      * @return Response
      */
-    public function update()
+    public function myQuestions()
     {
-
+        $questions = $this->questions->findByAttributes(['user_id' => Auth::user()->id])->paginate();
+        return Response::json($questions);
     }
 
     /**

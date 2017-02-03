@@ -37,4 +37,10 @@ Route::group(['middleware' => 'cors'], function(Router $router){
         'middleware' => 'auth'
     ]);
 
+    $router->get('questions/myquestions', [
+        'as' => 'api.get.questions.myquestions',
+        'uses' => 'QuestionsApiController@myQuestions',
+        'middleware' => 'auth'
+    ]);
+
 });

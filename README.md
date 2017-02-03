@@ -42,3 +42,10 @@
 	HEADERS : Authorization
 	PARAMS : question_id, comment
 	RETURNS : Comment object.
+
+7. Get my questions
+
+	URl : {home_url}/api/questions/myquestions
+	METHOD : GET
+	HEADERS : Authorization
+	RETURNS : User questions along with pagination
