@@ -6,4 +6,5 @@ use Modules\Core\Repositories\BaseRepository;
 
 interface QuestionsRepository extends BaseRepository
 {
+	public function catfilter($catid);
 }

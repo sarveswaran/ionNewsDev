@@ -7,4 +7,12 @@ use Modules\Core\Repositories\Eloquent\EloquentBaseRepository;
 
 class EloquentQuestionsRepository extends EloquentBaseRepository implements QuestionsRepository
 {
+	public function catfilter($catid){
+			$dispensary =  $this->model
+						->where('category_id', '=',$catid)
+						->orderBy('id', 'desc')
+                		->paginate(3);
+         return $dispensary;	
+
+	}
 }

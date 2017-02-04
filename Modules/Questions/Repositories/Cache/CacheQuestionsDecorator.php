@@ -13,4 +13,8 @@ class CacheQuestionsDecorator extends BaseCacheDecorator implements QuestionsRep
         $this->entityName = 'questions.questions';
         $this->repository = $questions;
     }
+
+	public function catfilter($catid){
+		$this->repository->catfilter($catid);
+	}
 }
