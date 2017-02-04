@@ -46,7 +46,7 @@ class QuestionsApiController extends Controller
         $request['user_id'] = Auth::user()->id;
         $vote = $this->vote->create($request->all());
 
-        $votes = $this->vote->getByAttributes(['question_id' => $request->question_id])->groupBy('answer_id');
+        $votes = $this->vote->getByAttributes(['question_id' => $request->question_id])->groupBy('answer');
 
         foreach ($votes as $key => $value) {
             $votes[$key] = count($value);
