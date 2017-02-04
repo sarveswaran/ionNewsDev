@@ -44,7 +44,13 @@ class QuestionsApiController extends Controller
     public function vote(VoteRequest $request)
     {
         $request['user_id'] = Auth::user()->id;
-        $vote = $this->vote->create($request->all());
+        $exists = $this->vote->findByAttributes(['question_id' =>$request->question_id,'user_id' =>  Auth::user()->id]);
+        if(!isset($exists->id)){
+             $vote = $this->vote->create($request->all());
+             $message = "Successfully Voted";
+        }else{
+            $message = "Already Voted";
+        }
         $nowquestion = $this->questions->find($request->question_id);
         $votes = $this->vote->getByAttributes(['question_id' => $request->question_id])->groupBy('answer');
         $nowquestion->answer1_count = 0;
@@ -80,7 +86,7 @@ class QuestionsApiController extends Controller
 
             //$votes[$key] = count($value);
         }
-
+        $nowquestion->message = $message;
         return Response::json($nowquestion);
     }
 
