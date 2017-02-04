@@ -78,7 +78,7 @@ class QuestionsApiController extends Controller
     {
         $all = $this->questions->findByAttributes(['category_id' => $category]);
         if(isset($all->id)){
-            $questions = $this->questions->findByAttributes(['category_id' => $category])->paginate();
+            $questions = $this->questions->findByAttributes([])->paginate();
             return Response::json($questions);
         }else{
              return Response::json(['message' => 'no data']);
