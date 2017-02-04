@@ -45,14 +45,43 @@ class QuestionsApiController extends Controller
     {
         $request['user_id'] = Auth::user()->id;
         $vote = $this->vote->create($request->all());
-
+        $nowquestion = $this->questions->find($request->question_id);
         $votes = $this->vote->getByAttributes(['question_id' => $request->question_id])->groupBy('answer');
+        $nowquestion->answer1_count = 0;
+        $nowquestion->answer2_count = 0;
+        $nowquestion->answer3_count = 0;
+        $nowquestion->answer4_count = 0;
+        $nowquestion->answer5_count = 0;
+
 
         foreach ($votes as $key => $value) {
-            $votes[$key] = count($value);
+
+            if($nowquestion->answer_1 == $key){
+
+                $nowquestion->answer1_count = count($value);
+
+            }elseif($nowquestion->answer_2 == $key){
+
+                $nowquestion->answer2_count = count($value);
+        
+
+            }elseif($nowquestion->answer_3 == $key){
+
+                $nowquestion->answer3_count = count($value);
+
+            }elseif($nowquestion->answer_4 == $key){
+
+                $nowquestion->answer4_count = count($value);
+
+            }elseif($nowquestion->answer_5 == $key){
+
+                $nowquestion->answer5_count = count($value);
+            }
+
+            //$votes[$key] = count($value);
         }
 
-        return Response::json($votes);
+        return Response::json($nowquestion);
     }
 
     /**
