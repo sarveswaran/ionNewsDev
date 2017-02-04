@@ -15,7 +15,7 @@ class VoteRequest extends FormRequest
     {
         return [
             'question_id' => 'required|numeric',
-            'answer_id' => 'required|numeric'
+            'answer' => 'required|numeric'
         ];
     }
 
