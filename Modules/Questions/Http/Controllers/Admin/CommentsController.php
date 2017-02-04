@@ -29,9 +29,9 @@ class CommentsController extends AdminBaseController
      */
     public function index()
     {
-        //$comments = $this->comments->all();
+        $comments = $this->comments->all();
 
-        return view('questions::admin.comments.index', compact(''));
+        return view('questions::admin.comments.index', compact('comments'));
     }
 
     /**
