@@ -8,11 +8,20 @@ use Modules\Core\Repositories\Eloquent\EloquentBaseRepository;
 class EloquentQuestionsRepository extends EloquentBaseRepository implements QuestionsRepository
 {
 	public function catfilter($catid){
-			$dispensary =  $this->model
+			$cat =  $this->model
 						->where('category_id', '=',$catid)
 						->orderBy('id', 'desc')
                 		->paginate(15);
-         return $dispensary;	
+         return $cat;	
+
+	}
+
+	public function catfilter($userid){
+			$list =  $this->model
+						->where('user_id', '=',$userid)
+						->orderBy('id', 'desc')
+                		->paginate(15);
+         return $list;	
 
 	}
 }

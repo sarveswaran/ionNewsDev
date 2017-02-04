@@ -17,4 +17,8 @@ class CacheQuestionsDecorator extends BaseCacheDecorator implements QuestionsRep
 	public function catfilter($catid){
 		$this->repository->catfilter($catid);
 	}
+
+	public function myfilter($userid){
+		$this->repository->myfilter($userid);
+	}
 }

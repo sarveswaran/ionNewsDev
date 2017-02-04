@@ -145,7 +145,7 @@ class QuestionsApiController extends Controller
         $myQuestion =  $this->questions->findByAttributes(['user_id' => Auth::user()->id]);
 
         if(isset($myQuestion->id)){
-            $questions = $this->questions->findByAttributes(['user_id' => Auth::user()->id])->paginate();
+            $questions = $this->questions->myfilter(Auth::user()->id);
             return Response::json($questions);
         }else{
             array(['message' => 'no questions']);
