@@ -11,5 +11,5 @@ class Vote extends Model
 
     protected $table = 'questions__votes';
     //public $translatedAttributes = [];
-    protected $fillable = ['user_id', 'question_id', 'answer_id'];
+    protected $fillable = ['user_id', 'question_id', 'answer'];
 }
