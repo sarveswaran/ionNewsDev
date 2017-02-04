@@ -76,7 +76,6 @@ class QuestionsApiController extends Controller
      */
     public function categoryQuestions($category)
     {
-        return $category;
         $all = $this->questions->findByAttributes(['category_id' => $category]);
         if(isset($all->id)){
             $questions = $this->questions->findByAttributes(['category_id' => $category])->paginate();
