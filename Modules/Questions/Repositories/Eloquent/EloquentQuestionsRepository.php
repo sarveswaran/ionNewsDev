@@ -11,7 +11,7 @@ class EloquentQuestionsRepository extends EloquentBaseRepository implements Ques
 			$dispensary =  $this->model
 						->where('category_id', '=',$catid)
 						->orderBy('id', 'desc')
-                		->paginate(3);
+                		->paginate(15);
          return $dispensary;	
 
 	}
