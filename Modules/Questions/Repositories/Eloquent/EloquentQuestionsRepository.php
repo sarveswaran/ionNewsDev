@@ -16,7 +16,7 @@ class EloquentQuestionsRepository extends EloquentBaseRepository implements Ques
 
 	}
 
-	public function catfilter($userid){
+	public function myfilter($userid){
 			$list =  $this->model
 						->where('user_id', '=',$userid)
 						->orderBy('id', 'desc')
