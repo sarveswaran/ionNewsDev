@@ -54,7 +54,7 @@ class FrontController extends BasePublicController
                Auth::user()->last_login = new \DateTime();
                Auth::user()->save();
                $token = Auth::generateTokenById($authicated_user->id);
-               return response(['token' => $token,'last_login' =>$last_login,'role'=>$authicated_user->role])->header('Content-Type', 'application/json');
+               return response(['token' => $token,'last_login' =>$last_login,'first_name'=> $authicated_user->first_name,'role'=>$authicated_user->role])->header('Content-Type', 'application/json');
            }else{
                $this->response->setContent(array('message'=>'Please Activate your account'));
                return $this->response->setStatusCode(401,'Please Activate your account');
