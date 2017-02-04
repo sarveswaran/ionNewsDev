@@ -57,7 +57,7 @@
                                 <td>
                                     <div class="btn-group">
                                         <a href="{{ route('admin.questions.category.edit', [$category->id]) }}" class="btn btn-default btn-flat"><i class="fa fa-pencil"></i></a>
-                                        <button class="btn btn-danger btn-flat" data-toggle="modal" data-target="#modal-delete-confirmation" data-action-target="{{ route('admin.questions.category.destroy', [$category->id]) }}"><i class="fa fa-trash"></i></button>
+                                      <!--   <button class="btn btn-danger btn-flat" data-toggle="modal" data-target="#modal-delete-confirmation" data-action-target="{{ route('admin.questions.category.destroy', [$category->id]) }}"><i class="fa fa-trash"></i></button> -->
                                     </div>
                                 </td>
                             </tr>
