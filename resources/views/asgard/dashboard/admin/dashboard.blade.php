@@ -103,13 +103,13 @@
             </div>
         </div>
     </div> -->
-        <div class="row rowgap">
+   <!--      <div class="row rowgap">
         <div class="col-xs-12">
             <div class="box box-primary">
                 <div class="box-header">
                 Recently Registered Customers
                 </div>
-                <!-- /.box-header -->
+              
                 <div class="box-body">
                     <div class="table-responsive">
                         <table class="data-table table table-bordered table-hover">
@@ -187,13 +187,13 @@
                 
                             </tfoot>
                         </table>
-                        <!-- /.box-body -->
+                     
                     </div>
                 </div>
-                <!-- /.box -->
+            
             </div>
         </div>
-    </div>
+    </div> -->
      <div class="row rowgap">
         <div class="col-xs-12">
             <div class="box box-primary">
@@ -208,68 +208,27 @@
                             <tr>
                                 <th>{{ trans('Sl.No') }}</th>
                                 <th>{{ trans('Question') }}</th>
-                                <th data-sortable="false">{{ trans('Created By') }}</th>
+                                <th data-sortable="false">{{ trans('Status') }}</th>
                                  <th>{{ trans('Date') }}</th>
                             </tr>
                             </thead>
                             <tbody>
+                         <?php if (isset($questions)): ?>
+                            <?php foreach ($questions as $question): ?>
+                           
                             <tr>
-                                <td>1</td>
-                                <td>bh FD F F F  F F FDarath</td>
-                                <td>9743725012</td>
-                                <td>bharath@gmail.com</td>
-                               
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>shar FD FD FD FD DF  F F F FD F ath</td>
-                                <td>9732725232</td>
-                                <td>sharath@gmail.com</td>
-
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>a FD FD FD F DF D F DF  F FD F Dnil</td>
-                                <td>9323272501</td>
-                                <td>Benanzy@gmail.com</td>
+                                <td>{{ $question->id }}</td>
+                                <td>{{ $question->question }}</td>
+                                <?php if($question->status == 1){?>
+                                <td>active</td>
+                                <?php }else{?>
+                                <td>Inactive</td>
+                                <?php }?>
+                                <td>{{ $question->created_at }}</td>
                                 
                             </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>naveen</td>
-                                <td>9743725012</td>
-                                <td>navee@gmail.com</td>
-                                
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>sanDF DF F FDFD DF  F FD FD Fjay</td>
-                                <td>97443725012</td>
-                                <td>sanjay@gmail.com</td>
-                                
-                            </tr>
-                            <tr>
-                                <td>6</td>
-                                <td>raghu DF FD FD  FD F FD F FD  DF DF FD</td>
-                                <td>9223725552</td>
-                                <td>raghu@gmail.com</td>
-                                
-                            </tr>
-                            <?php if (isset($user_details)): ?>
-                            <?php foreach ($user_details as $user_details): ?>
-                            <tr>
-                                <td>
-                                    <a href="{{ route('admin.contact.user_details.edit', [$user_details->id]) }}">
-                                        {{ $user_details->created_at }}
-                                    </a>
-                                </td>
-                                <td>
-                                    <div class="btn-group">
-                                        <a href="{{ route('admin.contact.user_details.edit', [$user_details->id]) }}" class="btn btn-default btn-flat"><i class="fa fa-pencil"></i></a>
-                                        <button class="btn btn-danger btn-flat" data-toggle="modal" data-target="#modal-delete-confirmation" data-action-target="{{ route('admin.contact.user_details.destroy', [$user_details->id]) }}"><i class="fa fa-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
+                         
+                            
                             <?php endforeach; ?>
                             <?php endif; ?>
                             </tbody>
