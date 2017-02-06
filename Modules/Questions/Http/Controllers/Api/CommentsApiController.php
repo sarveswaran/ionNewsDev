@@ -20,7 +20,18 @@ class CommentsApiController extends Controller
     public function comment(Comment $request)
     {
     	$request['user_id'] = Auth::user()->id;
-    	$comment = $this->comments->create($request->all());
-    	return Response::json(['comment' => $comment]);
+        $exists = $this->comments->findByAttributes(['question_id' => $request->question_id ,'user_id' => $request['user_id']]);
+        if(!isset($exists->id)){
+        	$comment = $this->comments->create($request->all());
+
+           $content =   $this->comments->getByAttributes(['question_id' => $request->question_id]);
+           //$content->message =  'successfully posted';
+    
+        }else{
+          $content =  $this->comments->getByAttributes(['question_id' => $request->question_id]);
+          //$content->message =  'already comment posted';
+        }
+
+        return $content;
     }
 }
