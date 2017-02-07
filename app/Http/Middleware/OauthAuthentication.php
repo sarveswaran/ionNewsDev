@@ -10,6 +10,14 @@ use Log;
 
 class OauthAuthentication
 {
+
+    /**
+     * The URIs that should be excluded from token verification
+     *
+     * @var array
+     */
+    protected $except = ['/api/questions'];
+
     /**
      * Handle an incoming request.
 
@@ -25,20 +33,36 @@ class OauthAuthentication
     public function handle($request, Closure $next, $guard = null)
     {
 
-       if(!$request->header('Authorization')){
+        if(!$request->header('Authorization')){
+            return response('token not found',401);
+        }else{
+            Auth::setToken($request->header('Authorization'));   
+            $authicated_user = Auth::user(); 
 
-         return response('token not found',401);
-       }else{
-          Auth::setToken($request->header('Authorization'));   
-          $authicated_user = Auth::user(); 
-
-          if($authicated_user){
+            if($authicated_user){
                 $request->merge(array('user_id' => $authicated_user->id));
-          }else{
-               return response('invalid token',401);
-          }                
-        return $next($request);
-        
+            }else{
+                if ($this->shouldPassThrough($request)) {
+                    return $next($request);
+                }
+                return response('invalid token',401);
+            }                
+            return $next($request);
        }
+    }
+
+    protected function shouldPassThrough($request)
+    {
+        foreach ($this->except as $except) {
+            if ($except !== '/') {
+                $except = trim($except, '/');
+            }
+
+            if ($request->is($except)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

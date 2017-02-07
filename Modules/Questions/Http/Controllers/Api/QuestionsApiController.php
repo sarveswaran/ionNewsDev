@@ -33,6 +33,7 @@ class QuestionsApiController extends Controller
     public function index()
     {
         $questions = $this->questions->paginate();
+        Log::info(Auth::id());
         return Response::json(['questions' => $questions]);
     }
 

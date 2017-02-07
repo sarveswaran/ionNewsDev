@@ -6,7 +6,8 @@ Route::group(['middleware' => 'cors'], function(Router $router){
 
     $router->get('questions', [
         'as' => 'api.get.questions',
-        'uses' => 'QuestionsApiController@index'
+        'uses' => 'QuestionsApiController@index',
+        'middleware' => 'auth'
     ]);
 
     $router->post('vote', [
