@@ -11,6 +11,22 @@
         {!! Form::select('category_id', $categories, null, ['class' => 'form-control']) !!}
         {!! $errors->first('category_id', '<span class="help-block">:message</span>') !!}
     </div>
+    <div class="row">
+         <div class="col-sm-10">
+            <div class="form-group{{ $errors->has('Address') ? ' has-error' : '' }}">
+                {!! Form::label('trend', trans('Is It trending')) !!}
+                 &nbsp;&nbsp;
+                &nbsp;&nbsp;
+                {!! Form::label('trend', trans('Yes')) !!}
+                {!! Form::radio('trend', 1, ['class' => '']) !!}
+                {!! $errors->first('trend', '<span class="help-block">:message</span>') !!}
+                &nbsp;&nbsp;
+                {!! Form::label('trend', trans('No')) !!}
+                {!! Form::radio('trend', 0, ['class' => '']) !!}
+                {!! $errors->first('trend', '<span class="help-block">:message</span>') !!}
+            </div>
+        </div>
+    </div>
 
 	<div class='form-group{{ $errors->has('answer_1') ? ' has-error' : '' }}'>
 	    {!! Form::label('answer_1', trans('answer_1')) !!}

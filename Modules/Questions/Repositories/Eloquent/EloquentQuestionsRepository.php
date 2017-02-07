@@ -8,11 +8,24 @@ use Modules\Core\Repositories\Eloquent\EloquentBaseRepository;
 class EloquentQuestionsRepository extends EloquentBaseRepository implements QuestionsRepository
 {
 	public function catfilter($catid){
+		if($catid == 1){
+
 			$cat =  $this->model
-						->where('category_id', '=',$catid)
+						->where('trend', '=',1)
+						->where('status','=',1)
 						->orderBy('id', 'desc')
                 		->paginate(15);
          return $cat;	
+
+
+		}else{
+			$cat =  $this->model
+						->where('category_id', '=',$catid)
+						->where('status','=',1)
+						->orderBy('id', 'desc')
+                		->paginate(15);
+         	return $cat;	
+    	 }
 
 	}
 

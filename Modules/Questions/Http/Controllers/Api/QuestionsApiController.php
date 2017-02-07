@@ -112,8 +112,13 @@ class QuestionsApiController extends Controller
      * @return Response
      */
     public function categoryQuestions($category)
-    {
-        $all = $this->questions->findByAttributes(['category_id' => $category]);
+    {   
+        if($category == 1){
+            $all = $this->questions->findByAttributes(['status' => '1','trend' => '1']);
+        }else{
+            $all = $this->questions->findByAttributes(['category_id' => $category]);
+        }
+       
         if(isset($all->id)){
             $questions = $this->questions->catfilter($category);
             return Response::json($questions);
@@ -130,7 +135,7 @@ class QuestionsApiController extends Controller
      */
     public function listOfCategories()
     {
-        $categories = $this->categoryRepository->all();
+        $categories = $this->categoryRepository->getByAttributes([],'id','asc');
         return Response::json($categories);
     }
 
