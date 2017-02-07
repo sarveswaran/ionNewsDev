@@ -22,6 +22,11 @@ Route::group(['middleware' => 'cors'], function(Router $router){
         'middleware' => 'auth'
     ]);
 
+    $router->get('comment/{question_id}', [
+        'as' => 'api.get.comment',
+        'uses' => 'CommentsApiController@getcomment'
+    ]);
+
     $router->get('questions/category/{category}', [
         'as' => 'api.get.questions.category',
         'uses' => 'QuestionsApiController@categoryQuestions'

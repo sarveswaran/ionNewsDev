@@ -34,4 +34,10 @@ class CommentsApiController extends Controller
 
         return $content;
     }
+
+    public function getcomment($question_id){
+
+      return $this->comments->getByAttributes(['question_id' => $question_id]);
+
+    }
 }
