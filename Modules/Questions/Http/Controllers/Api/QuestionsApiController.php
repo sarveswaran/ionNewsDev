@@ -87,6 +87,8 @@ class QuestionsApiController extends Controller
 
             //$votes[$key] = count($value);
         }
+
+        $nowquestion->total = $nowquestion->answer1_count+$nowquestion->answer2_count+$nowquestion->answer3_count+$nowquestion->answer4_count +$nowquestion->answer5_count;
         $nowquestion->message = $message;
         return Response::json($nowquestion);
     }
