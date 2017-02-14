@@ -101,7 +101,7 @@ class QuestionsApiController extends Controller
     public function create(CreateQuestionRequestByUser $request)
     {
         $request['user_id'] = Auth::user()->id;
-        $request['answer_5'] = 'Nota';
+        $request['answer_5'] = 'None of the above';
         //$request['category_id'] = 1;
         $question = $this->questions->create($request->all());
         return Response::json($question);
