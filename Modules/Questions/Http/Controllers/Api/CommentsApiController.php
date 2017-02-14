@@ -20,8 +20,9 @@ class CommentsApiController extends Controller
     public function comment(Comment $request)
     {
     	$request['user_id'] = Auth::user()->id;
-        $exists = $this->comments->findByAttributes(['question_id' => $request->question_id ,'user_id' => $request['user_id']])->count('id');
-        if($exists < 6){
+        $exists = $this->comments->getByAttributes(['question_id' => $request->question_id ,'user_id' => $request['user_id']]);
+        $val = count($exists);
+        if($val < 6){
         	$comment = $this->comments->create($request->all());
 
            $content =   $this->comments->getByAttributes(['question_id' => $request->question_id]);
