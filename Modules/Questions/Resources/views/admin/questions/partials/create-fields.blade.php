@@ -54,7 +54,7 @@
 
 	<div class='form-group{{ $errors->has('answer_5') ? ' has-error' : '' }}'>
 	    {!! Form::label('answer_5', trans('answer_5')) !!}
-	    {!! Form::text('answer_5', old('answer_5', 'Nota'), ['class' => 'form-control', 'placeholder' => trans('answer_5'), 'readonly' => '']) !!}
+	    {!! Form::text('answer_5', old('answer_5', 'None of the above'), ['class' => 'form-control', 'placeholder' => trans('answer_5'), 'readonly' => '']) !!}
 	    {!! $errors->first('answer_5', '<span class="help-block">:message</span>') !!}
 	</div>
 
