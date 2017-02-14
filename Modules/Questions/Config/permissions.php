@@ -31,7 +31,14 @@ return [
         'edit' => 'questions::categories.edit resource',
         'destroy' => 'questions::categories.destroy resource',
     ],
+    'questions.moviequestions' => [
+        'index' => 'questions::moviequestions.list resource',
+        'create' => 'questions::moviequestions.create resource',
+        'edit' => 'questions::moviequestions.edit resource',
+        'destroy' => 'questions::moviequestions.destroy resource',
+    ],
 // append
+
 
 
 

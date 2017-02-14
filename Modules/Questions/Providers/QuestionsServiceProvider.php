@@ -102,7 +102,20 @@ class QuestionsServiceProvider extends ServiceProvider
                 return new \Modules\Questions\Repositories\Cache\CacheCategoryDecorator($repository);
             }
         );
+        $this->app->bind(
+            'Modules\Questions\Repositories\MovieQuestionsRepository',
+            function () {
+                $repository = new \Modules\Questions\Repositories\Eloquent\EloquentMovieQuestionsRepository(new \Modules\Questions\Entities\MovieQuestions());
+
+                if (! config('app.cache')) {
+                    return $repository;
+                }
+
+                return new \Modules\Questions\Repositories\Cache\CacheMovieQuestionsDecorator($repository);
+            }
+        );
 // add bindings
+
 
 
 

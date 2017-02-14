@@ -83,7 +83,17 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender
                         $this->auth->hasAccess('questions.categories.index')
                     );
                 });
+                $item->item(trans('questions::moviequestions.title.moviequestions'), function (Item $item) {
+                    $item->icon('fa fa-copy');
+                    $item->weight(0);
+                    $item->append('admin.questions.moviequestions.create');
+                    $item->route('admin.questions.moviequestions.index');
+                    $item->authorize(
+                        $this->auth->hasAccess('questions.moviequestions.index')
+                    );
+                });
 // append
+
 
 
 

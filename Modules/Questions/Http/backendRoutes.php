@@ -169,7 +169,41 @@ $router->group(['prefix' =>'/questions'], function (Router $router) {
         'uses' => 'CategoryController@destroy',
         'middleware' => 'can:questions.categories.destroy'
     ]);
+    $router->bind('moviequestions', function ($id) {
+        return app('Modules\Questions\Repositories\MovieQuestionsRepository')->find($id);
+    });
+    $router->get('moviequestions', [
+        'as' => 'admin.questions.moviequestions.index',
+        'uses' => 'MovieQuestionsController@index',
+        'middleware' => 'can:questions.moviequestions.index'
+    ]);
+    $router->get('moviequestions/create', [
+        'as' => 'admin.questions.moviequestions.create',
+        'uses' => 'MovieQuestionsController@create',
+        'middleware' => 'can:questions.moviequestions.create'
+    ]);
+    $router->post('moviequestions', [
+        'as' => 'admin.questions.moviequestions.store',
+        'uses' => 'MovieQuestionsController@store',
+        'middleware' => 'can:questions.moviequestions.create'
+    ]);
+    $router->get('moviequestions/{moviequestions}/edit', [
+        'as' => 'admin.questions.moviequestions.edit',
+        'uses' => 'MovieQuestionsController@edit',
+        'middleware' => 'can:questions.moviequestions.edit'
+    ]);
+    $router->put('moviequestions/{moviequestions}', [
+        'as' => 'admin.questions.moviequestions.update',
+        'uses' => 'MovieQuestionsController@update',
+        'middleware' => 'can:questions.moviequestions.edit'
+    ]);
+    $router->delete('moviequestions/{moviequestions}', [
+        'as' => 'admin.questions.moviequestions.destroy',
+        'uses' => 'MovieQuestionsController@destroy',
+        'middleware' => 'can:questions.moviequestions.destroy'
+    ]);
 // append
+
 
 
 
