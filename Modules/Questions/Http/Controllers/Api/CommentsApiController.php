@@ -38,7 +38,15 @@ class CommentsApiController extends Controller
 
     public function getcomment($question_id){
 
-      return $this->comments->getByAttributes(['question_id' => $question_id]);
+      $comments = $this->comments->getByAttributes(['question_id' => $question_id]);
+
+      foreach ($comments as $comment) {
+        $comment->user;
+        $comment->name = $comment->user->first_name;
+
+      }
+
+      return $comment;
 
     }
 }

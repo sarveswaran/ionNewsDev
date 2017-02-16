@@ -12,4 +12,9 @@ class Comments extends Model
     protected $table = 'questions__comments';
     //public $translatedAttributes = [];
     protected $fillable = ['question_id', 'user_id', 'comment'];
+
+    public function user()
+    {
+        return $this->belongsTo('Modules\User\Entities\Sentinel\User','user_id');
+    }
 }
