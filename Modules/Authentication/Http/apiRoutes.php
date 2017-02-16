@@ -18,6 +18,10 @@ Route::group(['middleware' => 'cors'], function(Router $router){
         'as' => 'authentication.api.register',
         'uses' => 'FrontController@register'
     ]);
+     $router->post('/forgot', [
+        'as' => 'authentication.api.forgotpassword',
+        'uses' => 'FrontController@forgotpassword'
+    ]);
      $router->post('/updateuserinfo', [
         'as' => 'authentication.api.updateuserinfo',
         'uses' => 'FrontController@updateuserinfo',
