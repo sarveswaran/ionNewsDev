@@ -22,7 +22,7 @@ class CommentsApiController extends Controller
     	$request['user_id'] = Auth::user()->id;
         $exists = $this->comments->getByAttributes(['question_id' => $request->question_id ,'user_id' => $request['user_id']]);
         $val = count($exists);
-        if($val < 6){
+        if($val < 20){
         	$comment = $this->comments->create($request->all());
 
            $content =   $this->comments->getByAttributes(['question_id' => $request->question_id]);
@@ -31,6 +31,12 @@ class CommentsApiController extends Controller
         }else{
           $content =  $this->comments->getByAttributes(['question_id' => $request->question_id]);
           //$content->message =  'already comment posted';
+        }
+
+        foreach ($content as $cont) {
+            $cont->user;
+            $cont->name = $cont->user->first_name.' '.$cont->user->last_name;
+
         }
 
         return $content;
@@ -46,7 +52,7 @@ class CommentsApiController extends Controller
       }
       foreach ($comments as $comment) {
         $comment->user;
-        $comment->name = $comment->user->first_name;
+        $comment->name = $comment->user->first_name.' '.$comment->user->last_name;
 
       }
 
