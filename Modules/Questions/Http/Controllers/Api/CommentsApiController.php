@@ -40,6 +40,10 @@ class CommentsApiController extends Controller
 
       $comments = $this->comments->getByAttributes(['question_id' => $question_id]);
 
+      if(!$comments || count($comments) < 1){
+
+        return $comments;
+      }
       foreach ($comments as $comment) {
         $comment->user;
         $comment->name = $comment->user->first_name;
