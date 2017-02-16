@@ -50,7 +50,7 @@ class CommentsApiController extends Controller
 
       }
 
-      return $comment;
+      return $comments;
 
     }
 }
