@@ -132,7 +132,19 @@ class FrontController extends BasePublicController
 
             $user = $this->user->createWithRoles($request->all(), $role_id,true);
             $user->role = $request->role;
+
+    
+      
+        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])) {    
+         $authicated_user = Auth::user();    
+           if($this->user->find($authicated_user->id)->isActivated()){
+               $last_login =  $authicated_user->last_login;
+               Auth::user()->last_login = new \DateTime();
+               Auth::user()->save();
+               $user->token = Auth::generateTokenById($authicated_user->id);
           return response($user)->header('Content-Type', 'application/json');
+          }
+        }
       }
     }
 
