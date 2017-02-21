@@ -131,6 +131,7 @@ class FrontController extends BasePublicController
             }
 
             $user = $this->user->createWithRoles($request->all(), $role_id,true);
+            $user->role = $request->role;
           return response($user)->header('Content-Type', 'application/json');
       }
     }
