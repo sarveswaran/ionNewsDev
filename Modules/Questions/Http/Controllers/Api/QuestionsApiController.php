@@ -32,7 +32,7 @@ class QuestionsApiController extends Controller
      */
     public function index()
     {
-        $questions = $this->questions->paginate();
+        $questions = $this->questions->catfilter(1);;
         // Log::info(Auth::id());
         return Response::json(['questions' => $questions]);
     }
@@ -118,7 +118,7 @@ class QuestionsApiController extends Controller
         if($category == 1){
             $all = $this->questions->findByAttributes(['status' => '1','trend' => '1']);
         }else{
-            $all = $this->questions->findByAttributes(['category_id' => $category]);
+            $all = $this->questions->findByAttributes(['category_id' => $category,'status' => 1]);
         }
        
         if(isset($all->id)){
@@ -137,7 +137,7 @@ class QuestionsApiController extends Controller
      */
     public function listOfCategories()
     {
-        $categories = $this->categoryRepository->getByAttributes([],'id','asc');
+        $categories = $this->categoryRepository->getByAttributes(['status' => 1],'id','asc');
         return Response::json($categories);
     }
 
