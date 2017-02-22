@@ -15,6 +15,7 @@ use Modules\User\Events\UserHasBegunResetProcess;
 use Modules\User\Repositories\RoleRepository;
 use Modules\User\Services\UserResetter;
 use Modules\Services\Repositories\UsertypeRepository;
+use Modules\Authentication\Events\Confirmnotify;
 use Log;
 class FrontController extends BasePublicController
 {
@@ -96,7 +97,7 @@ class FrontController extends BasePublicController
       }
     }
 
-    public function register(Request $request,RoleRepository $roles){
+    public function register(Request $request,RoleRepository $roles,Confirmnotify $confirm){
       $validator = Validator::make($request->all(), [
           'email' => 'required|unique:users',
           'password' => 'required',
@@ -133,18 +134,8 @@ class FrontController extends BasePublicController
             $user = $this->user->createWithRoles($request->all(), $role_id,true);
             $user->role = $request->role;
 
-
-            $headers[] = 'MIME-Version: 1.0';
-            $headers[] = 'Content-type: text/html; charset=iso-8859-1';
-
-            // Additional headers
-            $headers[] = 'To: Mary <mary@example.com>,'.$request->email;
-            $headers[] = 'From: Birthday Reminder <info@brigradepoll.com>';
-
-          
-
-          mail($request->email, 'Welcome to BrigadePoll', "Hi".$request->first_name." , welcome to brigadepoll here you can start answering social questions", implode("\r\n", $headers));
-      
+        $confirm->broadcastOn($user);
+        
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])) {    
          $authicated_user = Auth::user();    
            if($this->user->find($authicated_user->id)->isActivated()){
