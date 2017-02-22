@@ -133,7 +133,17 @@ class FrontController extends BasePublicController
             $user = $this->user->createWithRoles($request->all(), $role_id,true);
             $user->role = $request->role;
 
-        mail($request->email, 'Welcome to BrigadePoll', "Hi".$request->first_name." , welcome to brigadepoll here you can start answering social questions");
+
+            $headers[] = 'MIME-Version: 1.0';
+            $headers[] = 'Content-type: text/html; charset=iso-8859-1';
+
+            // Additional headers
+            $headers[] = 'To: Mary <mary@example.com>,'.$request->email;
+            $headers[] = 'From: Birthday Reminder <info@brigradepoll.com>';
+
+          
+
+          mail($request->email, 'Welcome to BrigadePoll', "Hi".$request->first_name." , welcome to brigadepoll here you can start answering social questions", implode("\r\n", $headers));
       
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])) {    
          $authicated_user = Auth::user();    
