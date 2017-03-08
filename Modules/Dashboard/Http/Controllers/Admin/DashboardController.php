@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\Response;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
 use Modules\Dashboard\Repositories\WidgetRepository;
 use Modules\User\Contracts\Authentication;
-use Modules\Questions\Repositories\QuestionsRepository;
-use Modules\User\Repositories\UserRepository;
 use Nwidart\Modules\Repository;
 
 class DashboardController extends AdminBaseController
@@ -27,14 +25,12 @@ class DashboardController extends AdminBaseController
      * @param WidgetRepository $widget
      * @param Authentication $auth
      */
-    public function __construct(Repository $modules, WidgetRepository $widget, Authentication $auth,QuestionsRepository $questions,UserRepository $users)
+    public function __construct(Repository $modules, WidgetRepository $widget, Authentication $auth)
     {
         parent::__construct();
         $this->bootWidgets($modules);
         $this->widget = $widget;
         $this->auth = $auth;
-        $this->questions = $questions;
-        $this->users = $users;
     }
 
     /**
@@ -44,15 +40,15 @@ class DashboardController extends AdminBaseController
     public function index()
     {
         $this->requireAssets();
-        $questions = $this->questions->getByAttributes(['status' => 1])->take(12);
-        //$users = $this->users->getByAttributes(['status' => 1])->take(5);
+
         $widget = $this->widget->findForUser($this->auth->id());
+
         $customWidgets = json_encode(null);
         if ($widget) {
             $customWidgets = $widget->widgets;
         }
 
-        return view('dashboard::admin.dashboard', compact('customWidgets','questions'));
+        return view('dashboard::admin.dashboard', compact('customWidgets'));
     }
 
     /**

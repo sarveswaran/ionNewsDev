@@ -1,3 +1,3 @@
 <script>
-window.location = "http://admin.brigadepoll.com/backend";
+// window.location = "news/backend";
 </script>
