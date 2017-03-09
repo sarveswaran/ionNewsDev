@@ -1,0 +1,16 @@
+{
+    "name": "Content",
+    "alias": "content",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 1,
+    "providers": [
+        "Modules\\Content\\Providers\\ContentServiceProvider",
+        "Modules\\Content\\Providers\\RouteServiceProvider"
+    ],
+    "aliases":{},
+    "files": [
+        
+    ]
+}

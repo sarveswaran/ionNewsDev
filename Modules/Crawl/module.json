@@ -1,0 +1,16 @@
+{
+    "name": "Crawl",
+    "alias": "crawl",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 1,
+    "providers": [
+        "Modules\\Crawl\\Providers\\CrawlServiceProvider",
+        "Modules\\Crawl\\Providers\\RouteServiceProvider"
+    ],
+    "aliases":{},
+    "files": [
+        
+    ]
+}
