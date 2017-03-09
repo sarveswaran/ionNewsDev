@@ -40,11 +40,20 @@
                             <?php if (isset($categories)): ?>
                             <?php foreach ($categories as $category): ?>
                             <tr>
+
                                 <td>
-                                    <a href="{{ route('admin.content.category.edit', [$category->id]) }}">
-                                        {{ $category->created_at }}
-                                    </a>
+                                        {{ $category->id }}
                                 </td>
+                                <td>
+                                        {{ $category->name }}
+                                </td>
+                                 <td>
+                                        {{ $category->slug_name }}
+                                </td>
+                                <td>
+                                        {{ $category->status }}
+                                </td>
+                    
                                 <td>
                                     <div class="btn-group">
                                         <a href="{{ route('admin.content.category.edit', [$category->id]) }}" class="btn btn-default btn-flat"><i class="fa fa-pencil"></i></a>
