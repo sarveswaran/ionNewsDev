@@ -41,6 +41,15 @@
                             <?php foreach ($contents as $content): ?>
                             <tr>
                                 <td>
+                                        {{ $content->id }}
+                                </td>
+                                <td>
+                                        {{ $content->title }}
+                                </td>
+                                <td>
+                                        {{ $content->category_id }}
+                                </td>
+                                <td>
                                     <a href="{{ route('admin.content.content.edit', [$content->id]) }}">
                                         {{ $content->created_at }}
                                     </a>

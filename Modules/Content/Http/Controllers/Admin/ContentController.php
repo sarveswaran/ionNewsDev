@@ -29,9 +29,9 @@ class ContentController extends AdminBaseController
      */
     public function index()
     {
-        //$contents = $this->content->all();
+        $contents = $this->content->all();
 
-        return view('content::admin.contents.index', compact(''));
+        return view('content::admin.contents.index', compact('contents'));
     }
 
     /**

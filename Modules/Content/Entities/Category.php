@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    use Translatable;
+    //use Translatable;
 
     protected $table = 'content__categories';
     public $translatedAttributes = [];

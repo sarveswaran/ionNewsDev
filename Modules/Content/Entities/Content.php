@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Content extends Model
 {
-    use Translatable;
+    //use Translatable;
 
     protected $table = 'content__contents';
     public $translatedAttributes = [];
-    protected $fillable = [];
+    protected $fillable = ['title','sub_title','content','author'];
 }
