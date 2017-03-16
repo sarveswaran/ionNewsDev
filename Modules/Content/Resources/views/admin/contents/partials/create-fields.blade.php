@@ -14,6 +14,17 @@
                 {!! $errors->first('sub_title', '<span class="help-block">:message</span>') !!}
             </div>
         </div>
+          <div class="col-sm-6">
+              <div class="form-group{{ $errors->has('company_id') ? ' has-error' : '' }}">
+                  {!! Form::label('category_id', trans('Service Provider Name')) !!}
+                  <select class="form-control" name="category_id">
+                      <?php foreach ($categories as $category): ?>
+                          <option value="{{ $category->id }}">{{ $category->name }}</option>
+                      <?php endforeach; ?>
+                  </select>
+              </div>
+          </div>
+    
         <div class="col-sm-12">
             <div class="form-group{{ $errors->has('content') ? ' has-error' : '' }}">
                 {!! Form::label('content', trans('Story content')) !!}
@@ -24,7 +35,7 @@
        </div>
       <div class="row">
      	<div class="form-group box-body">
-	        <input name="" type="button" class="btn btn-primary btn-flat" value="Add Image" onclick="addRow('dataTable')" />
+	        <input  type="button" class="btn btn-primary btn-flat" value="Add Image" onclick="addRow('dataTable')" />
 	        <input type="button" class="btn btn-danger btn-flat" value="Delete Image" onclick="deleteRow('dataTable')" />
 	        <table id="dataTable" width="350px" border="1" class="imgtable" style="width: 100%;border: 4px solid #ecf0f5;">
 	            <tr>
@@ -37,9 +48,9 @@
 	            <tr>
 	                <td><input  type="checkbox" name="chk"/></td>
 	                <td> 1 </td>
-	                <td class="filechoose"><input type='file' name="filebox[]" onchange="readURL(this);"/ value=""></td>
-	                <td><img id="blah" src="#" alt="Image preview" /></td>
-	                <td><textarea name=""></textarea></td>
+	                <td class="filechoose"><input type='file' name="filebox['imgae'][]" onchange="readURL(this);"/ value=""></td>
+	                <td><img id="blah" src="#" alt="Image preview" width="60" /></td>
+	                <td><textarea name="filebox['description'][]"></textarea></td>
 	            </tr>
 	        </table>
 	    </div>

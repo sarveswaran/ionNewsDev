@@ -16,6 +16,15 @@
 @stop
 
 @section('content')
+    <div class="col-xs-12">
+            <div class="row">
+                 <div class="btn-group pull-left" style="margin: 0 15px 15px 0;">
+                    <a href="{{ route('admin.content.content.index') }}" class="btn btn-primary btn-flat" style="padding: 4px 10px;">
+                        <i class="fa fa-arrow-left"></i> {{ trans('Back') }}
+                    </a>
+                </div>
+        </div>
+    </div>
     {!! Form::open(['route' => ['admin.crawl.crawlcontent.store'], 'method' => 'post']) !!}
     <div class="row">
         <div class="col-md-12">

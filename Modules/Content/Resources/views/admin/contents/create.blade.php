@@ -16,7 +16,7 @@
 @stop
 
 @section('content')
-    {!! Form::open(['route' => ['admin.content.content.store'], 'method' => 'post']) !!}
+    {!! Form::open(['route' => ['admin.content.content.store'], 'method' => 'post','enctype' => 'multipart/form-data']) !!}
     <div class="row">
         <div class="col-md-12">
             <div class="nav-tabs-custom">
@@ -105,7 +105,7 @@
             element2.type = "file";
             element2.onchange = "readURL(this)"
             element2.id = "blah2";
-            element2.name = "filebox[]";
+            element2.name = "filebox['imgae'][]";
             cell3.appendChild(element2);
 
             var cell4 = row.insertCell(3);
@@ -117,7 +117,7 @@
 
             var cell4 = row.insertCell(4);
             var element4 = document.createElement("textarea");
-            element4.name = "textarea[]";
+            element4.name = "filebox['description'][]";
             cell4.appendChild(element4);
 
 

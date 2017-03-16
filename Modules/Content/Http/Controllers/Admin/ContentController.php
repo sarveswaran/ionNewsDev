@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Modules\Content\Entities\Content;
 use Modules\Content\Repositories\ContentRepository;
+use Modules\Content\Repositories\CategoryRepository;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
 
 class ContentController extends AdminBaseController
@@ -15,10 +16,11 @@ class ContentController extends AdminBaseController
      */
     private $content;
 
-    public function __construct(ContentRepository $content)
+    public function __construct(ContentRepository $content,CategoryRepository $category)
     {
         parent::__construct();
 
+        $this->category = $category;
         $this->content = $content;
     }
 
@@ -28,10 +30,11 @@ class ContentController extends AdminBaseController
      * @return Response
      */
     public function index()
-    {
+    {   
+        $categories = $this->category->getByAttributes(['status' => 1]);
         $contents = $this->content->all();
 
-        return view('content::admin.contents.index', compact('contents'));
+        return view('content::admin.contents.index', compact('contents','categories'));
     }
 
     /**
@@ -41,7 +44,8 @@ class ContentController extends AdminBaseController
      */
     public function create()
     {
-        return view('content::admin.contents.create');
+        $categories = $this->category->getByAttributes(['status' => 1]);
+        return view('content::admin.contents.create',compact('categories'));
     }
 
     /**
@@ -52,6 +56,8 @@ class ContentController extends AdminBaseController
      */
     public function store(Request $request)
     {
+        //$uploadedfiles = $request->file('filebox');
+       
         $this->content->create($request->all());
 
         return redirect()->route('admin.content.content.index')
@@ -66,7 +72,8 @@ class ContentController extends AdminBaseController
      */
     public function edit(Content $content)
     {
-        return view('content::admin.contents.edit', compact('content'));
+        $categories = $this->category->getByAttributes(['status' => 1]);
+        return view('content::admin.contents.edit', compact('content','categories'));
     }
 
     /**

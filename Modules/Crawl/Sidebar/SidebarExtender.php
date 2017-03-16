@@ -32,24 +32,7 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender
     public function extendWith(Menu $menu)
     {
         $menu->group(trans('core::sidebar.content'), function (Group $group) {
-            $group->item(trans('crawl::crawlcontents.title.crawlcontents'), function (Item $item) {
-                $item->icon('fa fa-copy');
-                $item->weight(10);
-                $item->authorize(
-                     /* append */
-                );
-                $item->item(trans('crawl::crawlcontents.title.crawlcontents'), function (Item $item) {
-                    $item->icon('fa fa-copy');
-                    $item->weight(0);
-                    $item->append('admin.crawl.crawlcontent.create');
-                    $item->route('admin.crawl.crawlcontent.index');
-                    $item->authorize(
-                        $this->auth->hasAccess('crawl.crawlcontents.index')
-                    );
-                });
-// append
-
-            });
+            
         });
 
         return $menu;
