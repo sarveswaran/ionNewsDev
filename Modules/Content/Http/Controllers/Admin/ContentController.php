@@ -48,6 +48,11 @@ class ContentController extends AdminBaseController
         return view('content::admin.contents.create',compact('categories'));
     }
 
+
+    public function ajaxcall(Request $request)
+    {
+        return array('title' => 'sports title','sub_title' => 'sports  best person in the world','content' => 'm,sdm, dsd,msndmsds dssddsd sdddsds dsd');
+    }
     /**
      * Store a newly created resource in storage.
      *

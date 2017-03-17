@@ -6,6 +6,7 @@ return [
         'create' => 'content::contents.create resource',
         'edit' => 'content::contents.edit resource',
         'destroy' => 'content::contents.destroy resource',
+        'ajaxcall' => 'content::contents.ajaxcall resource',
     ],
     'content.categories' => [
         'index' => 'content::categories.list resource',

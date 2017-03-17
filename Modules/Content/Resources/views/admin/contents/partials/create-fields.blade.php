@@ -1,22 +1,36 @@
 <div class="box-body">
+  <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                {!! Form::label('name', trans('URL Address')) !!}
+                {!! Form::text('name', old('name'), ['class' => 'form-control','data-slug' => 'source', 'placeholder' => trans('URL to fetch content')]) !!}
+                {!! $errors->first('name', '<span class="help-block">:message</span>') !!}
+            </div>
+        </div>
+        <div class="col-sm-6">
+        <label></label><br>
+        <input  type="button" class="btn btn-primary btn-flat" value="Crawl Content" onclick="crawl()" />
+        </div>
+    </div>
+
       <div class="row">
          <div class="col-sm-12">
             <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
                 {!! Form::label('title', trans('Title')) !!}
-                {!! Form::text('title', old('title'), ['class' => 'form-control', 'placeholder' => trans('Story title')]) !!}
+                {!! Form::text('title', old('title'), ['class' => 'form-control','id' =>'title',  'placeholder' => trans('Story title')]) !!}
                 {!! $errors->first('title', '<span class="help-block">:message</span>') !!}
             </div>
         </div>
         <div class="col-sm-12">
             <div class="form-group{{ $errors->has('sub_title') ? ' has-error' : '' }}">
                 {!! Form::label('sub_title', trans('Subtitle')) !!}
-                {!! Form::text('sub_title', old('sub_title'), ['class' => 'form-control', 'placeholder' => trans('subtitle')]) !!}
+                {!! Form::text('sub_title', old('sub_title'), ['class' => 'form-control','id' =>'sub_title', 'placeholder' => trans('subtitle')]) !!}
                 {!! $errors->first('sub_title', '<span class="help-block">:message</span>') !!}
             </div>
         </div>
           <div class="col-sm-6">
               <div class="form-group{{ $errors->has('company_id') ? ' has-error' : '' }}">
-                  {!! Form::label('category_id', trans('Service Provider Name')) !!}
+                  {!! Form::label('category_id', trans('Category')) !!}
                   <select class="form-control" name="category_id">
                       <?php foreach ($categories as $category): ?>
                           <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -28,7 +42,7 @@
         <div class="col-sm-12">
             <div class="form-group{{ $errors->has('content') ? ' has-error' : '' }}">
                 {!! Form::label('content', trans('Story content')) !!}
-                {!! Form::textarea('content', old('content'), ['class' => 'form-control', 'placeholder' => trans('Story content')]) !!}
+                {!! Form::textarea('content', old('content'), ['class' => 'form-control','id' =>'content','placeholder' => trans('Story content')]) !!}
                 {!! $errors->first('content', '<span class="help-block">:message</span>') !!}
             </div>
         </div>

@@ -143,6 +143,23 @@
                 alert(e);
             }
         }
+        function crawl() {
+
+             $.ajax({
+                type: 'GET',
+                data: {url: 'sd'},
+                url: '/news/public/backend/content/contents/ajaxcall',
+                success: function(result){
+                    $('#title').val(result.title);
+                    $('#sub_title').val(result.sub_title);
+                    $('#content').val(result.content);
+                },
+                error: function(xhr, desc, err) {
+                    console.log(xhr);
+                }
+            });
+    
+        }
 
     </script>
 @stop

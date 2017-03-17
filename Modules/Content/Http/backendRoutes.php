@@ -17,6 +17,11 @@ $router->group(['prefix' =>'/content'], function (Router $router) {
         'uses' => 'ContentController@create',
         'middleware' => 'can:content.contents.create'
     ]);
+    $router->get('contents/ajaxcall', [
+        'as' => 'admin.content.content.ajaxcall',
+        'uses' => 'ContentController@ajaxcall',
+        'middleware' => 'can:content.contents.ajaxcall'
+    ]);
     $router->post('contents', [
         'as' => 'admin.content.content.store',
         'uses' => 'ContentController@store',
