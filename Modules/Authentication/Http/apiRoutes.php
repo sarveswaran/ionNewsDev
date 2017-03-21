@@ -46,6 +46,11 @@ Route::group(['middleware' => 'cors'], function(Router $router){
         'uses' => 'FrontController@members',
         'middleware' => 'auth:api'
     ]);
+    $router->post('/reset', [
+        'as' => 'contact.api.resetpassword',
+        'uses' => 'FrontController@resetpassword',
+        'middleware' => 'auth:api'
+    ]);
 });
 });
 		
