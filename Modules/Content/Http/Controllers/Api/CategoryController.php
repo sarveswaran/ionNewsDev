@@ -32,7 +32,7 @@ class CategoryController extends BasePublicController
 
     }
     public function categorylist(Request $request,Client $http){
-     
+     =
 
             $categorylist = $this->category->getByAttributes(['status' => 1]);
 
