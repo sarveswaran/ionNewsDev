@@ -20,6 +20,9 @@ class CreateContentContentsTable extends Migration
             $table->string('content');
             $table->string('author')->nullable();
             $table->timestamps();
+//            $table->lastInsertId();
+
+
            // $table->foreign('category_id')->references('id')->on('category')->onDelete('cascade');
         });
     }

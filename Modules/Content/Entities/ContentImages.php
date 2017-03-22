@@ -11,5 +11,8 @@ class ContentImages extends Model
 
     protected $table = 'content__contentimages';
     public $translatedAttributes = [];
-    protected $fillable = [];
+    protected $fillable = [
+              'content_id',
+              'image_path',
+    ];
 }

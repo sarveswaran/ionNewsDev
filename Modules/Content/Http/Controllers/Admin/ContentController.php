@@ -22,6 +22,7 @@ class ContentController extends AdminBaseController
 
         $this->category = $category;
         $this->content = $content;
+
     }
 
     /**
@@ -47,11 +48,84 @@ class ContentController extends AdminBaseController
         $categories = $this->category->getByAttributes(['status' => 1]);
         return view('content::admin.contents.create',compact('categories'));
     }
+//    public function createImg()
+//    {
+//
+//    }
 
 
     public function ajaxcall(Request $request)
     {
-        return array('title' => 'sports title','sub_title' => 'sports  best person in the world','content' => 'm,sdm, dsd,msndmsds dssddsd sdddsds dsd');
+        $url=$_GET['url'];
+        $ch=curl_init();
+//        $header=array("Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+//            "Accept-Language:en-US,en;q=0.8,hi;q=0.6,af;q=0.4",
+//            "Connection:keep-alive",
+//            "Host:www.geekwire.com",
+//            "Upgrade-Insecure-Requests:1",
+//            "User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36");
+        curl_setopt($ch, CURLOPT_URL, $url);
+//        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 0);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        $result = curl_exec($ch);
+
+            $dom = new \DOMDocument();
+            libxml_use_internal_errors(true);
+
+            $dom->loadHTML($result);
+            $title = $dom->getElementsByTagName('title')->item(0)->nodeValue;
+        if(strpos($result,"<img")>0) {
+            $img = $dom->getElementsByTagName('img');
+            $i = 0;
+            $array = array();
+            foreach ($img as $value) {
+                $aa = $value->attributes;
+                foreach ($aa as $a) {
+                    if ($a->name == 'alt') {
+                        if ($a->nodeValue != NULL)
+                            $array[$i]['img_name'] = $a->nodeValue;
+                    }
+                    if ($a->name == 'src') {
+                        $array[$i]['img_url'] = $a->nodeValue;
+
+                    }
+                }
+                $i++;
+            }
+            $img_array = array();
+            foreach ($array as $array_data) {
+                if (array_key_exists('img_name', $array_data))
+                    if ($array_data['img_name'] != NULL)
+                        $img_array[] = $array_data;
+            }
+
+            $paragraph = $dom->getElementsByTagName('p');
+
+            $paraarray = array();
+            foreach ($paragraph as $pdata) {
+                $paraarray[] = $pdata->nodeValue;
+            }
+            $FinalArray = array();
+            for ($i = 0; $i < sizeof($img_array); $i++) {
+                $FinalArray[$i]['img_name'] = $img_array[$i]['img_name'];
+                $FinalArray[$i]['img_url'] = $img_array[$i]['img_url'];
+                if ($i < sizeof($paraarray))
+                    $FinalArray[$i]['desc'] = $paraarray[$i];
+            }
+            $count = sizeof($FinalArray);
+            $FinalArray['title'] = $title;
+            $FinalArray['sub_title'] = $title;
+            $FinalArray['count'] = $count;
+            $FinalArray['status']=200;
+        }else{  $FinalArray['title'] = $title;
+                $FinalArray['status']=202;
+            }
+
+            return $FinalArray;
+//        return array('title' => $title,'sub_title' => 'sports  best person in the world','content' => 'm,sdm, dsd,msndmsds dssddsd sdddsds dsd');
     }
     /**
      * Store a newly created resource in storage.

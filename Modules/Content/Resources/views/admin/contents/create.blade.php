@@ -63,6 +63,7 @@
     </script>
     <script>
         $( document ).ready(function() {
+            var results='';
             $('input[type="checkbox"].flat-blue, input[type="radio"].flat-blue').iCheck({
                 checkboxClass: 'icheckbox_flat-blue',
                 radioClass: 'iradio_flat-blue'
@@ -84,41 +85,49 @@
     </script>
 
       <script language="javascript">
+          var results='';
         function addRow(tableID) {
+               if(results!='') {
+                   var table = document.getElementById(tableID);
 
-            var table = document.getElementById(tableID);
+                   var rowCount = table.rows.length;
+                   if (rowCount == results.count-1)
+                       alert('All Images are Showing Successfully');
+                   else {
+                       var row = table.insertRow(rowCount);
+                       var cell1 = row.insertCell(0);
+                       var element1 = document.createElement("input");
+                       element1.type = "checkbox";
+                       element1.name = "chkbox[]";
+                       cell1.appendChild(element1);
 
-            var rowCount = table.rows.length;
-            var row = table.insertRow(rowCount);
+                       var cell2 = row.insertCell(1);
+                       cell2.innerHTML = rowCount;
 
-            var cell1 = row.insertCell(0);
-            var element1 = document.createElement("input");
-            element1.type = "checkbox";
-            element1.name="chkbox[]";
-            cell1.appendChild(element1);
+                       var cell3 = row.insertCell(2);
+                       var element2 = document.createElement("input");
+                       element2.type = "file";
+                       element2.onchange = "readURL(this)";
+                       element2.id = "blah2";
+                       element2.name = "filebox['imgae'][]";
+                       cell3.appendChild(element2);
 
-            var cell2 = row.insertCell(1);
-            cell2.innerHTML = rowCount + 1;
+                       var cell4 = row.insertCell(3);
+                       var element3 = document.createElement("img");
+                       element3.src = results[rowCount-1]['img_url'];
+                       element3.alt = results[rowCount-1]['img_name'];
+                       element3.name = "imges[]";
+                       cell4.appendChild(element3);
 
-            var cell3 = row.insertCell(2);
-            var element2 = document.createElement("input");
-            element2.type = "file";
-            element2.onchange = "readURL(this)"
-            element2.id = "blah2";
-            element2.name = "filebox['imgae'][]";
-            cell3.appendChild(element2);
-
-            var cell4 = row.insertCell(3);
-            var element3 = document.createElement("img");
-            element3.src = "#";
-            element3.alt = "Image preview";
-            element3.name = "imges[]";
-            cell4.appendChild(element3);
-
-            var cell4 = row.insertCell(4);
-            var element4 = document.createElement("textarea");
-            element4.name = "filebox['description'][]";
-            cell4.appendChild(element4);
+//                   var cell4 = row.insertCell(4);
+//                   var element4 = document.createElement("textarea");
+//                   element4.name ="filebox['imgae'][]";
+////                   element4.text(results[rowCount]['desc']);
+////                   $(".desc").val(results[rowCount]['desc']);
+//                   cell4.appendChild(element4);
+                   }
+               }else alert('You have not mention Url Address');
+//                }});
 
 
         }
@@ -144,15 +153,29 @@
             }
         }
         function crawl() {
-
+             var urls=$(".form-control").val();
              $.ajax({
                 type: 'GET',
-                data: {url: 'sd'},
-                url: '/news/public/backend/content/contents/ajaxcall',
-                success: function(result){
-                    $('#title').val(result.title);
+                data: {url: urls},
+                url: '/cms-project/public/backend/content/contents/ajaxcall',
+                success: function(result) {
+                    results = result;
                     $('#sub_title').val(result.sub_title);
-                    $('#content').val(result.content);
+                    $('#title').val(result.title);
+                    var counter = 0;
+                    if (result.status == 200)
+                    {
+                        $.each(result, function (key, value) {
+                            if (counter == 5)
+                                return false;
+                            if (value.desc != null) {
+                                counter++;
+                                $('#content').append(value.desc + '   <br>');
+                            }
+                        });
+                }else {
+                      alert("No img are found in this given URL");
+                    }
                 },
                 error: function(xhr, desc, err) {
                     console.log(xhr);
