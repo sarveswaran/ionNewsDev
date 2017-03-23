@@ -3,7 +3,7 @@
         <div class="col-sm-6">
             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                 {!! Form::label('name', trans('URL Address')) !!}
-                {!! Form::text('name', old('name'), ['class' => 'form-control','data-slug' => 'source', 'placeholder' => trans('URL to fetch content')]) !!}
+                {!! Form::text('crawl_url', old('crawl_url'), ['class' => 'form-control','data-slug' => 'source', 'placeholder' => trans('URL to fetch content')]) !!}
                 {!! $errors->first('name', '<span class="help-block">:message</span>') !!}
             </div>
         </div>
