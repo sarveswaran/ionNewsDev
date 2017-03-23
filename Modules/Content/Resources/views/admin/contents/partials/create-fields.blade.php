@@ -57,15 +57,15 @@
 	                <th>SL.no</th>
 	                <th>Upload</th>
 	                <th>Preview</th>
-	                <th>Image Description</th>
+	                {{--<th>Image Description</th>--}}
 	            </tr>
-	            <tr>
-	                <td><input  type="checkbox" name="chk"/></td>
-	                <td> 1 </td>
-	                <td class="filechoose"><input type='file' name="filebox['imgae'][]" onchange="readURL(this);"/ value=""></td>
-	                <td><img id="blah" src="#" alt="Image preview" width="60" /></td>
-	                <td><textarea name="filebox['description'][]"></textarea></td>
-	            </tr>
+	            {{--<tr>--}}
+	                {{--<td><input  type="checkbox" name="chk"/></td>--}}
+	                {{--<td> 1 </td>--}}
+	                {{--<td class="filechoose"><input type='file' name="filebox['imgae'][]" onchange="readURL(this);" value=""></td>--}}
+	                {{--<td><img id="blah" src="#" alt="Image preview" width="60" /></td>--}}
+	                {{--<td><textarea name="filebox['description'][]"></textarea></td>--}}
+	            {{--</tr>--}}
 	        </table>
 	    </div>
        </div>

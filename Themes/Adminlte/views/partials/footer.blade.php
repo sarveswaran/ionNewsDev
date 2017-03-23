@@ -14,9 +14,11 @@
     </div>
 </div>
 <footer class="main-footer">
-    
+    <div class="pull-right hidden-xs">
+        <b>Version</b> {{ $version }}
+    </div>
 
     @yield('footer')
-   
+    <strong>Copyright © {{ date('Y')}} <a href="http://asgardcms.com" target="_blank">AsgardCms</a></strong>
 </footer>
 

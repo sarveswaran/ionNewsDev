@@ -48,7 +48,7 @@
                 <ul class="dropdown-menu">
                     <!-- User image -->
                     <li class="user-header bg-light-blue">
-                        <!-- <img src="{{ $user->present()->gravatar() }}" class="img-circle" alt="User Image" /> -->
+                        <img src="{{ $user->present()->gravatar() }}" class="img-circle" alt="User Image" />
                         <p>
                             <?php if ($user->present()->fullname() != ' '): ?>
                                 <?= $user->present()->fullname(); ?>
