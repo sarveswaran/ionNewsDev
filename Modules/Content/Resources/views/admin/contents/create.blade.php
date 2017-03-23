@@ -176,8 +176,8 @@
                                 counter++;
                                 $('#content').append(value.desc + '   <br>');
                             }
-                            table+='<tr><td style="text-align: center;"><input  type="radio" name="chk"/></td>'+
-                                    '<td><img id="blah" src="'+value.img_url+'" alt="'+value.img_name+'" width="60" /></td></tr>';
+                            table+='<tr><td style="text-align: center;"><input  type="radio" name="image" value ="'+value.img_url+'"/></td>'+
+                                    '<td><img id="blah" name="" src="'+value.img_url+'" alt="'+value.img_name+'" width="100" /><input type="hidden" name="img'+i+'" value="'+value.img_url+'" style="opacity: 0;"/></td></tr>';
                             i++;
                         });
                         $("#syndata").html(table);

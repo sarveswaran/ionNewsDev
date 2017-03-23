@@ -48,9 +48,10 @@
                     {!! Form::label('image', trans('Image')) !!}
                     {!! Form::file('image', old('image'), ['class' => 'form-control', 'placeholder' => trans('image')]) !!}
                     {!! $errors->first('image', '<span class="help-block">:message</span>') !!}
-                    <img src="{{ URL::asset('/a.jpg') }}" width="120">
+                    <img src="{{ $content->image }}" width="120">
                 </div>
             </div>
+            <!-- URL::asset('/a.jpg ')-->
      	<!-- <div class="form-group box-body">
 	        <input name="" type="button" class="btn btn-primary btn-flat" value="Add Image" onclick="addRow('dataTable')" />
 	        <input type="button" class="btn btn-danger btn-flat" value="Delete Image" onclick="deleteRow('dataTable')" />
