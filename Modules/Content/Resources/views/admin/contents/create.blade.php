@@ -101,23 +101,23 @@
                        element1.name = "chkbox[]";
                        cell1.appendChild(element1);
 
-                       var cell2 = row.insertCell(1);
-                       cell2.innerHTML = rowCount;
+                       // var cell2 = row.insertCell(1);
+                       // cell2.innerHTML = rowCount;
+
+                       // var cell3 = row.insertCell(2);
+                       // var element2 = document.createElement("input");
+                       // element2.type = "file";
+                       // element2.onchange = "readURL(this)";
+                       // element2.id = "blah2";
+                       // element2.name = "filebox['imgae'][]";
+                       // cell3.appendChild(element2);
 
                        var cell3 = row.insertCell(2);
-                       var element2 = document.createElement("input");
-                       element2.type = "file";
-                       element2.onchange = "readURL(this)";
-                       element2.id = "blah2";
-                       element2.name = "filebox['imgae'][]";
+                       var element2 = document.createElement("img");
+                       element2.src = results[rowCount-1]['img_url'];
+                       element2.alt = results[rowCount-1]['img_name'];
+                       element2.name = "imges[]";
                        cell3.appendChild(element2);
-
-                       var cell4 = row.insertCell(3);
-                       var element3 = document.createElement("img");
-                       element3.src = results[rowCount-1]['img_url'];
-                       element3.alt = results[rowCount-1]['img_name'];
-                       element3.name = "imges[]";
-                       cell4.appendChild(element3);
 
 //                   var cell4 = row.insertCell(4);
 //                   var element4 = document.createElement("textarea");
@@ -157,7 +157,7 @@
              $.ajax({
                 type: 'GET',
                 data: {url: urls},
-                url: '/backend/content/contents/ajaxcall',
+                url: '/news/public/backend/content/contents/ajaxcall',
                 success: function(result) {
                     results = result;
                     $('#sub_title').val(result.sub_title);
@@ -176,8 +176,7 @@
                                 counter++;
                                 $('#content').append(value.desc + '   <br>');
                             }
-                            table+='<tr><td><input  type="checkbox" name="chk"/></td><td>'+i+'</td>' +
-                                    '<td class="filechoose"><input type="file" name="filebox[][]" onchange="readURL(this);" value=""></td>' +
+                            table+='<tr><td style="text-align: center;"><input  type="radio" name="chk"/></td>'+
                                     '<td><img id="blah" src="'+value.img_url+'" alt="'+value.img_name+'" width="60" /></td></tr>';
                             i++;
                         });

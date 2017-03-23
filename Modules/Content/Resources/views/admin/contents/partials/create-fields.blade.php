@@ -49,15 +49,13 @@
        </div>
       <div class="row">
      	<div class="form-group box-body">
-	        <input  type="button" class="btn btn-primary btn-flat" value="Add Image" onclick="addRow('dataTable')" />
-	        <input type="button" class="btn btn-danger btn-flat" value="Delete Image" onclick="deleteRow('dataTable')" />
+	        <input  type="hidden" class="btn btn-primary btn-flat" value="Add Image" onclick="addRow('dataTable')" />
+	        <input type="hidden" class="btn btn-danger btn-flat" value="Delete Image" onclick="deleteRow('dataTable')" />
 	        <table id="dataTable" width="350px" border="1" class="imgtable" style="width: 100%;border: 4px solid #ecf0f5;">
                 <thead>
 
                 <tr>
-	                <th></th>
-	                <th>SL.no</th>
-	                <th>Upload</th>
+	                <th>select</th>
 	                <th>Preview</th>
 	                {{--<th>Image Description</th>--}}
 	            </tr>

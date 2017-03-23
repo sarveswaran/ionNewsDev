@@ -8,13 +8,13 @@
                 {!! $errors->first('first_name', '<span class="help-block">:message</span>') !!}
             </div>
         </div>
-        <div class="col-sm-12">
+       <!--  <div class="col-sm-12">
             <div class="form-group{{ $errors->has('crawl_url') ? ' has-error' : '' }}">
                 {!! Form::label('Crawl url', trans('crawl url')) !!}
                 {!! Form::text('crawl_url', $content->crawl_url, ['class' => 'form-control', 'placeholder' => trans('crawl url'),'readonly' => 'true']) !!}
                 {!! $errors->first('crawl_url', '<span class="help-block">:message</span>') !!}
             </div>
-        </div>
+        </div> -->
         <div class="col-sm-12">
             <div class="form-group{{ $errors->has('sub_title') ? ' has-error' : '' }}">
                 {!! Form::label('sub_title', trans('Subtitle')) !!}
@@ -42,7 +42,16 @@
         </div>
        </div>
       <div class="row">
-     	<div class="form-group box-body">
+        
+            <div class="col-sm-4">
+                <div class="form-group{{ $errors->has('image') ? ' has-error' : '' }}">
+                    {!! Form::label('image', trans('Image')) !!}
+                    {!! Form::file('image', old('image'), ['class' => 'form-control', 'placeholder' => trans('image')]) !!}
+                    {!! $errors->first('image', '<span class="help-block">:message</span>') !!}
+                    <img src="{{ URL::asset('/a.jpg') }}" width="120">
+                </div>
+            </div>
+     	<!-- <div class="form-group box-body">
 	        <input name="" type="button" class="btn btn-primary btn-flat" value="Add Image" onclick="addRow('dataTable')" />
 	        <input type="button" class="btn btn-danger btn-flat" value="Delete Image" onclick="deleteRow('dataTable')" />
 	        <table id="dataTable" width="350px" border="1" class="imgtable" style="width: 100%;border: 4px solid #ecf0f5;">
@@ -61,7 +70,7 @@
 	                <td><textarea name=""></textarea></td>
 	            </tr>
 	        </table>
-	    </div>
+	    </div> -->
        </div>
     </div>
 </div>
