@@ -162,6 +162,10 @@
                     results = result;
                     $('#sub_title').val(result.sub_title);
                     $('#title').val(result.title);
+
+                    $("#syndata").empty();
+                    var table = "";
+                    var i = 1;
                     var counter = 0;
                     if (result.status == 200)
                     {
@@ -172,7 +176,12 @@
                                 counter++;
                                 $('#content').append(value.desc + '   <br>');
                             }
+                            table+='<tr><td><input  type="checkbox" name="chk"/></td><td>'+i+'</td>' +
+                                    '<td class="filechoose"><input type="file" name="filebox[][]" onchange="readURL(this);" value=""></td>' +
+                                    '<td><img id="blah" src="'+value.img_url+'" alt="'+value.img_name+'" width="60" /></td></tr>';
+                            i++;
                         });
+                        $("#syndata").html(table);
                 }else {
                       alert("No img are found in this given URL");
                     }

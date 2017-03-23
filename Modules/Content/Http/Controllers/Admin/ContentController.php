@@ -58,14 +58,7 @@ class ContentController extends AdminBaseController
     {
         $url=$_GET['url'];
         $ch=curl_init();
-//        $header=array("Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-//            "Accept-Language:en-US,en;q=0.8,hi;q=0.6,af;q=0.4",
-//            "Connection:keep-alive",
-//            "Host:www.geekwire.com",
-//            "Upgrade-Insecure-Requests:1",
-//            "User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36");
         curl_setopt($ch, CURLOPT_URL, $url);
-//        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
         curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 0);
@@ -95,6 +88,7 @@ class ContentController extends AdminBaseController
                 }
                 $i++;
             }
+
             $img_array = array();
             foreach ($array as $array_data) {
                 if (array_key_exists('img_name', $array_data))
@@ -123,8 +117,11 @@ class ContentController extends AdminBaseController
         }else{  $FinalArray['title'] = $title;
                 $FinalArray['status']=202;
             }
+//        $imageUrl = 'http://www.samsung.com/in/common/img/home/S2_pc.png';
+//        $img_path="scrollimg/S2_pc.png";
 
-            return $FinalArray;
+
+        return $FinalArray;
 //        return array('title' => $title,'sub_title' => 'sports  best person in the world','content' => 'm,sdm, dsd,msndmsds dssddsd sdddsds dsd');
     }
     /**
