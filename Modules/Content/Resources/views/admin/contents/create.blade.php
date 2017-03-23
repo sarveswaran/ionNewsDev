@@ -157,7 +157,7 @@
              $.ajax({
                 type: 'GET',
                 data: {url: urls},
-                url: '/news/public/backend/content/contents/ajaxcall',
+                url: '/backend/content/contents/ajaxcall',
                 success: function(result) {
                     results = result;
                     $('#sub_title').val(result.sub_title);

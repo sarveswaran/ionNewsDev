@@ -10,6 +10,12 @@ Route::group(['middleware' => 'cors'], function(Router $router){
         'uses' => 'StoryController@story',
         'middleware' => 'auth:api'
     ]);
+
+     $router->get('/homepage', [
+        'as' => 'StoryController.api.homepage',
+        'uses' => 'StoryController@homepage',
+        'middleware' => 'auth:api'
+    ]);
 });
 });
 
