@@ -136,7 +136,7 @@ class ContentController extends AdminBaseController
     public function store(Request $request)
     {
         //$uploadedfiles = $request->file('filebox');
-       
+        //print_r($_FILES);die;
         $this->content->create($request->all());
 
         return redirect()->route('admin.content.content.index')
