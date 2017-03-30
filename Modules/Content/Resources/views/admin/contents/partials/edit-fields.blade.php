@@ -27,7 +27,7 @@
                   {!! Form::label('category_id', trans('Service Provider Name')) !!}
                   <select class="form-control" name="category_id">
                       <?php foreach ($categories as $category): ?>
-                          <option value="{{ $category->id }}">{{ $category->name }}</option>
+                          <option value="{{ $category->id }}" <?php if($category->id == $content->category_id) echo "selected"; else echo '';?> >{{ $category->name }}</option>
                       <?php endforeach; ?>
                   </select>
               </div>

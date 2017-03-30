@@ -46,7 +46,7 @@ class StoryController extends BasePublicController
         return $this->response->setStatusCode(400,$meserror);
       }else{
 
-            $dataset = $this->content->findByAttributes(['category_id' => $request->category_id])->paginate(5);
+            $dataset = $this->content->filter('category_id' , $request->category_id);
 
             return $dataset;
 
