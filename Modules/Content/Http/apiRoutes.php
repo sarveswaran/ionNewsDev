@@ -7,8 +7,7 @@ $router->group(['prefix' =>'/story'], function (Router $router) {
 Route::group(['middleware' => 'cors'], function(Router $router){
 	 $router->get('/list', [
         'as' => 'StoryController.api.story',
-        'uses' => 'StoryController@story',
-        'middleware' => 'auth:api'
+        'uses' => 'StoryController@story'
     ]);
 
      $router->get('/homepage', [

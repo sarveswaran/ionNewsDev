@@ -13,4 +13,9 @@ class CacheContentDecorator extends BaseCacheDecorator implements ContentReposit
         $this->entityName = 'content.contents';
         $this->repository = $content;
     }
+
+    public function filter($field,$value){
+    	
+    	return $this->repository->filter($field,$value);
+    }
 }

@@ -52,7 +52,7 @@ class CategoryController extends AdminBaseController
      */
     public function store(Request $request)
     {
-        
+
         $this->category->create($request->all());
 
         return redirect()->route('admin.content.category.index')
