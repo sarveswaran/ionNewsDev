@@ -23,7 +23,7 @@
         </div>
         <div class="col-sm-12">
             <div class="form-group{{ $errors->has('sub_title') ? ' has-error' : '' }}">
-                {!! Form::label('sub_title', trans('Subtitle')) !!}
+                {!! Form::label('sub_titzle', trans('Subtitle')) !!}
                 {!! Form::text('sub_title', old('sub_title'), ['class' => 'form-control','id' =>'sub_title', 'placeholder' => trans('subtitle')]) !!}
                 {!! $errors->first('sub_title', '<span class="help-block">:message</span>') !!}
             </div>
@@ -71,5 +71,23 @@
 	            {{--</tr>--}}
 	        </table>
 	    </div>
-       </div>
+      <div class="form-group user-types">
+
+
+           <table class=" data-table table table-bordered table-hover dataTable" id="User_data" role="grid" aria-describedby="DataTables_Table_0_info">
+           <thead>
+               <tr>
+                  <th><input type="checkbox"  id="select_all"/>Select</th>
+                  <th>Name</th>
+                  <th>User_id </th>
+                  <!-- <th>Rolls</th> -->
+              </tr>  
+              </thead>
+              <tbody id = "user_info">  
+         
+                </tbody>
+               </tbody> 
+           </table>      
+      </div>
+    </div>
     </div>

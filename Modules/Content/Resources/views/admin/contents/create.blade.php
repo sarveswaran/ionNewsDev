@@ -59,6 +59,7 @@
                     { key: 'b', route: "<?= route('admin.content.content.index') ?>" }
                 ]
             });
+
         });
     </script>
     <script>
@@ -85,6 +86,34 @@
     </script>
 
       <script language="javascript">
+
+
+
+
+
+
+
+
+      $("#select_all").change(function(){  //"select all" change
+      var status = this.checked; // "select all" checked status
+      $('.checkbox').each(function(){ //iterate all listed checkbox items
+        this.checked = status; //change ".checkbox" checked status
+       });
+   
+      });
+
+$('.checkbox').change(function(){ //".checkbox" change
+    //uncheck "select all", if one of the listed checkbox item is unchecked
+    if(this.checked == false){ //if this item is unchecked
+        $("#select_all")[0].checked = false; //change "select all" checked status to false
+    }
+   
+    //check "select all" if all checkbox items are checked
+    if ($('.checkbox:checked').length == $('.checkbox').length ){
+        $("#select_all")[0].checked = true; //change "select all" checked status to true
+    }
+});
+
           var results='';
         function addRow(tableID) {
                if(results!='') {
@@ -154,10 +183,10 @@
         }
         function crawl() {
              var urls=$(".form-control").val();
-             $.ajax({
+                $.ajax({
                 type: 'GET',
                 data: {url: urls},
-                url: '/backend/content/contents/ajaxcall',
+                url: '/public/backend/content/contents/ajaxcall',
                 success: function(result) {
                     results = result;
                     $('#sub_title').val(result.sub_title);
@@ -170,15 +199,17 @@
                     if (result.status == 200)
                     {
                         $.each(result, function (key, value) {
-                            if (counter == 5)
+                            if (counter == 5 || i==5)
                                 return false;
                             if (value.desc != null) {
                                 counter++;
                                 $('#content').append(value.desc + '   <br>');
-                            }
+                              }
+                            
                             table+='<tr><td style="text-align: center;"><input  type="radio" name="image" value ="'+value.img_url+'"/></td>'+
                                     '<td><img id="blah" name="" src="'+value.img_url+'" alt="'+value.img_name+'" width="100" /><input type="hidden" name="img'+i+'" value="'+value.img_url+'" style="opacity: 0;"/></td></tr>';
                             i++;
+
                         });
                         $("#syndata").html(table);
                 }else {
@@ -189,7 +220,52 @@
                     console.log(xhr);
                 }
             });
-    
+             $.ajax({
+                type: 'GET',
+                url: '/public/backend/content/users',
+                success: function(result) {
+                    $("#user_info").empty();
+                    var table = "";
+                    var i = 1;
+                   $.each(result, function (key, value) {
+                                                      
+             table+='<tr id="'+value.id+'"><td> <input class="checkbox" type="checkbox" name="check[]" value="'+value.id+'"></td>'+
+                              '<td>'+value.name+'</td>'+
+                  '<td>'+value.id+'</td>';
+                            i++;
+
+                        });
+                        $("#user_info").html(table);
+
+                        $("#User_data").DataTable({
+                        "initComplete": function( settings, json ) {
+                            $('.dataTables_filter').find('input[typcd e=search]').attr('type','text');
+                        },
+                        "bPaginate": true,
+                        "bautoWidth": true,
+                        "pagingType": "full_numbers",
+                        "pageLength": 10,
+                        "lengthMenu": [10, 25, 50, 100],
+                        "dom": 'T<"clear">lfrtip',
+                        "initComplete": function( settings, json ) {
+                            $('.dataTables_filter').find('input[type=search]').attr('type','text');
+                        },
+                        tableTools: {
+                            "sSwfPath":"http://cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf",
+                            aButtons: ['csv']
+                        }
+                    });
+
+
+
+              
+                },
+                error: function(xhr, desc, err) {
+                    console.log(xhr);}
+
+                
+              });
+
         }
 
     </script>

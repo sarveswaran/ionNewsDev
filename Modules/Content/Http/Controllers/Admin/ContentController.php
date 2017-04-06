@@ -6,8 +6,17 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Modules\Content\Entities\Content;
 use Modules\Content\Repositories\ContentRepository;
+use Modules\Content\Repositories\ContentUserRepository;
 use Modules\Content\Repositories\CategoryRepository;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
+use Modules\User\Repositories\UserRepository;
+use Modules\User\Entities\Sentinel\User;
+use Modules\Content\Entities\ContentImages;
+use Modules\Content\Entities\ContentUser;
+use Modules\Content\Entities\ContentCompany;
+
+use Log;
+use DB;
 
 class ContentController extends AdminBaseController
 {
@@ -16,12 +25,12 @@ class ContentController extends AdminBaseController
      */
     private $content;
 
-    public function __construct(ContentRepository $content,CategoryRepository $category)
+    public function __construct(ContentRepository $content,CategoryRepository $category,ContentUserRepository $contentUser)
     {
         parent::__construct();
-
         $this->category = $category;
-        $this->content = $content;
+        $this->content = $content;  
+        $this->contentUser=$contentUser;    
 
     }
 
@@ -33,8 +42,7 @@ class ContentController extends AdminBaseController
     public function index()
     {   
         $categories = $this->category->getByAttributes(['status' => 1]);
-        $contents = $this->content->all();
-
+        $contents = $this->content->all();     
         return view('content::admin.contents.index', compact('contents','categories'));
     }
 
@@ -48,15 +56,10 @@ class ContentController extends AdminBaseController
         $categories = $this->category->getByAttributes(['status' => 1]);
         return view('content::admin.contents.create',compact('categories'));
     }
-//    public function createImg()
-//    {
-//
-//    }
-
 
     public function ajaxcall(Request $request)
-    {
-        $url=$_GET['url'];
+    {  
+        $url=$_GET['url'];        
         $ch=curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, false);
@@ -64,46 +67,124 @@ class ContentController extends AdminBaseController
         curl_setopt($ch, CURLOPT_POST, 0);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         $result = curl_exec($ch);
-
+        curl_close($ch);
             $dom = new \DOMDocument();
             libxml_use_internal_errors(true);
-
             $dom->loadHTML($result);
+            if($dom->getElementsByTagName('title')->length>1){
             $title = $dom->getElementsByTagName('title')->item(0)->nodeValue;
-        if(strpos($result,"<img")>0) {
+            $sub_title = $dom->getElementsByTagName('title')->item(1)->nodeValue;
+            }else {
+             $title = $dom->getElementsByTagName('title')->item(0)->nodeValue;
+             $sub_title = $title;
+            }
+              
+           if(strpos($result,"<img")>0) {
             $img = $dom->getElementsByTagName('img');
             $i = 0;
             $array = array();
             foreach ($img as $value) {
                 $aa = $value->attributes;
-                foreach ($aa as $a) {
+                foreach ($aa as $a) {                   
                     if ($a->name == 'alt') {
                         if ($a->nodeValue != NULL)
                             $array[$i]['img_name'] = $a->nodeValue;
                     }
-                    if ($a->name == 'src') {
+                    else if ($a->name == 'src') {
                         $array[$i]['img_url'] = $a->nodeValue;
 
                     }
+                    else if($a->name == 'width'){
+                             if ($a->nodeValue != NULL)
+                            $array[$i]['width'] = $a->nodeValue;
+                    }
+                    else if($a->name =='height'){
+                             if ($a->nodeValue != NULL)
+                            $array[$i]['height'] = $a->nodeValue;
+                    }
+                     else if($a->name =='border'){
+                             if ($a->nodeValue != NULL)
+                            $array[$i]['border'] = $a->nodeValue;
+                    }
+
                 }
                 $i++;
             }
-
+          
             $img_array = array();
-            foreach ($array as $array_data) {
-                if (array_key_exists('img_name', $array_data))
-                    if ($array_data['img_name'] != NULL)
-                        $img_array[] = $array_data;
+            $img_url=array();
+         
+            foreach ($array as $value) {
+
+                if(array_key_exists('height',$value) AND array_key_exists('width',$value)){
+                if($value['height']>100 or $value['width']>100) {
+                    $split_image = pathinfo($value['img_url']);
+                    if (array_key_exists('img_name', $value)){ 
+
+                    if(!in_array('gif', $split_image)){
+
+                    if ($value['img_name'] != NULL){
+                        $img_array[] = $value;
+                         $img_url[]=$value['img_url'];
+                    }
+                    else  {
+                          $value['img_name']='Sample_Image';
+                          $img_array[] = $value;
+                           $img_url[]=$value['img_url'];
+                          }
+                    }
+                   }
+                   else { 
+                          if(!in_array('gif', $split_image)){
+                              $value['img_name']='Sample_Image';
+                              $img_array[] = $value;
+                              $img_url[]=$value['img_url'];
+                          }
+                         }
+
+                }
+                }
             }
+            if(sizeof($img_array)<5){                
+            foreach ($array as $array_data) { 
 
+                $split_image = pathinfo($array_data['img_url']);
+
+
+                if(!in_array('gif', $split_image)){
+
+                if (array_key_exists('img_name', $array_data)){
+
+                    if ($array_data['img_name'] != NULL){
+                        if (!in_array($array_data['img_url'], $img_url)) 
+                        $img_array[] = $array_data;
+                    }
+                    else{
+                          $array_data['img_name']='Sample_Image';
+                          if (!in_array($array_data['img_url'], $img_url)) 
+                          $img_array[] = $array_data;
+                    }
+                    }else{
+                          $array_data['img_name']='Sample_Image';
+                          if (!in_array($array_data['img_url'], $img_url)) 
+                          $img_array[] = $array_data;
+                    }
+
+                   if(sizeof($img_array)==6)
+                    break;
+            }
+            }           
+            } 
+           // echo "<pre>"; print_r($img_array);exit;
+             
+           
             $paragraph = $dom->getElementsByTagName('p');
-
             $paraarray = array();
-            foreach ($paragraph as $pdata) {
+            foreach ($paragraph as $pdata){
                 $paraarray[] = $pdata->nodeValue;
             }
             $FinalArray = array();
-            for ($i = 0; $i < sizeof($img_array); $i++) {
+            for ($i = 0; $i < sizeof($img_array); $i++){
                 $FinalArray[$i]['img_name'] = $img_array[$i]['img_name'];
                 $FinalArray[$i]['img_url'] = $img_array[$i]['img_url'];
                 if ($i < sizeof($paraarray))
@@ -114,15 +195,10 @@ class ContentController extends AdminBaseController
             $FinalArray['sub_title'] = $title;
             $FinalArray['count'] = $count;
             $FinalArray['status']=200;
-        }else{  $FinalArray['title'] = $title;
+            }else{  $FinalArray['title'] = $title;
                 $FinalArray['status']=202;
-            }
-//        $imageUrl = 'http://www.samsung.com/in/common/img/home/S2_pc.png';
-//        $img_path="scrollimg/S2_pc.png";
-
-
+             }
         return $FinalArray;
-//        return array('title' => $title,'sub_title' => 'sports  best person in the world','content' => 'm,sdm, dsd,msndmsds dssddsd sdddsds dsd');
     }
     /**
      * Store a newly created resource in storage.
@@ -132,9 +208,50 @@ class ContentController extends AdminBaseController
      */
     public function store(Request $request)
     {
-        //$uploadedfiles = $request->file('filebox');
-        //print_r($request->chk);die;
-        $this->content->create($request->all());
+       
+        $ids=$this->content->create($request->all());       
+        $id=json_decode($ids,true);        
+          $id=$ids['id'];
+          $data=$request->all();
+          Log::info($data);         
+          // $ContentImages= new ContentImages;
+          // $ContentImages->content_id=$id;
+          // $ContentImages->image_path=$data['image'];
+          // $ContentImages->save();
+          if(array_key_exists('check', $data))
+        {
+            $length=sizeof($data['check']);        
+            for ($i=0;$i<$length;$i++) {  
+          
+                       $abc['user_id']=$data['check'][$i];
+                        $abc['content_id']=$id;
+                        $this->contentUser->create($abc);           
+            }
+        }
+
+
+          $users =json_decode(User::all(),true);
+            // Log::info(sizeof($data['check']));
+                // Log::info($data['check']);
+          $company_name=array();
+          $i=0;  
+              // Log::info($users);         
+          foreach ($users as $key => $value) {
+             if($value['id']==$data['check'][$i])
+                {
+                    $company_name[]=$value['company'];
+                    $i++;
+                }
+                if($i>=sizeof($data['check']))
+                    break;
+            }
+          for ($i=0;$i<sizeof($company_name);$i++) {               
+                 $ContentCompany= new ContentCompany;
+                 $ContentCompany->content_id=$id;
+                 $ContentCompany->company_name=$company_name[$i];
+                 $ContentCompany->save();
+            }
+
 
         return redirect()->route('admin.content.content.index')
             ->withSuccess(trans('core::core.messages.resource created', ['name' => trans('content::contents.title.contents')]));
@@ -147,8 +264,9 @@ class ContentController extends AdminBaseController
      * @return Response
      */
     public function edit(Content $content)
-    {
+    {    
         $categories = $this->category->getByAttributes(['status' => 1]);
+     
         return view('content::admin.contents.edit', compact('content','categories'));
     }
 
@@ -157,12 +275,64 @@ class ContentController extends AdminBaseController
      *
      * @param  Content $content
      * @param  Request $request
+     * @param  ContentUser $contentUser
      * @return Response
      */
-    public function update(Content $content, Request $request)
-    {
-        $this->content->update($content, $request->all());
+    public function update(Content $content, Request $request,ContentUser $contentUser )
+    { 
+         $content_data=json_decode($content,true);
+         $data=$request->all();
+         $content_id=$content_data['id'];
+          // $ContentImages= new ContentImages;
+          // $ContentImages->content_id=$content_id;
+          // $ContentImages->image_path=$content_data['image'];
+          // $ContentImages->save();
+         Log::info($request);
+         if(isset($request->img) && $request->img!=""){
 
+            $image = $request->img;
+
+         }else{
+
+            $image = $content->image;
+         } 
+         Log::info($image);
+         Log::info($request->img);
+         $request->merge(['image' => $image]);
+         if(array_key_exists('check', $data))
+         {  
+              $userData = DB::table('content__contentusers')->select(\DB::raw('*'))
+                ->where('content_id','=',$content_id)->get();
+                $deleteId=array();
+                $userData=json_decode($userData,true);
+
+                 foreach ($userData as $key => $value) {
+                                     
+                      if(in_array($value['user_id'], $data['check']))
+                         $deleteId[]=$value['user_id'];
+                    
+                }
+                DB::table('content__contentusers')->where('content_id', '=', $content_id)
+                ->whereNotIn('user_id',$deleteId)->delete();
+               
+                $length=sizeof($data['check']);
+                Log::info("length     ".$length);
+                for ($i=0;$i<$length;$i++) { 
+
+                 if(!in_array($data['check'][$i], $deleteId)){
+
+                        $abc['user_id']=$data['check'][$i];
+                        $abc['content_id']=$content_id;
+                        $this->contentUser->create($abc);                 
+
+               }
+            }  
+                            
+            
+
+         }
+
+        $this->content->update($content, $request->all());
         return redirect()->route('admin.content.content.index')
             ->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('content::contents.title.contents')]));
     }
@@ -180,4 +350,108 @@ class ContentController extends AdminBaseController
         return redirect()->route('admin.content.content.index')
             ->withSuccess(trans('core::core.messages.resource deleted', ['name' => trans('content::contents.title.contents')]));
     }
+    public function getAllUsers(Request $request)
+    {   
+            
+         $users =json_decode(User::all(),true);            
+         if (isset($_GET['id'])) {            
+            $content_id=$_GET['id']; 
+            $userData = DB::table('content__contentusers as cu')->select(\DB::raw('u.*'))
+            ->join('users as u','u.id','=','cu.user_id')
+            ->where('cu.content_id','=',$content_id)->get();
+          $check_aray=array();
+          $uncheck_array=array();
+          $userData=json_decode($userData,true);
+          $j=0;$k=0;
+          Log::info($userData);
+          Log::info("Size of ".sizeof($userData));
+          $userId=array();
+          foreach ($userData as $key => $value) {
+               $userId[$key]=$value['id'];
+          }
+          $ch=0;
+          foreach ($users as $value) {           
+            if($ch<sizeof($userData) && in_array($value['id'], $userId))
+            { 
+                $check_aray[$k]['id']=$value['id'];
+                $check_aray[$k]['name']=$value['first_name'];
+                $k++;
+                $ch++;
+            }
+            else {
+                 $uncheck_array[$j]['id']=$value['id'];
+                 $uncheck_array[$j]['name']=$value['first_name'];
+                  $j++;
+
+                 } 
+                    
+          }
+          Log::info($check_aray);
+          Log::info($ch);
+          // Log::info($uncheck_array);
+          $FinalArray['check']=$check_aray;
+          $FinalArray['uncheck']=$uncheck_array;
+          // Log::info($FinalArray);
+
+         
+           }    
+        else {              
+              $company_name=array();
+              $k=0;
+              $FinalArray=array();
+              foreach ($users as $value) {
+              $FinalArray[$k]['id']=$value['id'];
+              $FinalArray[$k]['name']=$value['first_name'];
+              $FinalArray[$k]['role']=$value['role'];
+              $FinalArray[$k]['roll_type']=$value['company'];
+              $k++;
+              }
+
+     }
+     return $FinalArray;
+     }
+     public function getAllUsersInfo(Request $request)
+     {
+          $users =json_decode(User::all(),true);
+           $FinalArray_name=array();
+           $FinalArray_ids=array();
+           foreach ($users as $key => $value) {
+                $name=$value['first_name']." ".$value['last_name'];
+                $FinalArray_name[]=$name;
+                $FinalArray_ids[$name]=$value['id'];
+           }
+             $FinalArray['name']=$FinalArray_name;
+             $FinalArray['ids']=$FinalArray_ids;
+           return response()->json($FinalArray);
+     }
+
+     public function store_user_info(Request $request)
+     {      
+          
+           $content_id=$_GET['content_id'];
+           $user_id=$_GET['user_id'];   
+            // echo $content_id."   ".$user_id; exit;      
+
+           $userData = DB::table('content__contentusers')->select(\DB::raw('*'))
+            ->where('content_id','=',$content_id)->get();
+            $userData=json_decode($userData,true);
+            $check=0;
+            foreach ($userData as $userInfo) {
+                 if(in_array($user_id, $userInfo))
+                      $check=1;             
+                     
+                } 
+                    if($check==0)
+                    {
+                     Log::info($user_id);
+                     $ContentUser= new ContentUser;
+                     $ContentUser->user_id=$user_id;
+                     $ContentUser->content_id=$content_id;
+                     $ContentUser->save();
+                     return 200;
+                   } 
+                    else return 202;           
+                }          
+
+
 }

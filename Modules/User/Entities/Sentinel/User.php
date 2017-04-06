@@ -19,6 +19,8 @@ class User extends EloquentUser implements UserInterface
         'permissions',
         'first_name',
         'last_name',
+        'company',
+
     ];
 
     /**

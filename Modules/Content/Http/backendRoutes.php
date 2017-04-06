@@ -3,6 +3,8 @@
 use Illuminate\Routing\Router;
 /** @var Router $router */
 
+// content/users
+
 $router->group(['prefix' =>'/content'], function (Router $router) {
     $router->bind('content', function ($id) {
         return app('Modules\Content\Repositories\ContentRepository')->find($id);
@@ -12,6 +14,26 @@ $router->group(['prefix' =>'/content'], function (Router $router) {
         'uses' => 'ContentController@index',
         'middleware' => 'can:content.contents.index'
     ]);
+
+    $router->get('users', [
+        'as' => 'Content.all.users', 
+        'uses' => 'ContentController@getAllUsers'
+        // 'middleware' => 'can:content.contents.getAllUsers'
+
+ ]);
+      $router->get('all_users', [
+        'as' => 'Content.all.all_users', 
+        'uses' => 'ContentController@getAllUsersInfo'
+        // 'middleware' => 'can:content.contents.getAllUsers'
+
+ ]);
+           $router->get('storeUserInfo', [
+        'as' => 'Content.all.storeUserInfo', 
+        'uses' => 'ContentController@store_user_info'
+        // 'middleware' => 'can:content.contents.getAllUsers'
+
+ ]);
+
     $router->get('contents/create', [
         'as' => 'admin.content.content.create',
         'uses' => 'ContentController@create',
@@ -108,7 +130,75 @@ $router->group(['prefix' =>'/content'], function (Router $router) {
         'uses' => 'ContentImagesController@destroy',
         'middleware' => 'can:content.contentimages.destroy'
     ]);
+    $router->bind('contentuser', function ($id) {
+        return app('Modules\Content\Repositories\ContentUserRepository')->find($id);
+    });
+    $router->get('contentusers', [
+        'as' => 'admin.content.contentuser.index',
+        'uses' => 'ContentUserController@index',
+        'middleware' => 'can:content.contentusers.index'
+    ]);
+    $router->get('contentusers/create', [
+        'as' => 'admin.content.contentuser.create',
+        'uses' => 'ContentUserController@create',
+        'middleware' => 'can:content.contentusers.create'
+    ]);
+    $router->post('contentusers', [
+        'as' => 'admin.content.contentuser.store',
+        'uses' => 'ContentUserController@store',
+        'middleware' => 'can:content.contentusers.create'
+    ]);
+    $router->get('contentusers/{contentuser}/edit', [
+        'as' => 'admin.content.contentuser.edit',
+        'uses' => 'ContentUserController@edit',
+        'middleware' => 'can:content.contentusers.edit'
+    ]);
+    $router->put('contentusers/{contentuser}', [
+        'as' => 'admin.content.contentuser.update',
+        'uses' => 'ContentUserController@update',
+        'middleware' => 'can:content.contentusers.edit'
+    ]);
+    $router->delete('contentusers/{contentuser}', [
+        'as' => 'admin.content.contentuser.destroy',
+        'uses' => 'ContentUserController@destroy',
+        'middleware' => 'can:content.contentusers.destroy'
+    ]);
+    $router->bind('contentcompany', function ($id) {
+        return app('Modules\Content\Repositories\ContentCompanyRepository')->find($id);
+    });
+    $router->get('contentcompanies', [
+        'as' => 'admin.content.contentcompany.index',
+        'uses' => 'ContentCompanyController@index',
+        'middleware' => 'can:content.contentcompanies.index'
+    ]);
+    $router->get('contentcompanies/create', [
+        'as' => 'admin.content.contentcompany.create',
+        'uses' => 'ContentCompanyController@create',
+        'middleware' => 'can:content.contentcompanies.create'
+    ]);
+    $router->post('contentcompanies', [
+        'as' => 'admin.content.contentcompany.store',
+        'uses' => 'ContentCompanyController@store',
+        'middleware' => 'can:content.contentcompanies.create'
+    ]);
+    $router->get('contentcompanies/{contentcompany}/edit', [
+        'as' => 'admin.content.contentcompany.edit',
+        'uses' => 'ContentCompanyController@edit',
+        'middleware' => 'can:content.contentcompanies.edit'
+    ]);
+    $router->put('contentcompanies/{contentcompany}', [
+        'as' => 'admin.content.contentcompany.update',
+        'uses' => 'ContentCompanyController@update',
+        'middleware' => 'can:content.contentcompanies.edit'
+    ]);
+    $router->delete('contentcompanies/{contentcompany}', [
+        'as' => 'admin.content.contentcompany.destroy',
+        'uses' => 'ContentCompanyController@destroy',
+        'middleware' => 'can:content.contentcompanies.destroy'
+    ]);
 // append
+
+
 
 
 

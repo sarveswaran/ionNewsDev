@@ -65,7 +65,27 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender
                         $this->auth->hasAccess('content.contentimages.index')
                     );
                 });
+                $item->item(trans('content::contentusers.title.contentusers'), function (Item $item) {
+                    $item->icon('fa fa-copy');
+                    $item->weight(0);
+                    $item->append('admin.content.contentuser.create');
+                    $item->route('admin.content.contentuser.index');
+                    $item->authorize(
+                        $this->auth->hasAccess('content.contentusers.index')
+                    );
+                });
+                $item->item(trans('content::contentcompanies.title.contentcompanies'), function (Item $item) {
+                    $item->icon('fa fa-copy');
+                    $item->weight(0);
+                    $item->append('admin.content.contentcompany.create');
+                    $item->route('admin.content.contentcompany.index');
+                    $item->authorize(
+                        $this->auth->hasAccess('content.contentcompanies.index')
+                    );
+                });
 // append
+
+
 
 
 

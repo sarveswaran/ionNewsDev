@@ -46,32 +46,31 @@
             <div class="col-sm-4">
                 <div class="form-group{{ $errors->has('image') ? ' has-error' : '' }}">
                     {!! Form::label('image', trans('Image')) !!}
-                    {!! Form::file('image', old('image'), ['class' => 'form-control', 'placeholder' => trans('image')]) !!}
+                    {!! Form::file('img', old('img'), ['class' => 'form-control', 'placeholder' => trans('image')]) !!}
                     {!! $errors->first('image', '<span class="help-block">:message</span>') !!}
                     <img src="{{ $content->image }}" width="120">
                 </div>
             </div>
-            <!-- URL::asset('/a.jpg ')-->
-     	<!-- <div class="form-group box-body">
-	        <input name="" type="button" class="btn btn-primary btn-flat" value="Add Image" onclick="addRow('dataTable')" />
-	        <input type="button" class="btn btn-danger btn-flat" value="Delete Image" onclick="deleteRow('dataTable')" />
-	        <table id="dataTable" width="350px" border="1" class="imgtable" style="width: 100%;border: 4px solid #ecf0f5;">
-	            <tr>
-	                <th></th>
-	                <th>SL.no</th>
-	                <th>Upload</th>
-	                <th>Preview</th>
-	                <th>Image Description</th>
-	            </tr>
-	            <tr>
-	                <td><input  type="checkbox" name="chk"/></td>
-	                <td> 1 </td>
-	                <td class="filechoose"><input type='file' name="filebox[]" onchange="readURL(this);"/ value=""></td>
-	                <td><img id="blah" src="#" alt="Image preview" width="60" /></td>
-	                <td><textarea name=""></textarea></td>
-	            </tr>
-	        </table>
-	    </div> -->
-       </div>
+      </div>
+          
+     <div class="form-group user-types">
+           <table class=" data-table table table-bordered table-hover dataTable" id="User_data" role="grid" aria-describedby="DataTables_Table_0_info">
+           <thead>
+               <tr>
+                  <th><input type="checkbox"  id="select_all" value=0 name="che" />Select</th>
+                  <th>Name</th>
+                  <th>User_id </th>
+              </tr>  
+              </thead>
+              <tbody id = "user_info">  
+         
+                </tbody>
+               </tbody> 
+           </table>      
+      </div>
+	    </div>
+    
+      
+
     </div>
 </div>

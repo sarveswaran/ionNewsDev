@@ -20,7 +20,21 @@ return [
         'edit' => 'content::contentimages.edit resource',
         'destroy' => 'content::contentimages.destroy resource',
     ],
+    'content.contentusers' => [
+        'index' => 'content::contentusers.list resource',
+        'create' => 'content::contentusers.create resource',
+        'edit' => 'content::contentusers.edit resource',
+        'destroy' => 'content::contentusers.destroy resource',
+    ],
+    'content.contentcompanies' => [
+        'index' => 'content::contentcompanies.list resource',
+        'create' => 'content::contentcompanies.create resource',
+        'edit' => 'content::contentcompanies.edit resource',
+        'destroy' => 'content::contentcompanies.destroy resource',
+    ],
 // append
+
+
 
 
 

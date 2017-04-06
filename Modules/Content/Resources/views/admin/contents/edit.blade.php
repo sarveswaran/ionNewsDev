@@ -83,6 +83,99 @@
         }
     </script>
     <script language="javascript">
+
+
+
+    $("#select_all").change(function(){
+    var status = this.checked;    
+    if(status){
+        $("#select_all").val(1);
+        alert($("#select_all").val());
+    }
+     else $("#select_all").val(0);
+    $('.checkbox').each(function(){ //iterate all listed checkbox items
+        this.checked = status; //change ".checkbox" checked status
+    });
+   
+});
+
+$('.checkbox').change(function(){ //".checkbox" change
+    //uncheck "select all", if one of the listed checkbox item is unchecked
+    if(this.checked == false){ //if this item is unchecked
+        $("#select_all")[0].checked = false; //change "select all" checked status to false
+    }
+   
+    //check "select all" if all checkbox items are checked
+    if ($('.checkbox:checked').length == $('.checkbox').length ){
+        $("#select_all")[0].checked = true; //change "select all" checked status to true
+    }
+});
+     
+            $.ajax({
+                type: 'GET',
+                url: '/public/backend/content/users?id=<?php echo $content->id;?>',
+                success: function(result) {
+                    var checked_result=result.check;
+
+                    var uncheck_result=result.uncheck;
+                    
+                    console.log(checked_result);
+                    $("#user_info").empty();
+                    var table = "";
+                    var i = 1;
+                   $.each(checked_result, function (key, value) {
+                                                      
+             table+='<tr id="'+value.id+'"><td> <input class="checkbox" type="checkbox" name="check[]" value="'+value.id+'" checked></td>'+
+                              '<td>'+value.name+'</td>'+
+                  '<td>'+value.id+'</td>';
+                            i++;
+
+                        });
+                    $.each(uncheck_result, function (key, value) {
+                                                      
+             table+='<tr id="'+value.id+'"><td> <input class="checkbox" type="checkbox" name="check[]" value="'+value.id+'"></td>'+
+                              '<td>'+value.name+'</td>'+
+                  '<td>'+value.id+'</td>';
+                            i++;
+
+                        });
+                        $("#user_info").html(table);
+
+                        $("#User_data").DataTable({
+                        "initComplete": function( settings, json ) {
+                            $('.dataTables_filter').find('input[typcd e=search]').attr('type','text');
+                        },
+                        "bPaginate": true,
+                        "bautoWidth": true,
+                        "pagingType": "full_numbers",
+                        "pageLength": 25,
+                        "lengthMenu": [10, 25, 50, 100],
+                        "dom": 'T<"clear">lfrtip',
+                        "initComplete": function( settings, json ) {
+                            $('.dataTables_filter').find('input[type=search]').attr('type','text');
+                        },
+                        tableTools: {
+                            "sSwfPath":"http://cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf",
+                            aButtons: ['csv']
+                        }
+                    });
+
+
+
+              
+                },
+                error: function(xhr, desc, err) {
+                    console.log(xhr);}
+
+                
+              });
+
+
+
+
+
+
+
         function addRow(tableID) {
 
             var table = document.getElementById(tableID);
@@ -136,12 +229,11 @@
                     i--;
                 }
 
-
             }
             }catch(e) {
                 alert(e);
             }
         }
-
-    </script>
+   </script>
+  
 @stop
