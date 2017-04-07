@@ -16,7 +16,7 @@
 @stop
 
 @section('content')
-    {!! Form::open(['route' => ['admin.content.content.update', $content->id], 'method' => 'put']) !!}
+    {!! Form::open(['route' => ['admin.content.content.update', $content->id], 'method' => 'put', 'onsubmit'=>'return formValidator()']) !!}
     <div class="row">
         <div class="col-md-12">
             <div class="nav-tabs-custom">
@@ -85,12 +85,29 @@
     <script language="javascript">
 
 
+     
+    var form_checker=0;
+
+     function formValidator() {
+         $('.checkbox').each(function(){ //iterate all listed checkbox items
+            if(this.checked)
+            {
+              form_checker=1;
+            }
+        
+       
+    });
+            if(form_checker==1)
+            return true;
+           else{ alert("Please Add Atleast One User");
+            return false;
+          }
+    }
 
     $("#select_all").change(function(){
     var status = this.checked;    
     if(status){
         $("#select_all").val(1);
-        alert($("#select_all").val());
     }
      else $("#select_all").val(0);
     $('.checkbox').each(function(){ //iterate all listed checkbox items

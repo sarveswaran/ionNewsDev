@@ -16,7 +16,7 @@
 @stop
 
 @section('content')
-    {!! Form::open(['route' => ['admin.content.content.store'], 'method' => 'post','enctype' => 'multipart/form-data']) !!}
+    {!! Form::open(['route' => ['admin.content.content.store'], 'method' => 'post','enctype' => 'multipart/form-data', 'onsubmit'=>'return formValidator()']) !!}
     <div class="row">
         <div class="col-md-12">
             <div class="nav-tabs-custom">
@@ -31,7 +31,7 @@
                     @endforeach
 
                     <div class="box-footer">
-                        <button type="submit" class="btn btn-primary btn-flat">{{ trans('core::core.button.create') }}</button>
+                        <button type="submit" class="btn btn-primary btn-flat"  >{{ trans('core::core.button.create') }}</button>
                         <a class="btn btn-danger pull-right btn-flat" href="{{ route('admin.content.content.index')}}"><i class="fa fa-times"></i> {{ trans('core::core.button.cancel') }}</a>
                     </div>
                 </div>
@@ -72,6 +72,7 @@
         });
     </script>
     <script type="text/javascript">
+      
         function readURL(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -87,30 +88,48 @@
 
       <script language="javascript">
 
+    var form_checker=0;
+
+     function formValidator() {
+         $('.checkbox').each(function(){ //iterate all listed checkbox items
+            if(this.checked)
+            {
+              form_checker=1;
+            }
+        
+       
+    });
+            if(form_checker==1)
+            return true;
+           else{ alert("Please Select Atleast One User");
+            return false;
+          }
+    }
 
 
 
 
-
-
-
-      $("#select_all").change(function(){  //"select all" change
-      var status = this.checked; // "select all" checked status
-      $('.checkbox').each(function(){ //iterate all listed checkbox items
-        this.checked = status; //change ".checkbox" checked status
+      $("#select_all").change(function(){ 
+      
+      var status = this.checked; 
+      $('.checkbox').each(function(){ 
+        this.checked = status; 
        });
    
       });
 
-$('.checkbox').change(function(){ //".checkbox" change
-    //uncheck "select all", if one of the listed checkbox item is unchecked
-    if(this.checked == false){ //if this item is unchecked
-        $("#select_all")[0].checked = false; //change "select all" checked status to false
+$('.checkbox').change(function(){ 
+  
+    
+    if(this.checked == false){ 
+         
+        $("#select_all")[0].checked = false; 
     }
    
-    //check "select all" if all checkbox items are checked
+    
     if ($('.checkbox:checked').length == $('.checkbox').length ){
-        $("#select_all")[0].checked = true; //change "select all" checked status to true
+        
+        $("#select_all")[0].checked = true; 
     }
 });
 
@@ -132,6 +151,8 @@ $('.checkbox').change(function(){ //".checkbox" change
 
                        // var cell2 = row.insertCell(1);
                        // cell2.innerHTML = rowCount;
+
+
 
                        // var cell3 = row.insertCell(2);
                        // var element2 = document.createElement("input");
@@ -274,6 +295,7 @@ $('.checkbox').change(function(){ //".checkbox" change
               });
 
         }
+
 
     </script>
 @stop
