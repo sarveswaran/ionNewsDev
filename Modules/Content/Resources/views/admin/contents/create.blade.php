@@ -183,10 +183,17 @@ $('.checkbox').change(function(){ //".checkbox" change
         }
         function crawl() {
              var urls=$(".form-control").val();
+
+            // var APP_URLs = '{{ env('APP_URL') }}';              
+             if(!urls)
+             {
+              alert ("Please Enter URl First");
+               return false;
+             }
                 $.ajax({
                 type: 'GET',
                 data: {url: urls},
-                url: '/public/backend/content/contents/ajaxcall',
+                url: '{{ env('APP_URL') }}/content/contents/ajaxcall',
                 success: function(result) {
                     results = result;
                     $('#sub_title').val(result.sub_title);
@@ -222,7 +229,7 @@ $('.checkbox').change(function(){ //".checkbox" change
             });
              $.ajax({
                 type: 'GET',
-                url: '/public/backend/content/users',
+                url: '{{ env('APP_URL') }}/content/users',
                 success: function(result) {
                     $("#user_info").empty();
                     var table = "";

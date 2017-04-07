@@ -113,7 +113,7 @@ $('.checkbox').change(function(){ //".checkbox" change
      
             $.ajax({
                 type: 'GET',
-                url: '/public/backend/content/users?id=<?php echo $content->id;?>',
+                url: '{{ env('APP_URL') }}/content/users?id=<?php echo $content->id;?>',
                 success: function(result) {
                     var checked_result=result.check;
 
