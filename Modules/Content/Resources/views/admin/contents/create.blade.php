@@ -214,7 +214,7 @@ $('.checkbox').change(function(){
                 $.ajax({
                 type: 'GET',
                 data: {url: urls},
-                url: '{{ env('APP_URL') }}/backend/content/contents/ajaxcall',
+                url: '{{ env('APP_URL') }}/contents/ajaxcall',
                 success: function(result) {
                     results = result;
                     $('#sub_title').val(result.sub_title);
@@ -250,7 +250,7 @@ $('.checkbox').change(function(){
             });
              $.ajax({
                 type: 'GET',
-                url: '{{ env('APP_URL') }}/backend/content/users',
+                url: '{{ env('APP_URL') }}/users',
                 success: function(result) {
                     $("#user_info").empty();
                     var table = "";

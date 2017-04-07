@@ -130,7 +130,7 @@ $('.checkbox').change(function(){ //".checkbox" change
      
             $.ajax({
                 type: 'GET',
-                url: '{{ env('APP_URL') }}/backend/content/users?id=<?php echo $content->id;?>',
+                url: '{{ env('APP_URL') }}/users?id=<?php echo $content->id;?>',
                 success: function(result) {
                     var checked_result=result.check;
 
