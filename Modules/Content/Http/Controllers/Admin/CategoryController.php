@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Modules\Content\Entities\Category;
 use Modules\Content\Repositories\CategoryRepository;
+use Modules\Content\Http\Requests\CreateCategoryRequest;
+use Modules\Content\Http\Requests\UpdateCategoryRequest;
+
+
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
 
 class CategoryController extends AdminBaseController
@@ -47,10 +51,10 @@ class CategoryController extends AdminBaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  Request $request
+     * @param  CreateCategoryRequest $request
      * @return Response
      */
-    public function store(Request $request)
+    public function store(CreateCategoryRequest $request)
     {
 
         $this->category->create($request->all());
@@ -74,10 +78,10 @@ class CategoryController extends AdminBaseController
      * Update the specified resource in storage.
      *
      * @param  Category $category
-     * @param  Request $request
+     * @param  UpdateCategoryRequest $request
      * @return Response
      */
-    public function update(Category $category, Request $request)
+    public function update(Category $category, UpdateCategoryRequest $request)
     {
         $this->category->update($category, $request->all());
 
