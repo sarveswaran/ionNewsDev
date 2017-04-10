@@ -35,6 +35,7 @@ class CategoryController extends BasePublicController
     
 
             $categorylist = $this->category->getByAttributes(['status' => 1]);
+             print_r($categorylist); exit;
 
             return $categorylist;
 

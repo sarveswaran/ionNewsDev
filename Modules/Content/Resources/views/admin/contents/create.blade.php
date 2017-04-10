@@ -64,6 +64,9 @@
     </script>
     <script>
         $( document ).ready(function() {
+          $(".user-types").hide();
+          $(".img-info").hide();
+
             var results='';
             $('input[type="checkbox"].flat-blue, input[type="radio"].flat-blue').iCheck({
                 checkboxClass: 'icheckbox_flat-blue',
@@ -204,6 +207,9 @@ $('.checkbox').change(function(){
         }
         function crawl() {
              var urls=$(".form-control").val();
+             $(".user-types").show();
+             $(".img-info").show();
+
 
             // var APP_URLs = '{{ env('APP_URL') }}';              
              if(!urls)
@@ -248,6 +254,9 @@ $('.checkbox').change(function(){
                     console.log(xhr);
                 }
             });
+
+                          
+
              $.ajax({
                 type: 'GET',
                 url: '{{ env('APP_URL') }}/users',
@@ -259,7 +268,7 @@ $('.checkbox').change(function(){
                                                       
              table+='<tr id="'+value.id+'"><td> <input class="checkbox" type="checkbox" name="check[]" value="'+value.id+'"></td>'+
                               '<td>'+value.name+'</td>'+
-                  '<td>'+value.id+'</td>';
+                  '<td>'+value.company+'</td><td>'+value.role+'</td>';
                             i++;
 
                         });

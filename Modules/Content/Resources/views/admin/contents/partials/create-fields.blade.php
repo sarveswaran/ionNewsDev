@@ -48,9 +48,9 @@
         </div>
        </div>
       <div class="row">
-     	<div class="form-group box-body">
-	        <input  type="hidden" class="btn btn-primary btn-flat" value="Add Image" onclick="addRow('dataTable')" />
-	        <input type="hidden" class="btn btn-danger btn-flat" value="Delete Image" onclick="deleteRow('dataTable')" />
+     	<div class="form-group box-body img-info">
+	        <!-- <input  type="hidden" class="btn btn-primary btn-flat" value="Add Image" onclick="addRow('dataTable')" /> -->
+	        <!-- <input type="hidden" class="btn btn-danger btn-flat" value="Delete Image" onclick="deleteRow('dataTable')" /> -->
 	        <table id="dataTable" width="350px" border="1" class="imgtable" style="width: 100%;border: 4px solid #ecf0f5;">
                 <thead>
 
@@ -74,13 +74,13 @@
       <div class="form-group user-types">
 
 
-           <table class=" data-table table table-bordered table-hover dataTable" id="User_data" role="grid" aria-describedby="DataTables_Table_0_info">
+           <table class=" data-table table table-bordered table-hover dataTable" id="User_data" role="grid" aria-describedby="DataTables_Table_0_info" >
            <thead>
                <tr>
                   <th><input type="checkbox"  id="select_all"/>Select</th>
                   <th>Name</th>
-                  <th>User_id </th>
-                  <!-- <th>Rolls</th> -->
+                  <th>Company Name </th>
+                  <th>Designation</th>
               </tr>  
               </thead>
               <tbody id = "user_info">  

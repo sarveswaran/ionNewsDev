@@ -42,7 +42,8 @@ class ContentController extends AdminBaseController
     public function index()
     {   
         $categories = $this->category->getByAttributes(['status' => 1]);
-        $contents = $this->content->all();     
+        $contents = $this->content->all(); 
+        // Log::info(json_decode($contents->sortBy('id'),true));    
         return view('content::admin.contents.index', compact('contents','categories'));
     }
 
@@ -353,7 +354,8 @@ class ContentController extends AdminBaseController
     public function getAllUsers(Request $request)
     {   
             
-         $users =json_decode(User::all(),true);            
+        $users =json_decode(User::all(),true);  
+        // echo "<pre>";   print_r($users); exit;          
          if (isset($_GET['id'])) {            
             $content_id=$_GET['id']; 
             $userData = DB::table('content__contentusers as cu')->select(\DB::raw('u.*'))
@@ -375,12 +377,18 @@ class ContentController extends AdminBaseController
             { 
                 $check_aray[$k]['id']=$value['id'];
                 $check_aray[$k]['name']=$value['first_name'];
+                $check_aray[$k]['company']=$value['company'];
+
                 $k++;
                 $ch++;
             }
             else {
                  $uncheck_array[$j]['id']=$value['id'];
                  $uncheck_array[$j]['name']=$value['first_name'];
+                 $uncheck_array[$j]['company']=$value['company'];
+
+
+
                   $j++;
 
                  } 
@@ -403,7 +411,7 @@ class ContentController extends AdminBaseController
               $FinalArray[$k]['id']=$value['id'];
               $FinalArray[$k]['name']=$value['first_name'];
               $FinalArray[$k]['role']=$value['role'];
-              $FinalArray[$k]['roll_type']=$value['company'];
+              $FinalArray[$k]['company']=$value['company'];
               $k++;
               }
 
