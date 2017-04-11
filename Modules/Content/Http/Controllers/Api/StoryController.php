@@ -59,7 +59,7 @@ class StoryController extends BasePublicController
             foreach ($categorylist as $category) {
               $setexist = $this->content->findByAttributes(['category_id' => $category->id]);
               if(!empty($setexist)){
-                $dataresponse[$category->name] = $this->content->getByAttributes(['category_id' => $category->id])->take(5);
+                $dataresponse[$category->name] = $this->content->getByAttributes(['category_id' => $category->id],'id','desc')->take(5);
 
               }else{
                    $dataresponse[$category->name] = array();

@@ -54,8 +54,34 @@ class FrontController extends BasePublicController
                $last_login =  $authicated_user->last_login;
                Auth::user()->last_login = new \DateTime();
                Auth::user()->save();
+
                $token = Auth::generateTokenById($authicated_user->id);
-               return response(['token' => $token,'last_login' =>$last_login,'first_name'=> $authicated_user->first_name,'role'=>$authicated_user->role])->header('Content-Type', 'application/json');
+               $authicated_user->token=$token;
+
+
+
+                $authicated_user=json_decode($authicated_user,true);
+               $response=array();
+               $response['id']=$authicated_user['id'];
+               $response['email']=$authicated_user['email'];
+               $response['first_name']=$authicated_user['first_name'];
+               $response['last_name']=$authicated_user['last_name'];
+               $response['last_login']=$authicated_user['last_login'];
+               $response['created_at']=$authicated_user['created_at'];
+               $response['updated_at']=$authicated_user['updated_at'];
+               $response['phone']=$authicated_user['phone'];
+               $response['address']=$authicated_user['address'];
+               $response['company_name']=$authicated_user['company'];
+               $response['designation']=$authicated_user['designation'];
+               $response['role']=$authicated_user['role'];
+               $response['token']=$authicated_user['token'];
+
+
+               return response(json_encode($response))->header('Content-Type', 'application/json');
+
+               // return response($authicated_user);
+               // return response(['id'=>$authicated_user->id,'token' => $token,'email'=>$authicated_user->email,'last_login' =>$last_login,'first_name'=> $authicated_user->first_name,'last_name'=>$authicated_user->last_name,'create_at'=>$authicated_user->created_at,'updated_at'=>$authicated_user->updated_at,
+                // 'company_name'=>$authicated_user->company,'designation'=>$authicated_user->designation,'role'=>$authicated_user->role])->header('Content-Type', 'application/json');
            }else{
                $this->response->setContent(array('message'=>'Please Activate your account'));
                return $this->response->setStatusCode(401,'Please Activate your account');
@@ -74,8 +100,6 @@ class FrontController extends BasePublicController
           if(isset($request->email) && $request->email){
             $user = $this->user->findByCredentials(['email' => $request->email ]);
             app(UserResetter::class)->startReset($request->all());
-            //return $user;
-           // event(new UserHasBegunResetProcess($user,rand()));
             return  array('message' => "successfully sent" );
           }else{
                $this->response->setContent(array('message'=>'Email id required'));
@@ -149,33 +173,68 @@ class FrontController extends BasePublicController
       }
     }
 
-   
+   public function update(Request $request){
+        
+          $validator = Validator::make($request->all(), [        
+          'first_name' => 'required|max:25',
+          'last_name' => 'required|max:25',
+          'company' => 'required',
+          'designation' => 'required',
+      ]);  
+           
+          if ($validator->fails()) {
+            $errors = $validator->errors();
+            foreach ($errors->all() as $message) {             
 
-    public function update(Request $request){
-            
+                $meserror =$message;
+            }              
+           $this->response->setContent(array('message'=> $message));
+          return $this->response->setStatusCode(400,$meserror);
+        }else { 
+         
+
             $find_user = $this->user->find($request->user_id);
 
-            if(isset($request->phone) && $request->phone){
-                $phone = $request->phone;
+            if(isset($request->first_name) && $request->first_name){
+                $first_name = $request->first_name;
             }else{
-                $phone = $find_user->phone;
+                $phone = $find_user->first_name;
             }
 
-            if(isset($request->address) && $request->address){
-                $address = $request->address;
+            if(isset($request->last_name) && $request->last_name){
+                $last_name = $request->last_name;
             }else{
-                $address = $find_user->address;
+                $last_name = $find_user->last_name;
             }
+
+             if(isset($request->company) && $request->company){
+                $company = $request->company;
+            }else{
+                $company = $find_user->company;
+            }
+           if(isset($request->designation) && $request->designation){
+                $designation = $request->designation;
+            }else{
+                $designation = $find_user->designation;
+            }
+
+
+
+
 
            
             $user_Detail = array(
-                            'address' => $address,
-                            'phone' => $phone
+                            'last_name' => $last_name,
+                            'first_name' => $first_name,
+                            'company'=>$company,
+                            'designation'=>$designation
                           );
-           
+          
            $details = $this->user->update($find_user,$user_Detail);
           return response($details)->header('Content-Type', 'application/json');
-    }
+    } 
+  }
+
 
     public function getactive(Request $request){
       $validator = Validator::make($request->all(), [
@@ -242,5 +301,8 @@ class FrontController extends BasePublicController
            array_push($userTypes, ['role_id' => $usertype->role_id,'name' => $usertype->role['name']]);
          }
         return $userTypes;
+     }
+     public function updateuserinfo(Request $request){
+          return response("hello");
      }
 }

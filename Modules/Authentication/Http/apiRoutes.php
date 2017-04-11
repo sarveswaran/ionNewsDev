@@ -41,9 +41,9 @@ Route::group(['middleware' => 'cors'], function(Router $router){
         'uses' => 'FrontController@removemember',
         'middleware' => 'auth:api'
     ]);
-    $router->get('/members', [
-        'as' => 'contact.api.members',
-        'uses' => 'FrontController@members',
+    $router->post('/update', [
+        'as' => 'contact.api.update',
+        'uses' => 'FrontController@update',
         'middleware' => 'auth:api'
     ]);
     $router->post('/reset', [
