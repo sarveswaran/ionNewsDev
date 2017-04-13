@@ -67,7 +67,8 @@ return [
         'phone',
         'parent_id',
         'company',
-        'designation'
+        'designation',
+        'profileImg'
     ],
     /*
     |--------------------------------------------------------------------------

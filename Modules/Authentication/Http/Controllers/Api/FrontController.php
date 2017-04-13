@@ -16,6 +16,7 @@ use Modules\User\Repositories\RoleRepository;
 use Modules\User\Services\UserResetter;
 use Modules\Services\Repositories\UsertypeRepository;
 use Modules\Authentication\Events\Confirmnotify;
+use Input;
 use Log;
 class FrontController extends BasePublicController
 {
@@ -66,14 +67,14 @@ class FrontController extends BasePublicController
                $response['email']=$authicated_user['email'];
                $response['first_name']=$authicated_user['first_name'];
                $response['last_name']=$authicated_user['last_name'];
-               $response['last_login']=$authicated_user['last_login'];
                $response['created_at']=$authicated_user['created_at'];
                $response['updated_at']=$authicated_user['updated_at'];
                $response['phone']=$authicated_user['phone'];
                $response['address']=$authicated_user['address'];
-               $response['company_name']=$authicated_user['company'];
+               $response['company']=$authicated_user['company'];
                $response['designation']=$authicated_user['designation'];
                $response['role']=$authicated_user['role'];
+               $response['profileImg']=$authicated_user['profileImg'];
                $response['token']=$authicated_user['token'];
 
 
@@ -165,7 +166,7 @@ class FrontController extends BasePublicController
            if($this->user->find($authicated_user->id)->isActivated()){
                $last_login =  $authicated_user->last_login;
                Auth::user()->last_login = new \DateTime();
-               Auth::user()->save();
+               Auth::user()->save();               
                $user->token = Auth::generateTokenById($authicated_user->id);
           return response($user)->header('Content-Type', 'application/json');
           }
@@ -198,7 +199,7 @@ class FrontController extends BasePublicController
             if(isset($request->first_name) && $request->first_name){
                 $first_name = $request->first_name;
             }else{
-                $phone = $find_user->first_name;
+                $first_name = $find_user->first_name;
             }
 
             if(isset($request->last_name) && $request->last_name){
@@ -229,9 +230,21 @@ class FrontController extends BasePublicController
                             'company'=>$company,
                             'designation'=>$designation
                           );
+            $details = $this->user->update($find_user,$user_Detail);
+
+            $response['id']=$details->id;
+            $response['email']=$details->email;
+            $response['first_name']=$details->first_name;
+            $response['last_name']=$details->last_name;
+            $response['created_at']=$details->created_at;
+            $response['updated_at']=$details->updated_at;
+            $response['phone']=$details->phone;
+            $response['address']=$details->address;
+            $response['status']=$details->status;
+            $response['company']=$details->company;
+            $response['designation']=$details->designation;
           
-           $details = $this->user->update($find_user,$user_Detail);
-          return response($details)->header('Content-Type', 'application/json');
+          return response($response)->header('Content-Type', 'application/json');
     } 
   }
 
@@ -303,6 +316,32 @@ class FrontController extends BasePublicController
         return $userTypes;
      }
      public function updateuserinfo(Request $request){
-          return response("hello");
+       print_r($request->all());
+       $data=$request->profileImg;
+    $validator = Validator::make($request->all(), [
+          'profileImg'=> 'required'
+      ]);
+
+               return response("hello");
+     }
+     public function updateProfileImg(Request $request)
+     {    
+     
+       if(empty($_FILES))
+        return response("profileImg Image required");
+      else {
+       $info = pathinfo($_FILES['profileImg']['name']);
+       $ext = $info['extension']; 
+       $filename= $info['filename']; 
+// 
+       $newname = $filename.".".$ext;      
+
+         $target = env('IMG_URL')."/".$newname;
+        move_uploaded_file( $_FILES['profileImg']['tmp_name'], $target);
+        $target1 = env('IMG_URL1')."/".$newname;
+        return response($target1);
+      }
+
+
      }
 }

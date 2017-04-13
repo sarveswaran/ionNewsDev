@@ -46,6 +46,13 @@ Route::group(['middleware' => 'cors'], function(Router $router){
         'uses' => 'FrontController@update',
         'middleware' => 'auth:api'
     ]);
+    $router->post('/updateProfileImg',[
+         'as'=>'authentication.api.updateprofileImg',
+         'uses'=>'FrontController@updateprofileImg',
+         'middleware'=>'auth:api'
+
+         ]);
+
     $router->post('/reset', [
         'as' => 'contact.api.resetpassword',
         'uses' => 'FrontController@resetpassword',
