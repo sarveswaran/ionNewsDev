@@ -316,13 +316,34 @@ class FrontController extends BasePublicController
         return $userTypes;
      }
      public function updateuserinfo(Request $request){
-       print_r($request->all());
-       $data=$request->profileImg;
-    $validator = Validator::make($request->all(), [
-          'profileImg'=> 'required'
-      ]);
 
-               return response("hello");
+      Log::info($request->all());
+       $validator = Validator::make($request->all(), [
+          'profileImg' => 'required',
+      ]);
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            foreach ($errors->all() as $message) {
+                $meserror =$message;
+            }
+            $this->response->setContent(array('message'=> $meserror));
+          return $this->response->setStatusCode(400,$meserror);
+        }else{    
+
+
+        $userId=$request->user_id;
+        $data=$request->profileImg;
+
+        $newname="profileImg".$userId.".jpg";  
+        $imgurl = env('IMG_URL')."/".$newname;
+       
+        $ifp = fopen($imgurl, "wb"); 
+        fwrite($ifp, base64_decode($data)); 
+        fclose($ifp);        
+        $target1 = env('IMG_URL1')."/".$newname;
+        
+        return response($target1);
+             }
      }
      public function updateProfileImg(Request $request)
      {    
