@@ -354,9 +354,10 @@ class FrontController extends BasePublicController
                                     'profileImg' => $target1
                                     );
                 $details = $this->user->update($find_user,$user_Detail);
-
+               $response['profileImg']=$target1;
+                // return response($target1);
                 
-                return response($target1);
+                return response($response)->header('Content-Type', 'application/json');
              }
 
 
