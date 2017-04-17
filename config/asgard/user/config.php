@@ -68,7 +68,8 @@ return [
         'parent_id',
         'company',
         'designation',
-        'profileImg'
+        'profileImg',
+        'device_code'
     ],
     /*
     |--------------------------------------------------------------------------

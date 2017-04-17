@@ -62,6 +62,9 @@ return [
         'first_name',
         'last_name',
         'company',
+        'designation',
+        'profileImg',
+        'device_code'
     ],
     /*
     |--------------------------------------------------------------------------

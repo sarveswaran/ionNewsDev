@@ -21,6 +21,8 @@ class User extends EloquentUser implements UserInterface
         'last_name',
         'company',
         'designation',
+        'profileImg',
+        'device_code',
 
     ];
 
