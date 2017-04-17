@@ -71,10 +71,16 @@ class FrontController extends BasePublicController
                $response['updated_at']=$authicated_user['updated_at'];
                $response['phone']=$authicated_user['phone'];
                $response['address']=$authicated_user['address'];
+               if(!empty($authicated_user['company']))
                $response['company']=$authicated_user['company'];
+               else $response['company']="";
+               if(!empty($authicated_user['designation']))
                $response['designation']=$authicated_user['designation'];
+               else $response['designation']="";
                $response['role']=$authicated_user['role'];
+               if(!empty($authicated_user['profileImg']))
                $response['profileImg']=$authicated_user['profileImg'];
+               else  $response['profileImg']="";
                $response['token']=$authicated_user['token'];
 
 
@@ -317,9 +323,12 @@ class FrontController extends BasePublicController
      }
      public function updateuserinfo(Request $request){
 
-      Log::info($request->all());
+     }
+     public function updateProfileImg(Request $request)
+     {
+       Log::info($request->all());
        $validator = Validator::make($request->all(), [
-          'profileImg' => 'required',
+          'profileImg' => 'required'
       ]);
         if ($validator->fails()) {
             $errors = $validator->errors();
@@ -330,38 +339,25 @@ class FrontController extends BasePublicController
           return $this->response->setStatusCode(400,$meserror);
         }else{    
 
+                $find_user = $this->user->find($request->user_id);       
 
-        $userId=$request->user_id;
-        $data=$request->profileImg;
+                $userId=$request->user_id;
+                $data=$request->profileImg;
+                $newname="profileImg".$userId.".jpg";  
+                $imgurl = env('IMG_URL')."/".$newname;       
+                $ifp = fopen($imgurl, "wb"); 
+                fwrite($ifp, base64_decode($data)); 
+                fclose($ifp); 
+                $target1 = env('IMG_URL1')."/".$newname;
 
-        $newname="profileImg".$userId.".jpg";  
-        $imgurl = env('IMG_URL')."/".$newname;
-       
-        $ifp = fopen($imgurl, "wb"); 
-        fwrite($ifp, base64_decode($data)); 
-        fclose($ifp);        
-        $target1 = env('IMG_URL1')."/".$newname;
-        
-        return response($target1);
+                $user_Detail = array(
+                                    'profileImg' => $target1
+                                    );
+                $details = $this->user->update($find_user,$user_Detail);
+
+                
+                return response($target1);
              }
-     }
-     public function updateProfileImg(Request $request)
-     {    
-     
-       if(empty($_FILES))
-        return response("profileImg Image required");
-      else {
-       $info = pathinfo($_FILES['profileImg']['name']);
-       $ext = $info['extension']; 
-       $filename= $info['filename']; 
-// 
-       $newname = $filename.".".$ext;      
-
-         $target = env('IMG_URL')."/".$newname;
-        move_uploaded_file( $_FILES['profileImg']['tmp_name'], $target);
-        $target1 = env('IMG_URL1')."/".$newname;
-        return response($target1);
-      }
 
 
      }
