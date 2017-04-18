@@ -33,7 +33,8 @@ class FrontController extends BasePublicController
     public function login(Request $request,Client $http){
       $validator = Validator::make($request->all(), [
           'email' => 'required',
-          'password' => 'required'
+          'password' => 'required',
+
       ]);
       if ($validator->fails()) {
           $errors = $validator->errors();
@@ -42,18 +43,23 @@ class FrontController extends BasePublicController
           }
           $this->response->setContent(array('message'=> $message));
         return $this->response->setStatusCode(400,$meserror);
-      }else{
+      }else{         
 
         $credentials = [
             'email' => $request->email,
             'password' => $request->password,
         ];
       
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])) {    
+         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])) {    
          $authicated_user = Auth::user();    
            if($this->user->find($authicated_user->id)->isActivated()){
                $last_login =  $authicated_user->last_login;
                Auth::user()->last_login = new \DateTime();
+               if(isset($request->device_code))
+               {
+               if($request->device_code)
+               Auth::User()->device_code=$request->device_code;
+               }
                Auth::user()->save();
 
                $token = Auth::generateTokenById($authicated_user->id);
@@ -71,9 +77,15 @@ class FrontController extends BasePublicController
                $response['updated_at']=$authicated_user['updated_at'];
                $response['phone']=$authicated_user['phone'];
                $response['address']=$authicated_user['address'];
+
+               if(!empty($authicated_user['device_code']))
+               $response['device_code']=$authicated_user['device_code'];             
+               else $response['device_code']="";
+
                if(!empty($authicated_user['company']))
                $response['company']=$authicated_user['company'];
                else $response['company']="";
+
                if(!empty($authicated_user['designation']))
                $response['designation']=$authicated_user['designation'];
                else $response['designation']="";
@@ -135,7 +147,8 @@ class FrontController extends BasePublicController
           'phone' => 'required|unique:users|max:10|min:9',
           'first_name' => 'required|max:25',
           'role' => 'required',
-          'last_name' => 'required|max:25'
+          'last_name' => 'required|max:25',
+          'device_code'=>'required'
       ]);
         if ($validator->fails()) {
             $errors = $validator->errors();
@@ -362,4 +375,45 @@ class FrontController extends BasePublicController
 
 
      }
+
+     public function push_notifications(Request $request)
+      {
+          $registrationIds=$request->device_code;       
+          define( 'API_ACCESS_KEY',env("API_ACCESS_KEY"));      
+       
+        $msg = array
+        (
+          'message'   => 'here is a message. message',
+          'title'   => 'This is a title. title',
+          'subtitle'  => 'This is a subtitle. subtitle',
+          'tickerText'  => 'Ticker text here...Ticker text here...Ticker text here',
+          'vibrate' => 1,
+          'sound'   => 1,
+          'largeIcon' => 'large_icon',
+          'smallIcon' => 'small_icon'
+        );
+        $fields = array
+        (
+          'registration_ids'  =>array($registrationIds),
+          'data'      => $msg
+        );
+         
+        $headers = array
+        (
+          'Authorization: key=' . API_ACCESS_KEY,
+          'Content-Type: application/json'
+        );
+        $url='https://fcm.googleapis.com/fcm/send';
+         
+        $ch = curl_init();
+        curl_setopt( $ch,CURLOPT_URL, 'http://android.googleapis.com/gcm/send');
+        curl_setopt( $ch,CURLOPT_POST, true );
+        curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+        curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+        curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+        curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode($fields) );
+        $result = curl_exec($ch );       
+        curl_close( $ch );
+        return response($result);
+      }
 }

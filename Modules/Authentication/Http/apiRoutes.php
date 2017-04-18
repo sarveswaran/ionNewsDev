@@ -27,6 +27,12 @@ Route::group(['middleware' => 'cors'], function(Router $router){
         'uses' => 'FrontController@updateuserinfo',
         'middleware' => 'auth:api'
     ]);
+     $router->post('/push_notifications',[
+        'as'=>'authentication.api.push_notifications',
+        'uses'=>'FrontController@push_notifications',
+        // 'middleware'=>'auth.api'
+
+        ]);
     $router->post('/getactive', [
         'as' => 'authentication.api.getactive',
         'uses' => 'FrontController@getactive'
