@@ -214,7 +214,7 @@ $('.checkbox').change(function(){
             // var APP_URLs = '{{ env('APP_URL') }}';              
              if(!urls)
              {
-              alert ("Please Enter URl First");
+              alert ("You have not mention Url Address");
                return false;
              }
                 $.ajax({
