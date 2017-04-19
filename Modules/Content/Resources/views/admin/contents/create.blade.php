@@ -268,7 +268,7 @@ $('.checkbox').change(function(){
                                                       
              table+='<tr id="'+value.id+'"><td> <input class="checkbox" type="checkbox" name="check[]" value="'+value.id+'"></td>'+
                               '<td>'+value.name+'</td>'+
-                  '<td>'+value.company+'</td><td>'+value.role+'</td>';
+                  '<td>'+value.company+'</td><td>'+value.role+'</td></tr>';
                             i++;
 
                         });

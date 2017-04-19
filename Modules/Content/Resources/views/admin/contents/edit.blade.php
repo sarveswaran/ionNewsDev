@@ -144,7 +144,7 @@ $('.checkbox').change(function(){ //".checkbox" change
                                                       
              table+='<tr id="'+value.id+'"><td> <input class="checkbox" type="checkbox" name="check[]" value="'+value.id+'" checked></td>'+
                               '<td>'+value.name+'</td>'+
-                  '<td>'+value.id+'</td>';
+                  '<td>'+value.company+'</td><td>'+value.role+'</td></tr>';
                             i++;
 
                         });
@@ -152,7 +152,7 @@ $('.checkbox').change(function(){ //".checkbox" change
                                                       
              table+='<tr id="'+value.id+'"><td> <input class="checkbox" type="checkbox" name="check[]" value="'+value.id+'"></td>'+
                               '<td>'+value.name+'</td>'+
-                  '<td>'+value.id+'</td>';
+                  '<td>'+value.company+'</td><td>'+value.role+'</td></tr>';
                             i++;
 
                         });

@@ -59,7 +59,8 @@
                <tr>
                   <th><input type="checkbox"  id="select_all" value=0 name="che" />Select</th>
                   <th>Name</th>
-                  <th>User_id </th>
+                  <th>Company Name </th>
+                  <th>Designation</th>
               </tr>  
               </thead>
               <tbody id = "user_info">  

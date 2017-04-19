@@ -375,9 +375,10 @@ class ContentController extends AdminBaseController
           foreach ($users as $value) {           
             if($ch<sizeof($userData) && in_array($value['id'], $userId))
             { 
-                $check_aray[$k]['id']=$value['id'];
-                $check_aray[$k]['name']=$value['first_name'];
-                $check_aray[$k]['company']=$value['company'];
+                $check_array[$k]['id']=$value['id'];
+                $check_array[$k]['name']=$value['first_name'];
+                $check_array[$k]['role']=$value['designation'];
+                $check_array[$k]['company']=$value['company'];
 
                 $k++;
                 $ch++;
@@ -385,6 +386,7 @@ class ContentController extends AdminBaseController
             else {
                  $uncheck_array[$j]['id']=$value['id'];
                  $uncheck_array[$j]['name']=$value['first_name'];
+                 $uncheck_array[$j]['role']=$value['designation'];
                  $uncheck_array[$j]['company']=$value['company'];
 
 
@@ -397,7 +399,7 @@ class ContentController extends AdminBaseController
           Log::info($check_aray);
           Log::info($ch);
           // Log::info($uncheck_array);
-          $FinalArray['check']=$check_aray;
+          $FinalArray['check']=$check_array;
           $FinalArray['uncheck']=$uncheck_array;
           // Log::info($FinalArray);
 
@@ -410,7 +412,7 @@ class ContentController extends AdminBaseController
               foreach ($users as $value) {
               $FinalArray[$k]['id']=$value['id'];
               $FinalArray[$k]['name']=$value['first_name'];
-              $FinalArray[$k]['role']=$value['role'];
+              $FinalArray[$k]['role']=$value['designation'];
               $FinalArray[$k]['company']=$value['company'];
               $k++;
               }
