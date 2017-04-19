@@ -214,7 +214,7 @@ class ContentController extends AdminBaseController
         $id=json_decode($ids,true);        
           $id=$ids['id'];
           $data=$request->all();
-          Log::info($data);         
+          // Log::info($data);         
           // $ContentImages= new ContentImages;
           // $ContentImages->content_id=$id;
           // $ContentImages->image_path=$data['image'];
@@ -288,18 +288,20 @@ class ContentController extends AdminBaseController
           // $ContentImages->content_id=$content_id;
           // $ContentImages->image_path=$content_data['image'];
           // $ContentImages->save();
-         Log::info($request);
-         if(isset($request->img) && $request->img!=""){
-
-            $image = $request->img;
-
-         }else{
-
+      
+         
+          if ($request->hasFile('img')){  
+            // $ext = pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION);
+          $image_name=$content_id.$_FILES['img']['name'];
+          $request->file('img')->move(env('IMG_URL').'/crawle_image',$image_name);
+          $image=env('IMG_URL1').'/crawle_image/'.$image_name;       
+           }
+          else {
             $image = $content->image;
-         } 
-         Log::info($image);
-         Log::info($request->img);
+           } 
+         
          $request->merge(['image' => $image]);
+
          if(array_key_exists('check', $data))
          {  
               $userData = DB::table('content__contentusers')->select(\DB::raw('*'))
@@ -317,7 +319,6 @@ class ContentController extends AdminBaseController
                 ->whereNotIn('user_id',$deleteId)->delete();
                
                 $length=sizeof($data['check']);
-                Log::info("length     ".$length);
                 for ($i=0;$i<$length;$i++) { 
 
                  if(!in_array($data['check'][$i], $deleteId)){
@@ -365,8 +366,8 @@ class ContentController extends AdminBaseController
           $uncheck_array=array();
           $userData=json_decode($userData,true);
           $j=0;$k=0;
-          Log::info($userData);
-          Log::info("Size of ".sizeof($userData));
+          // Log::info($userData);
+          // Log::info("Size of ".sizeof($userData));
           $userId=array();
           foreach ($userData as $key => $value) {
                $userId[$key]=$value['id'];
@@ -397,8 +398,7 @@ class ContentController extends AdminBaseController
                     
           }
           Log::info($check_aray);
-          Log::info($ch);
-          // Log::info($uncheck_array);
+          Log::info($uncheck_array);
           $FinalArray['check']=$check_array;
           $FinalArray['uncheck']=$uncheck_array;
           // Log::info($FinalArray);

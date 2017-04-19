@@ -16,7 +16,7 @@
 @stop
 
 @section('content')
-    {!! Form::open(['route' => ['admin.content.content.update', $content->id], 'method' => 'put', 'onsubmit'=>'return formValidator()']) !!}
+    {!! Form::open(['route' => ['admin.content.content.update', $content->id], 'method' => 'put','enctype' => 'multipart/form-data' ,'onsubmit'=>'return formValidator()']) !!}
     <div class="row">
         <div class="col-md-12">
             <div class="nav-tabs-custom">
