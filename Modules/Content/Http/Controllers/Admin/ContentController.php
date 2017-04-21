@@ -248,11 +248,15 @@ class ContentController extends AdminBaseController
             }
             $message=array();
             
-           
+             // Log::info($data);
+             // Log::info($id);
             $message['title']=$data['title'];
              $message['message']=$data['content'];
             if(array_key_exists('image', $data))
             $message['imageUrl']=$data['image'];
+            else $message['imageUrl']="";
+            $message['storyId']=$id;
+
             // Log::info($message);
             Log::info($device_code);
 
