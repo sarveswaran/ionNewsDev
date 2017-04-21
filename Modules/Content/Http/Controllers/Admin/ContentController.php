@@ -14,7 +14,8 @@ use Modules\User\Entities\Sentinel\User;
 use Modules\Content\Entities\ContentImages;
 use Modules\Content\Entities\ContentUser;
 use Modules\Content\Entities\ContentCompany;
-
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 use Log;
 use DB;
 
@@ -30,7 +31,7 @@ class ContentController extends AdminBaseController
         parent::__construct();
         $this->category = $category;
         $this->content = $content;  
-        $this->contentUser=$contentUser;    
+        $this->contentUser=$contentUser; 
 
     }
 
@@ -43,7 +44,6 @@ class ContentController extends AdminBaseController
     {   
         $categories = $this->category->getByAttributes(['status' => 1]);
         $contents = $this->content->all(); 
-        // Log::info(json_decode($contents->sortBy('id'),true));    
         return view('content::admin.contents.index', compact('contents','categories'));
     }
 
@@ -210,16 +210,17 @@ class ContentController extends AdminBaseController
     public function store(Request $request)
     {
        
-        $ids=$this->content->create($request->all());       
+        $ids=$this->content->create($request->all());    
+        // Log::info($ids);   
         $id=json_decode($ids,true);        
           $id=$ids['id'];
           $data=$request->all();
-          // Log::info($data);         
-          // $ContentImages= new ContentImages;
-          // $ContentImages->content_id=$id;
-          // $ContentImages->image_path=$data['image'];
-          // $ContentImages->save();
-          if(array_key_exists('check', $data))
+          // Log::info($data['title']);
+          // Log::info($data['sub_title']);
+          // Log::info($data['image']);
+          // Log::info($data['content']);
+
+        if(array_key_exists('check', $data))
         {
             $length=sizeof($data['check']);        
             for ($i=0;$i<$length;$i++) {  
@@ -232,16 +233,16 @@ class ContentController extends AdminBaseController
 
 
           $users =json_decode(User::all(),true);
-            // Log::info(sizeof($data['check']));
-                // Log::info($data['check']);
           $company_name=array();
           $i=0;  
-              // Log::info($users);         
+          // Log::info($users);   
+          $device_code=array();      
           foreach ($users as $key => $value) {
              if($value['id']==$data['check'][$i])
                 {
                     $company_name[]=$value['company'];
                     $i++;
+                    $device_code[$value['id']]=$value['device_code'];
                 }
                 if($i>=sizeof($data['check']))
                     break;
@@ -252,7 +253,24 @@ class ContentController extends AdminBaseController
                  $ContentCompany->company_name=$company_name[$i];
                  $ContentCompany->save();
             }
+            $message=array();
+            
+            $message['message']=$data['content'];
+            $message['title']=$data['title'];
+            $message['sub_title']=$data['sub_title'];
+            $message['imgae']=$data['image'];
+            $message['storyId']=$id;
+            $message['cotegoryId']=$data['category_id'];
+            Log::info($message);
+            Log::info($device_code);
 
+          $device_code="e8Ly18SxvzY:APA91bHIf1MhWAD8_f-E6qyPjn6W8uB3USZ6QpdMKwBRdN29tdA22EWOoUtDvkMqwbdbuX8EiyBJ53O4iHesLfNgan0qqLfGp5WjcnWK81K6Ea8g2cTO8eEyEMhal00KevcqXE3097ZY";
+            // foreach ($$device_code as $key => $value) {
+              $this->push_notifications($message,$device_code);
+
+            // }
+
+           
 
         return redirect()->route('admin.content.content.index')
             ->withSuccess(trans('core::core.messages.resource created', ['name' => trans('content::contents.title.contents')]));
@@ -284,14 +302,9 @@ class ContentController extends AdminBaseController
          $content_data=json_decode($content,true);
          $data=$request->all();
          $content_id=$content_data['id'];
-          // $ContentImages= new ContentImages;
-          // $ContentImages->content_id=$content_id;
-          // $ContentImages->image_path=$content_data['image'];
-          // $ContentImages->save();
-      
+          
          
           if ($request->hasFile('img')){  
-            // $ext = pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION);
           $image_name=$content_id.$_FILES['img']['name'];
           $request->file('img')->move(env('IMG_URL').'/crawle_image',$image_name);
           $image=env('IMG_URL1').'/crawle_image/'.$image_name;       
@@ -461,7 +474,38 @@ class ContentController extends AdminBaseController
                      return 200;
                    } 
                     else return 202;           
-                }          
+      }
+
+      public function push_notifications($msg = array(),$registrationIds)
+      {
+          define( 'API_ACCESS_KEY',env("API_ACCESS_KEY"));      
+       
+      
+        $fields = array
+        (
+          'registration_ids'  =>array($registrationIds),
+          'data'      => $msg
+        );
+         
+        $headers = array
+        (
+          'Authorization: key=' . API_ACCESS_KEY,
+          'Content-Type: application/json'
+        );
+        $url='https://fcm.googleapis.com/fcm/send';
+         
+        $ch = curl_init();
+        curl_setopt( $ch,CURLOPT_URL, 'http://android.googleapis.com/gcm/send');
+        curl_setopt( $ch,CURLOPT_POST, true );
+        curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+        curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+        curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+        curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode($fields) );
+        $result = curl_exec($ch );       
+        curl_close( $ch );
+        Log::info($result);
+        // return response($result);
+      }          
 
 
 }
