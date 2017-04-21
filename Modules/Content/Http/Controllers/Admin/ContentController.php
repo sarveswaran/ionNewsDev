@@ -211,15 +211,9 @@ class ContentController extends AdminBaseController
     {
        
         $ids=$this->content->create($request->all());    
-        // Log::info($ids);   
         $id=json_decode($ids,true);        
           $id=$ids['id'];
           $data=$request->all();
-          // Log::info($data['title']);
-          // Log::info($data['sub_title']);
-          // Log::info($data['image']);
-          // Log::info($data['content']);
-
         if(array_key_exists('check', $data))
         {
             $length=sizeof($data['check']);        
@@ -235,7 +229,6 @@ class ContentController extends AdminBaseController
           $users =json_decode(User::all(),true);
           $company_name=array();
           $i=0;  
-          // Log::info($users);   
           $device_code=array();      
           foreach ($users as $key => $value) {
              if($value['id']==$data['check'][$i])
@@ -255,20 +248,19 @@ class ContentController extends AdminBaseController
             }
             $message=array();
             
-            $message['message']=$data['content'];
+           
             $message['title']=$data['title'];
-            $message['sub_title']=$data['sub_title'];
-            $message['imgae']=$data['image'];
-            $message['storyId']=$id;
-            $message['cotegoryId']=$data['category_id'];
-            Log::info($message);
+             $message['message']=$data['content'];
+            if(array_key_exists('image', $data))
+            $message['imageUrl']=$data['image'];
+            // Log::info($message);
             Log::info($device_code);
 
-          $device_code="e8Ly18SxvzY:APA91bHIf1MhWAD8_f-E6qyPjn6W8uB3USZ6QpdMKwBRdN29tdA22EWOoUtDvkMqwbdbuX8EiyBJ53O4iHesLfNgan0qqLfGp5WjcnWK81K6Ea8g2cTO8eEyEMhal00KevcqXE3097ZY";
-            // foreach ($$device_code as $key => $value) {
-              $this->push_notifications($message,$device_code);
-
-            // }
+     
+            foreach ($device_code as $value) {
+              if($value)
+              $this->push_notifications($message,$value);
+            }
 
            
 
@@ -410,8 +402,8 @@ class ContentController extends AdminBaseController
                  } 
                     
           }
-          Log::info($check_aray);
-          Log::info($uncheck_array);
+          // Log::info($check_aray);
+          // Log::info($uncheck_array);
           $FinalArray['check']=$check_array;
           $FinalArray['uncheck']=$uncheck_array;
           // Log::info($FinalArray);
@@ -466,7 +458,7 @@ class ContentController extends AdminBaseController
                 } 
                     if($check==0)
                     {
-                     Log::info($user_id);
+                     // Log::info($user_id);
                      $ContentUser= new ContentUser;
                      $ContentUser->user_id=$user_id;
                      $ContentUser->content_id=$content_id;
@@ -478,7 +470,7 @@ class ContentController extends AdminBaseController
 
       public function push_notifications($msg = array(),$registrationIds)
       {
-          define( 'API_ACCESS_KEY',env("API_ACCESS_KEY"));      
+          $API_ACCESS_KEY = env("API_ACCESS_KEY");      
        
       
         $fields = array
@@ -489,7 +481,7 @@ class ContentController extends AdminBaseController
          
         $headers = array
         (
-          'Authorization: key=' . API_ACCESS_KEY,
+          'Authorization: key=' . $API_ACCESS_KEY,
           'Content-Type: application/json'
         );
         $url='https://fcm.googleapis.com/fcm/send';
