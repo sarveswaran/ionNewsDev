@@ -210,18 +210,22 @@ class ContentController extends AdminBaseController
     public function store(Request $request)
     {
        
-        $ids=$this->content->create($request->all());    
+        $ids=$this->content->create($request->all());   
+        
         $id=json_decode($ids,true);        
           $id=$ids['id'];
           $data=$request->all();
-        if(array_key_exists('check', $data))
-        {
-            $length=sizeof($data['check']);        
-            for ($i=0;$i<$length;$i++) {  
+
+        if(array_key_exists('checkedDetails', $data))
+        {   
+         $checkedArray=json_decode($data['checkedDetails'][0],true);
+            $length=sizeof($checkedArray); 
+
+            for ($i=0;$i<$length;$i++) { 
           
-                       $abc['user_id']=$data['check'][$i];
-                        $abc['content_id']=$id;
-                        $this->contentUser->create($abc);           
+                $abc['user_id']=$checkedArray[$i];
+                $abc['content_id']=$id;
+                $this->contentUser->create($abc);           
             }
         }
 

@@ -16,7 +16,7 @@
 @stop
 
 @section('content')
-    {!! Form::open(['route' => ['admin.content.content.store'], 'method' => 'post','enctype' => 'multipart/form-data', 'onsubmit'=>'return formValidator()']) !!}
+    {!! Form::open(['route' => ['admin.content.content.store'], 'method' => 'post','enctype' => 'multipart/form-data', 'onsubmit'=>'return formValidator()', 'id' => 'userListing']) !!}
     <div class="row">
         <div class="col-md-12">
             <div class="nav-tabs-custom">
@@ -94,25 +94,20 @@
     var form_checker=0;
 
      function formValidator() {
-         $('.checkbox').each(function(){ //iterate all listed checkbox items
-            if(this.checked)
-            {
-              form_checker=1;
-            }
-        
-       
-    });
-            if(form_checker==1)
-            return true;
-           else{ alert("Please Select Atleast One User");
-            return false;
-          }
+         if(checkedArray.length==0){
+          alert("Select atleast one user.");
+          return false;
+         }
+         $("#userListing").append("<input type='hidden' name='checkedDetails[]' value='"+JSON.stringify(checkedArray)+"'/>");
+         return true;
     }
 
 
 
 
       $("#select_all").change(function(){ 
+        alert("h");
+
       
       var status = this.checked; 
       $('.checkbox').each(function(){ 
@@ -121,20 +116,16 @@
    
       });
 
-$('.checkbox').change(function(){ 
-  
-    
-    if(this.checked == false){ 
-         
-        $("#select_all")[0].checked = false; 
-    }
-   
-    
-    if ($('.checkbox:checked').length == $('.checkbox').length ){
-        
-        $("#select_all")[0].checked = true; 
-    }
-});
+  checkedArray = [];
+function changed(event){
+  if(event.checked){
+    checkedArray.push(event.value);
+  }else{
+    var a = checkedArray.indexOf(event.value);
+    checkedArray.splice(a, 1);
+  }
+  console.log(checkedArray);
+}
 
           var results='';
         function addRow(tableID) {
@@ -266,7 +257,7 @@ $('.checkbox').change(function(){
                     var i = 1;
                    $.each(result, function (key, value) {
                                                       
-             table+='<tr id="'+value.id+'"><td> <input class="checkbox" type="checkbox" name="check[]" value="'+value.id+'"></td>'+
+             table+='<tr id="'+value.id+'"><td> <input class="checkbox" type="checkbox" onchange="changed(this);" name="check[]" value="'+value.id+'"></td>'+
                               '<td>'+value.name+'</td>'+
                   '<td>'+value.company+'</td><td>'+value.role+'</td></tr>';
                             i++;
