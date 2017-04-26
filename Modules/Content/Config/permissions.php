@@ -32,7 +32,14 @@ return [
         'edit' => 'content::contentcompanies.edit resource',
         'destroy' => 'content::contentcompanies.destroy resource',
     ],
+    'content.contentlikestories' => [
+        'index' => 'content::contentlikestories.list resource',
+        'create' => 'content::contentlikestories.create resource',
+        'edit' => 'content::contentlikestories.edit resource',
+        'destroy' => 'content::contentlikestories.destroy resource',
+    ],
 // append
+
 
 
 

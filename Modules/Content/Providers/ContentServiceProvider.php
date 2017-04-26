@@ -102,7 +102,20 @@ class ContentServiceProvider extends ServiceProvider
                 return new \Modules\Content\Repositories\Cache\CacheContentCompanyDecorator($repository);
             }
         );
+        $this->app->bind(
+            'Modules\Content\Repositories\ContentLikeStoryRepository',
+            function () {
+                $repository = new \Modules\Content\Repositories\Eloquent\EloquentContentLikeStoryRepository(new \Modules\Content\Entities\ContentLikeStory());
+
+                if (! config('app.cache')) {
+                    return $repository;
+                }
+
+                return new \Modules\Content\Repositories\Cache\CacheContentLikeStoryDecorator($repository);
+            }
+        );
 // add bindings
+
 
 
 
