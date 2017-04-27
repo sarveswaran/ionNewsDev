@@ -130,8 +130,8 @@ class StoryController extends BasePublicController
                     $abc['content_id']=$content_id;
                     $data=$this->likestory->create($abc); 
                     }
-                   
-              return response('successful');
+                    $response['status']="successful";
+              return response(json_encode($response));
         }
         }
         public function getAllLikeStory(Request $request)
