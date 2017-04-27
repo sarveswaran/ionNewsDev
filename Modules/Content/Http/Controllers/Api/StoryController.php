@@ -97,29 +97,42 @@ class StoryController extends BasePublicController
 
         public function story_like(Request $request)
         { 
-               $user_id=$request->user_id;  
-               $content_id=$user_id;       
-               $data=DB::table('content__contentlikestories')
-                          ->where('content_id','=',$content_id)
-                           ->where('user_id','=',$user_id)
-                           ->get();
+                 $validator = Validator::make($request->all(), [
+                 'content_id' => 'required']);
+       
+                 
+                   if ($validator->fails()) {
+                    $errors = $validator->errors();
+                    foreach ($errors->all() as $message) {
+                        $meserror =$message;
+                    }
+                    $this->response->setContent(array('message'=> $message));
+                    return $this->response->setStatusCode(400,$meserror);
+                  }else{
+                    $user_id=$request->user_id;  
+                   $content_id=$request->content_id;       
+                   $data=DB::table('content__contentlikestories')
+                              ->where('content_id','=',$content_id)
+                               ->where('user_id','=',$user_id)
+                               ->get();
 
-               if(sizeof($data)>0)
-               { 
-                $data=DB::table('content__contentlikestories')
-                    ->where('content_id','=',$content_id)
-                    ->where('user_id','=',$user_id)
-                    ->delete();
+                   if(sizeof($data)>0)
+                   { 
+                    $data=DB::table('content__contentlikestories')
+                        ->where('content_id','=',$content_id)
+                        ->where('user_id','=',$user_id)
+                        ->delete();
 
-               }
-              else {
-                       
-                $abc['user_id']=$content_id;
-                $abc['content_id']=$content_id;
-                $data=$this->likestory->create($abc); 
-              }
-               
-          return response($data);
+                   }
+                  else {
+                           
+                    $abc['user_id']=$user_id;
+                    $abc['content_id']=$content_id;
+                    $data=$this->likestory->create($abc); 
+                    }
+                   
+              return response('successful');
+        }
         }
         public function getAllLikeStory(Request $request)
         {     Log::info($request->user_id);        
