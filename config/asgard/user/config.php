@@ -69,7 +69,8 @@ return [
         'company',
         'designation',
         'profileImg',
-        'device_code'
+        'device_code',
+        'device_type'
     ],
     /*
     |--------------------------------------------------------------------------
