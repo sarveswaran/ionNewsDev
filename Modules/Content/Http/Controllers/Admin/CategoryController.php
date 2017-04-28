@@ -8,6 +8,8 @@ use Modules\Content\Entities\Category;
 use Modules\Content\Repositories\CategoryRepository;
 use Modules\Content\Http\Requests\CreateCategoryRequest;
 use Modules\Content\Http\Requests\UpdateCategoryRequest;
+use DB;
+use Log;
 
 
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
@@ -34,6 +36,7 @@ class CategoryController extends AdminBaseController
     public function index()
     {
         $categories = $this->category->all();
+         Log::info($categories);
 
         return view('content::admin.categories.index', compact('categories'));
     }
@@ -102,4 +105,17 @@ class CategoryController extends AdminBaseController
         return redirect()->route('admin.content.category.index')
             ->withSuccess(trans('core::core.messages.resource deleted', ['name' => trans('content::categories.title.categories')]));
     }
+    public function update_priority(Request $request)
+    {
+       $priorityData=$_POST['url'];
+       print_r($priorityData);
+       foreach ($priorityData as $key => $value) {
+        DB::table('content__categories')
+            ->where('id', $key)
+            ->update(['priority' => $value]);
+           
+       }
+       
+    }
+
 }
