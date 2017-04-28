@@ -20,7 +20,11 @@ $router->group(['prefix' =>'/content'], function (Router $router) {
         'uses' => 'ContentController@getAllUsers'
         // 'middleware' => 'can:content.contents.getAllUsers'
 
- ]);
+      ]);
+
+
+    
+
       $router->get('all_users', [
         'as' => 'Content.all.all_users', 
         'uses' => 'ContentController@getAllUsersInfo'
@@ -67,6 +71,7 @@ $router->group(['prefix' =>'/content'], function (Router $router) {
     $router->bind('category', function ($id) {
         return app('Modules\Content\Repositories\CategoryRepository')->find($id);
     });
+
     $router->get('categories', [
         'as' => 'admin.content.category.index',
         'uses' => 'CategoryController@index',
@@ -77,6 +82,14 @@ $router->group(['prefix' =>'/content'], function (Router $router) {
         'uses' => 'CategoryController@create',
         'middleware' => 'can:content.categories.create'
     ]);
+   // update priority table 
+      $router->post('Category/updatePriority', [
+        'as' => 'Category.all.updatePriority', 
+        'uses' => 'CategoryController@update_priority'
+        // 'middleware' => 'can:content.contents.getAllUsers'
+
+ ]);
+
     $router->post('categories', [
         'as' => 'admin.content.category.store',
         'uses' => 'CategoryController@store',
@@ -196,7 +209,41 @@ $router->group(['prefix' =>'/content'], function (Router $router) {
         'uses' => 'ContentCompanyController@destroy',
         'middleware' => 'can:content.contentcompanies.destroy'
     ]);
+    $router->bind('contentlikestory', function ($id) {
+        return app('Modules\Content\Repositories\ContentLikeStoryRepository')->find($id);
+    });
+    $router->get('contentlikestory', [
+        'as' => 'admin.content.contentlikestory.index',
+        'uses' => 'ContentLikeStoryController@index',
+        'middleware' => 'can:content.contentlikestories.index'
+    ]);
+    $router->get('contentlikestory/create', [
+        'as' => 'admin.content.contentlikestory.create',
+        'uses' => 'ContentLikeStoryController@create',
+        'middleware' => 'can:content.contentlikestories.create'
+    ]);
+    $router->post('contentlikestory', [
+        'as' => 'admin.content.contentlikestory.store',
+        'uses' => 'ContentLikeStoryController@store',
+        'middleware' => 'can:content.contentlikestories.create'
+    ]);
+    $router->get('contentlikestory/{contentlikestory}/edit', [
+        'as' => 'admin.content.contentlikestory.edit',
+        'uses' => 'ContentLikeStoryController@edit',
+        'middleware' => 'can:content.contentlikestories.edit'
+    ]);
+    $router->put('contentlikestory/{contentlikestory}', [
+        'as' => 'admin.content.contentlikestory.update',
+        'uses' => 'ContentLikeStoryController@update',
+        'middleware' => 'can:content.contentlikestories.edit'
+    ]);
+    $router->delete('contentlikestory/{contentlikestory}', [
+        'as' => 'admin.content.contentlikestory.destroy',
+        'uses' => 'ContentLikeStoryController@destroy',
+        'middleware' => 'can:content.contentlikestories.destroy'
+    ]);
 // append
+
 
 
 
