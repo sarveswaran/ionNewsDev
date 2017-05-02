@@ -36,7 +36,7 @@ class CategoryController extends AdminBaseController
     public function index()
     {
         $categories = $this->category->all();
-         Log::info($categories);
+         // Log::info($categories);
 
         return view('content::admin.categories.index', compact('categories'));
     }
@@ -47,8 +47,10 @@ class CategoryController extends AdminBaseController
      * @return Response
      */
     public function create()
-    {
-        return view('content::admin.categories.create');
+    {    $categories = $this->category->all();   
+         $categories_size=sizeof(json_decode($categories,true))+1;        
+
+        return view('content::admin.categories.create', compact('categories_size'));
     }
 
     /**
@@ -59,6 +61,13 @@ class CategoryController extends AdminBaseController
      */
     public function store(CreateCategoryRequest $request)
     {
+         $find_all_priority=$this->category->getAllPriority('priority',$request->priority);     
+          if(sizeof($find_all_priority)){
+            Log::info($find_all_priority);
+          foreach ($find_all_priority as $key => $value) { 
+              $details=$this->category->updatePriority($value['id'],$value['priority']+1);              
+          }
+      }
 
         $this->category->create($request->all());
 
@@ -73,7 +82,7 @@ class CategoryController extends AdminBaseController
      * @return Response
      */
     public function edit(Category $category)
-    {
+    { Log::info($category);
         return view('content::admin.categories.edit', compact('category'));
     }
 

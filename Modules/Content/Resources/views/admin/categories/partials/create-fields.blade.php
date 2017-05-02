@@ -17,7 +17,7 @@
          <div class="col-sm-4">
             <div class="form-group{{ $errors->has('priority') ? ' has-error' : '' }}">
                 {!! Form::label('priority', trans('priority')) !!}
-                {!! Form::text('priority', old('priority'), ['class' => 'form-control', 'placeholder' => trans('priority')]) !!}
+                {!! Form::text('priority', old('priority',$categories_size), ['class' => 'form-control', 'placeholder' => trans('priority')]) !!}
                 {!! $errors->first('priority', '<span class="help-block">:message</span>') !!}
             </div>
         </div>
@@ -29,11 +29,11 @@
                  &nbsp;&nbsp;
                 &nbsp;&nbsp;
                 {!! Form::label('status', trans('Enable')) !!}
-                {!! Form::radio('status', 1, ['class' => '']) !!}
+                {!! Form::radio('status', 1,'1', ['class' => '']) !!}
                 {!! $errors->first('status', '<span class="help-block">:message</span>') !!}
                 &nbsp;&nbsp;
                 {!! Form::label('status', trans('Disable')) !!}
-                {!! Form::radio('status', 0, ['class' => '']) !!}
+                {!! Form::radio('status', 0,'0', ['class' => '']) !!}
                 {!! $errors->first('status', '<span class="help-block">:message</span>') !!}
             </div>
         </div>
