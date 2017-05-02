@@ -137,9 +137,13 @@
    
            var priorityArray = <?php echo json_encode($priorityArray) ;?>;  
            console.log(priorityArray);
-           var arr = $.map(priorityArray, function(el) { return el; })
-           var max = Math.max(...arr);            
-           var min = Math.min(...arr); 
+            var count = Object.keys(priorityArray).length;
+             var max=count;
+             var min=1;
+              console.log(count);
+           // var arr = $.map(priorityArray, function(el) { return el; })
+           // var max = Math.max(...arr);            
+           // var min = Math.min(...arr); 
         
             // console.log(priorityArray.length);
             // var jo = $.parseJSON(priorityArray);
@@ -180,13 +184,9 @@
         }
       function changeDetailsDiv(event) { 
           event_class= $(event).attr("class");
-          new_value = $("."+event_class).val();
-           // alert($(this).val());
-           var categories_id=$("."+event_class).attr('orderId');
+          new_value = $("."+event_class).val();          
+          var categories_id=$("."+event_class).attr('orderId');
             
-           
-           // alert($('input['+id+'^=set_prioority]').value);
-           
            if(new_value>max || new_value<min)
            {
              alert("Please set the priority in given range ["+min+ " to "+max+" ]");
@@ -194,9 +194,7 @@
               return 0;
            }
          
-          // var original_value=$("."+event_class).attr('value');  
-          var original_value= priorityArray[categories_id];
-       
+          var original_value= priorityArray[categories_id];       
           $.each(priorityArray, function(key,value){
             if(original_value>new_value)
             {
@@ -216,9 +214,6 @@
            });
 
           priorityArray[categories_id]=new_value;
-          // $("."+event_class).val(new_value);
-          // alert($("."+event_class).val());
-          // $("."+event_class).attr('value').replace(new_value);
           console.log(priorityArray);
           $.each(priorityArray,function(k,v){
             $("#set_prioority_"+k).html(v);
@@ -228,7 +223,7 @@
 
       $("#updatepriority").click(function()
       { 
-         alert("hahhaa");
+        
          $.ajax({
                 type: 'POST',
                 data: {url: priorityArray},
