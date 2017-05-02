@@ -103,20 +103,32 @@
     }
 
 
+      checkedArray = [];
 
-
-      $("#select_all").change(function(){ 
-        alert("h");
-
-      
-      var status = this.checked; 
+      $("#select_all").change(function(){   
+    
+       var status = this.checked; 
+       if(status){
       $('.checkbox').each(function(){ 
+
         this.checked = status; 
+        checkedArray.push(this.value);  
+        //console.log(checkedArray);     
+        
        });
+    }else { $('.checkbox').each(function(){ 
+      this.checked = status; 
+      var a = checkedArray.indexOf(this.value);
+    checkedArray.splice(a, 1);
+     // console.log(checkedArray);
+  });
+
+    }
+
    
       });
 
-  checkedArray = [];
+  
 function changed(event){
   if(event.checked){
     checkedArray.push(event.value);
