@@ -109,6 +109,7 @@ class StoryController extends BasePublicController
                     $this->response->setContent(array('message'=> $message));
                     return $this->response->setStatusCode(400,$meserror);
                   }else{
+                         
                     $user_id=$request->user_id;  
                    $content_id=$request->content_id;       
                    $data=DB::table('content__contentlikestories')
@@ -131,7 +132,7 @@ class StoryController extends BasePublicController
                     $data=$this->likestory->create($abc); 
                     }
                     $response['status']="successful";
-              return response(json_encode($response));
+              return response($response);
         }
         }
         public function getAllLikeStory(Request $request)
