@@ -44,6 +44,8 @@ class ContentController extends AdminBaseController
     {   
         $categories = $this->category->getByAttributes(['status' => 1]);
         $contents = $this->content->all(); 
+        
+
         return view('content::admin.contents.index', compact('contents','categories'));
     }
 
@@ -209,12 +211,22 @@ class ContentController extends AdminBaseController
      */
     public function store(Request $request)
     {
-       
-        $ids=$this->content->create($request->all());   
+        
+        $Alldata=$request->all();
+        $sizeofCategories=sizeof($Alldata['category_id']);
+        // Log::info($Alldata);
+
+        $Alldata['all_category']=json_encode($Alldata['category_id']);
+        $Alldata['category_id']=$sizeofCategories;      
+        
+        // Log::info($Alldata);
+      
+        $ids=$this->content->create($Alldata);   
         
         $id=json_decode($ids,true);        
           $id=$ids['id'];
           $data=$request->all();
+          
 
         if(array_key_exists('checkedDetails', $data))
         {   
@@ -240,6 +252,7 @@ class ContentController extends AdminBaseController
                     $company_name[]=$value['company'];
                     $i++;
                     $device_code[$value['id']]=$value['device_code'];
+
                 }
                 if($i>=sizeof($data['check']))
                     break;
@@ -259,7 +272,7 @@ class ContentController extends AdminBaseController
             if(array_key_exists('image', $data))
             $message['imageUrl']=$data['image'];
             else $message['imageUrl']="";
-            $message['storyId']=$id;
+            $message['crawl_url']=$data['crawl_url'];
 
             // Log::info($message);
             Log::info($device_code);
@@ -267,7 +280,7 @@ class ContentController extends AdminBaseController
      
             foreach ($device_code as $value) {
               if($value)
-              $this->push_notifications($message,$value);
+              $this->push_notificationsIOS($message,$value);
             }
 
            
@@ -285,7 +298,7 @@ class ContentController extends AdminBaseController
     public function edit(Content $content)
     {    
         $categories = $this->category->getByAttributes(['status' => 1]);
-     
+            
         return view('content::admin.contents.edit', compact('content','categories'));
     }
 
@@ -302,8 +315,16 @@ class ContentController extends AdminBaseController
          $content_data=json_decode($content,true);
          $data=$request->all();
          $content_id=$content_data['id'];
-          
-         
+
+         $sizeofCategories=sizeof($data['category_id']);
+         Log::info($data);
+
+         $data['all_category']=json_encode($data['category_id']);
+         $data['category_id']=$sizeofCategories;      
+        
+         Log::info($data);
+
+
           if ($request->hasFile('img')){  
           $image_name=$content_id.$_FILES['img']['name'];
           $request->file('img')->move(env('IMG_URL').'/crawle_image',$image_name);
@@ -347,7 +368,7 @@ class ContentController extends AdminBaseController
 
          }
 
-        $this->content->update($content, $request->all());
+        $this->content->update($content, $data->all());
         return redirect()->route('admin.content.content.index')
             ->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('content::contents.title.contents')]));
     }
@@ -503,9 +524,69 @@ class ContentController extends AdminBaseController
         curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode($fields) );
         $result = curl_exec($ch );       
         curl_close( $ch );
-        Log::info($result);
+        // Log::info($result);
         // return response($result);
-      }          
+      } 
+      public function push_notificationsIOS($smg=array(),$registrationIds)
+      {
+
+        $apnsHost = env('apnsHost');
+        $apnsCert = env('apnsCert');
+        $apnsPort = env('apnsPort');
+        $apnsPass = env('apnsPass');
+        $token =$registrationIds;
+        
+        // Log::info(json_encode($smg));
+        // $message=json_encode($smg);
+        // $payload['aps'] = array('alert' => 'Oh hai!','badge' => 1, 'sound' => 'default');
+        // $payload['acme2']='ION NEWS';
+        // $output = json_encode($payload);
+
+        $story=$smg['message'];
+        $story='IBM NEWS';
+        $title='ION NEWS';
+        $url="http://assets.jpg";
+
+        $output='{
+    "aps": { 
+      "alert": { 
+        "title": "Pusher Native Push Notifications API", 
+        "subtitle": "Bringing you iOS 10 support!", 
+        "body": "Now add more content to your Push Notifications!"
+        }, 
+        "mutable-content": 1,
+        "category": "pusher"
+      },
+    "data": {
+      "attachment-url": "https://pusher.com/static_logos/320x320.png"
+    }
+}';
+        // Log::info($payload['acme2']=['abab','bababa']);
+        // Log::info($output);
+        // $token = pack('H*', str_replace(' ', '', $token));
+        $apnsMessage = chr(0).chr(0).chr(32).$token.chr(0).chr(strlen($output)).$output;
+
+        $streamContext = stream_context_create();
+        stream_context_set_option($streamContext, 'ssl', 'local_cert', $apnsCert);
+        stream_context_set_option($streamContext, 'ssl', 'passphrase', $apnsPass);
+
+        $apns = stream_socket_client('ssl://'.$apnsHost.':'.$apnsPort, $error, $errorString, 2, STREAM_CLIENT_CONNECT, $streamContext);
+        // print_r($apns);
+        // Log::info($apns);
+
+        if (!$apns)
+         exit("Failed to connect: $err $errstr" . PHP_EOL);
+        echo 'Connected to APNS' . PHP_EOL;
+
+        fwrite($apns, $apnsMessage);
+        fclose($apns);
+        // echo "hahhaa";
+      }
+
+        public function deleteStory(Request $request)
+        {
+          return response($request->all());
+        }       
 
 
 }

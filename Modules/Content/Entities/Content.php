@@ -11,5 +11,5 @@ class Content extends Model
 
     protected $table = 'content__contents';
     public $translatedAttributes = [];
-    protected $fillable = ['title','sub_title','content','author','category_id','crawl_url','image','all_users'];
+    protected $fillable = ['title','sub_title','content','author','category_id','crawl_url','image','all_users','all_category'];
 }

@@ -28,7 +28,26 @@
                 {!! $errors->first('sub_title', '<span class="help-block">:message</span>') !!}
             </div>
         </div>
-          <div class="col-sm-6">
+
+
+         <div class="tab-pane" id="tab_2-2">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                  {!! Form::label('category_id', trans('Category')) !!}
+                                    <select multiple="" class="form-control" name="category_id[]">
+                                        <?php foreach ($categories as $category): ?>
+                          <option value="{{ $category->id }}">{{ $category->name }}</option>
+                      <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+          <!-- <div class="col-sm-6">
               <div class="form-group{{ $errors->has('company_id') ? ' has-error' : '' }}">
                   {!! Form::label('category_id', trans('Category')) !!}
                   <select class="form-control" name="category_id">
@@ -38,7 +57,7 @@
                   </select>
               </div>
           </div>
-    
+     -->
         <div class="col-sm-12">
             <div class="form-group{{ $errors->has('content') ? ' has-error' : '' }}">
                 {!! Form::label('content', trans('Story content')) !!}

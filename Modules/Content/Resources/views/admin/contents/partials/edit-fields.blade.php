@@ -22,16 +22,35 @@
                 {!! $errors->first('sub_title', '<span class="help-block">:message</span>') !!}
             </div>
         </div>
-        <div class="col-sm-6">
-              <div class="form-group{{ $errors->has('company_id') ? ' has-error' : '' }}">
-                  {!! Form::label('category_id', trans('Service Provider Name')) !!}
-                  <select class="form-control" name="category_id">
-                      <?php foreach ($categories as $category): ?>
-                          <option value="{{ $category->id }}" <?php if($category->id == $content->category_id) echo "selected"; else echo '';?> >{{ $category->name }}</option>
+     
+
+
+          <div class="tab-pane" id="tab_2-2">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                  {!! Form::label('category_id', trans('Service Provider Name')) !!}
+                                    <select multiple="" class="form-control" name="category_id[]">
+
+                                        <?php   $allContentCategory=array();
+                                            $allcategory=$content->all_category;
+                                             if($allcategory)
+                                             { 
+                                              $allContentCategory=json_decode($allcategory,true);
+                                             } else $allContentCategory[0]=$content->category_id;
+
+                                        foreach ($categories as $category): ?>
+                                        <option value="{{ $category->id }}" <?php
+                                        if (in_array($category->id, $allContentCategory)) 
+                                        echo "selected"; else echo '';?>  >{{ $category->name }}</option>
                       <?php endforeach; ?>
-                  </select>
-              </div>
-          </div>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
         <div class="col-sm-12">
             <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">

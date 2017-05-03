@@ -13,6 +13,11 @@ $router->group(['prefix' =>'/content'], function (Router $router) {
         'as' => 'admin.content.content.index',
         'uses' => 'ContentController@index',
         'middleware' => 'can:content.contents.index'
+    ]); 
+    $router->post('contents/delete_story', [
+        'as' => 'admin.content.content.delete_story',
+        'uses' => 'ContentController@deleteStory'
+        // 'middleware' => 'can:content.contents.delete_Story'
     ]);
 
     $router->get('users', [
