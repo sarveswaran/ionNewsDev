@@ -78,7 +78,9 @@ class StoryController extends BasePublicController
       }
      public function homepage(Request $request,Client $http){
             
-            $categorylist = $this->category->getByAttributes(['status' => 1]);
+            $categorylist = $this->category->getByAttributes(['status' => 1],'priority','desc');
+
+            Log::info($categorylist);
             $dataresponse = array();
             foreach ($categorylist as $category) {
               $setexist = $this->content->findByAttributes(['category_id' => $category->id]);
