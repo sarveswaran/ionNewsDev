@@ -136,13 +136,17 @@ class StoryController extends BasePublicController
         }
         }
         public function getAllLikeStory(Request $request)
-        {     Log::info($request->user_id);        
+        {       
           $dataset=DB::table('content__contents as cc')
                   ->join('content__contentlikestories as ccl', 'cc.id','=','ccl.content_id')
                    ->select('cc.*' )
                    ->where('ccl.user_id','=',$request->user_id)                        
                    ->paginate(12);
-                   
+                 foreach ($dataset as $key => $value) {             
+                   $value->islike=1;
+               
+                  }
+                 
 
 
        
