@@ -585,7 +585,16 @@ class ContentController extends AdminBaseController
 
         public function deleteStory(Request $request)
         {
-          return response($request->all());
+            $all_content=$request->data;
+                  
+            try{
+            $data=DB::table('content__contents')
+            ->whereIn('id',$all_content)->delete();
+                } 
+            catch(Exception $e) {
+                  echo 'Message: ' .$e->getMessage();
+                  }
+            return response($data);        
         }       
 
 

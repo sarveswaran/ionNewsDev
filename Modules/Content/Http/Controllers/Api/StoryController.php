@@ -78,7 +78,7 @@ class StoryController extends BasePublicController
       }
      public function homepage(Request $request,Client $http){
             
-            $categorylist = $this->category->getByAttributes(['status' => 1]);
+            $categorylist = $this->category->getByAttributes(['status' => 1],'priority');
 
             Log::info($categorylist);
             $dataresponse = array();
