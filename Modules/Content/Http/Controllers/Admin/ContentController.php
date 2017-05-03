@@ -317,12 +317,12 @@ class ContentController extends AdminBaseController
          $content_id=$content_data['id'];
 
          $sizeofCategories=sizeof($data['category_id']);
-         Log::info($data);
+         // Log::info($data);
 
          $data['all_category']=json_encode($data['category_id']);
          $data['category_id']=$sizeofCategories;      
         
-         Log::info($data);
+         // Log::info($data);
 
 
           if ($request->hasFile('img')){  
