@@ -15,7 +15,7 @@
 @section('content')
     <div class="row">
         <div class="col-xs-12">
-        <button type="button" class="btn-info" id="deleteStory" hidden="hide" style="display: none;"> DELETE</button>
+        <button type="button" class="btn btn-primary btn-flat" id="deleteStory" hidden="hide" style="display: none;float: left;"> DELETE</button>
             <div class="row">
 
                 <!--  <div class="btn-group pull-right" style="margin: 0 15px 15px 0;">

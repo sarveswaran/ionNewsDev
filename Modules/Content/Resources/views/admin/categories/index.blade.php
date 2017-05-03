@@ -80,7 +80,7 @@
                                 <th>{{ trans('ID') }}</th>
                                 <th>{{ trans('Name') }}</th>
                                 <th>{{ trans('Slug Name') }}</th>
-                                <th>{{ trans('Priority') }} &nbsp <button type="button" class="btn-info" id="updatepriority" hidden="hide"> update</button></th>
+                                <th>{{ trans('Priority') }} &nbsp <button type="button" class="btn btn-primary btn-flat" id="updatepriority" hidden="hide"> update</button></th>
                                 <th>{{ trans('Status') }} </th>
                                 <th>{{ trans('core::core.table.actions') }}</th>
                             </tr>
