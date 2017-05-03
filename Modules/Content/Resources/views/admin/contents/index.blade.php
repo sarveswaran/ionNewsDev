@@ -213,7 +213,7 @@ function changed(event){
                 success: function(result) {
                     
                  $("#deleteStory").hide(); 
-                  // location.reload();
+                  location.reload();
                 }
      });
     
