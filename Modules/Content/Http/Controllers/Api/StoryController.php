@@ -90,17 +90,29 @@ class StoryController extends BasePublicController
                             
                                                      
               if(!empty($setexist)){
-                $dataresponse[$category->name]=DB::table('content__contents as cc')
+               $response=DB::table('content__contents as cc')
                             ->join('content__multiplecategorycontents as cm','cm.content_id','=','cc.id')
 
                             ->where('cm.category_id','=',$category->id)
                             ->groupBy('cc.id')
                             ->take(5)
                             ->get();
+                            Log::info(count($response));
+                if(count($response)!=0)
+                {     
+                 foreach ($response as $key => $value) {
+                                $value->priority=$category->priority;
+                              
+                            }           
+                 $dataresponse[$category->name]=$response;  
+                 }          
+                
                             
 
               }else{
-                   $dataresponse[$category->name] = array();
+                     $priority['priority']=1;
+                   $dataresponse[$category->name] =$priority; //array('priority'=>1);
+                   
               } 
             }
             

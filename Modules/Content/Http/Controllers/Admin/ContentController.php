@@ -214,6 +214,10 @@ class ContentController extends AdminBaseController
     {
         
         $Alldata=$request->all();
+        if(!array_key_exists('image', $Alldata))
+          $Alldata['image']=$Alldata['img1'];
+
+
         $sizeofCategories=sizeof($Alldata['category_id']);
         $multiContCategoryData=$Alldata['category_id'];
 
@@ -288,7 +292,7 @@ class ContentController extends AdminBaseController
      
             foreach ($device_code as $value) {
               if($value)
-              $this->push_notificationsIOS($message,$value);
+              $this->push_notifications($message,$value);
             }
 
            
