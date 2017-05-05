@@ -38,7 +38,14 @@ return [
         'edit' => 'content::contentlikestories.edit resource',
         'destroy' => 'content::contentlikestories.destroy resource',
     ],
+    'content.multiplecategorycontents' => [
+        'index' => 'content::multiplecategorycontents.list resource',
+        'create' => 'content::multiplecategorycontents.create resource',
+        'edit' => 'content::multiplecategorycontents.edit resource',
+        'destroy' => 'content::multiplecategorycontents.destroy resource',
+    ],
 // append
+
 
 
 

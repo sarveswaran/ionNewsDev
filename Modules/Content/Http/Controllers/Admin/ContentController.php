@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Modules\Content\Entities\Content;
 use Modules\Content\Repositories\ContentRepository;
 use Modules\Content\Repositories\ContentUserRepository;
+use Modules\Content\Repositories\MultipleCategoryContentRepository;
 use Modules\Content\Repositories\CategoryRepository;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
 use Modules\User\Repositories\UserRepository;
@@ -26,13 +27,13 @@ class ContentController extends AdminBaseController
      */
     private $content;
 
-    public function __construct(ContentRepository $content,CategoryRepository $category,ContentUserRepository $contentUser)
+    public function __construct(ContentRepository $content,CategoryRepository $category,ContentUserRepository $contentUser , MultipleCategoryContentRepository $multiContCategory)
     {
         parent::__construct();
         $this->category = $category;
         $this->content = $content;  
-        $this->contentUser=$contentUser; 
-
+        $this->contentUser=$contentUser;
+        $this->multiContCategory=$multiContCategory;
     }
 
     /**
@@ -214,23 +215,31 @@ class ContentController extends AdminBaseController
         
         $Alldata=$request->all();
         $sizeofCategories=sizeof($Alldata['category_id']);
-        // Log::info($Alldata);
+        $multiContCategoryData=$Alldata['category_id'];
 
         $Alldata['all_category']=json_encode($Alldata['category_id']);
         $Alldata['category_id']=$sizeofCategories;      
         
-        // Log::info($Alldata);
       
         $ids=$this->content->create($Alldata);   
         
         $id=json_decode($ids,true);        
           $id=$ids['id'];
-          $data=$request->all();
+          if(sizeof($multiContCategoryData))
+          {
+             foreach ($multiContCategoryData as $value) {
+                $abc['category_id']=$value;
+                $abc['content_id']=$id;         
+
+                $this->multiContCategory->create($abc); 
+                
+              }
+          }
           
 
-        if(array_key_exists('checkedDetails', $data))
+        if(array_key_exists('checkedDetails', $Alldata))
         {   
-         $checkedArray=json_decode($data['checkedDetails'][0],true);
+         $checkedArray=json_decode($Alldata['checkedDetails'][0],true);
             $length=sizeof($checkedArray); 
 
             for ($i=0;$i<$length;$i++) { 
@@ -247,14 +256,14 @@ class ContentController extends AdminBaseController
           $i=0;  
           $device_code=array();      
           foreach ($users as $key => $value) {
-             if($value['id']==$data['check'][$i])
+             if($value['id']==$Alldata['check'][$i])
                 {
                     $company_name[]=$value['company'];
                     $i++;
                     $device_code[$value['id']]=$value['device_code'];
 
                 }
-                if($i>=sizeof($data['check']))
+                if($i>=sizeof($Alldata['check']))
                     break;
             }
           for ($i=0;$i<sizeof($company_name);$i++) {               
@@ -265,14 +274,13 @@ class ContentController extends AdminBaseController
             }
             $message=array();
             
-             // Log::info($data);
-             // Log::info($id);
-            $message['title']=$data['title'];
-             $message['message']=$data['content'];
-            if(array_key_exists('image', $data))
-            $message['imageUrl']=$data['image'];
+             
+            $message['title']=$Alldata['title'];
+             $message['message']=$Alldata['content'];
+            if(array_key_exists('image', $Alldata))
+            $message['imageUrl']=$Alldata['image'];
             else $message['imageUrl']="";
-            $message['crawl_url']=$data['crawl_url'];
+            $message['crawl_url']=$Alldata['crawl_url'];
 
             // Log::info($message);
             Log::info($device_code);
@@ -317,12 +325,30 @@ class ContentController extends AdminBaseController
          $content_id=$content_data['id'];
 
          $sizeofCategories=sizeof($data['category_id']);
-         // Log::info($data);
+         $Allcategory=$data['category_id'];
 
          $data['all_category']=json_encode($data['category_id']);
          $data['category_id']=$sizeofCategories;      
         
-         // Log::info($data);
+         $categoryID=DB::table('content__multiplecategorycontents')
+                          ->select('category_id')
+                          ->where('content_id','=',$content_id)->get();
+          $categoryID=json_decode($categoryID,true);
+          $categoryIDs=array();
+          $k=0;
+
+          foreach ($categoryID as $value) {            
+            $categoryIDs[$k++]=$value['category_id'];           
+          }
+          foreach ($Allcategory as $value) {
+             if(!in_array($value, $categoryIDs))
+             {
+              $abc['category_id']=$value;
+              $abc['content_id']=$content_id;
+              $this->multiContCategory->create($abc); 
+            }
+
+            }
 
 
           if ($request->hasFile('img')){  
@@ -367,8 +393,9 @@ class ContentController extends AdminBaseController
             
 
          }
+          // Log::info($data);
 
-        $this->content->update($content, $data->all());
+        $this->content->update($content, $data);
         return redirect()->route('admin.content.content.index')
             ->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('content::contents.title.contents')]));
     }

@@ -247,7 +247,41 @@ $router->group(['prefix' =>'/content'], function (Router $router) {
         'uses' => 'ContentLikeStoryController@destroy',
         'middleware' => 'can:content.contentlikestories.destroy'
     ]);
+    $router->bind('multiplecategorycontent', function ($id) {
+        return app('Modules\Content\Repositories\MultipleCategoryContentRepository')->find($id);
+    });
+    $router->get('multiplecategorycontents', [
+        'as' => 'admin.content.multiplecategorycontent.index',
+        'uses' => 'MultipleCategoryContentController@index',
+        'middleware' => 'can:content.multiplecategorycontents.index'
+    ]);
+    $router->get('multiplecategorycontents/create', [
+        'as' => 'admin.content.multiplecategorycontent.create',
+        'uses' => 'MultipleCategoryContentController@create',
+        'middleware' => 'can:content.multiplecategorycontents.create'
+    ]);
+    $router->post('multiplecategorycontents', [
+        'as' => 'admin.content.multiplecategorycontent.store',
+        'uses' => 'MultipleCategoryContentController@store',
+        'middleware' => 'can:content.multiplecategorycontents.create'
+    ]);
+    $router->get('multiplecategorycontents/{multiplecategorycontent}/edit', [
+        'as' => 'admin.content.multiplecategorycontent.edit',
+        'uses' => 'MultipleCategoryContentController@edit',
+        'middleware' => 'can:content.multiplecategorycontents.edit'
+    ]);
+    $router->put('multiplecategorycontents/{multiplecategorycontent}', [
+        'as' => 'admin.content.multiplecategorycontent.update',
+        'uses' => 'MultipleCategoryContentController@update',
+        'middleware' => 'can:content.multiplecategorycontents.edit'
+    ]);
+    $router->delete('multiplecategorycontents/{multiplecategorycontent}', [
+        'as' => 'admin.content.multiplecategorycontent.destroy',
+        'uses' => 'MultipleCategoryContentController@destroy',
+        'middleware' => 'can:content.multiplecategorycontents.destroy'
+    ]);
 // append
+
 
 
 

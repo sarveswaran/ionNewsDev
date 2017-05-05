@@ -20,12 +20,14 @@ use Modules\Content\Repositories\ContentRepository;
 use Modules\Content\Repositories\CategoryRepository;
 use Modules\Content\Repositories\ContentLikeStoryRepository;
 use Modules\Content\Entities\ContentLikeStory;
+use Modules\Content\Repositories\MultipleCategoryContentRepository;
+
 use Log;
 use DB;
 class StoryController extends BasePublicController
 {
     protected $guard;
-    public function __construct(Response $response,Guard $guard,UserRepository $user,ContentRepository $content,CategoryRepository $category,ContentLikeStoryRepository $likestory)
+    public function __construct(Response $response,Guard $guard,UserRepository $user,ContentRepository $content,CategoryRepository $category,ContentLikeStoryRepository $likestory, MultipleCategoryContentRepository $multiContCategory)
     {
        parent::__construct();
        $this->response = $response;
@@ -34,6 +36,7 @@ class StoryController extends BasePublicController
        $this->content = $content;
        $this->category = $category;
        $this->likestory=$likestory;
+       $this->multiContCategory=$multiContCategory;
        //$this->middleware('auth:api');
       // $this->middleware('oauth');
     }
@@ -77,15 +80,69 @@ class StoryController extends BasePublicController
 
       }
      public function homepage(Request $request,Client $http){
+        $update_data=DB::table('content__contents')
+                      ->get();
+                      Log::info(json_decode($update_data));
+                      $update_data=json_decode($update_data);
+                      foreach ($update_data as $key => $value) {
+                          $data= json_decode(json_encode($value),true);
+                          $categorylist=json_decode($data['all_category']);
+                          if($categorylist){
+                           foreach ($categorylist as $category) {
+                             $abc['category_id']=$category;
+                             $abc['content_id']=$data['id'];
+                             $this->multiContCategory->create($abc); 
+                             Log::info($abc);
+                           }
+                         }
+                          else { 
+                            $abc['category_id']=$data['category_id'];
+                             $abc['content_id']=$data['id'];
+                             $this->multiContCategory->create($abc); 
+
+                          }
+                         
+                        }
+
+                      return $data;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             
             $categorylist = $this->category->getByAttributes(['status' => 1],'priority');
 
-            Log::info($categorylist);
+            // Log::info($categorylist);
             $dataresponse = array();
             foreach ($categorylist as $category) {
-              $setexist = $this->content->findByAttributes(['category_id' => $category->id]);
+              $setexist=DB::table('content__contents as cc')
+                            ->join('content__multiplecategorycontents as cm','cm.content_id','=','cc.id')
+                            ->where('cm.category_id','=',$category->id)->get();
+                            
+                                                     
+              Log::info($setexist);
               if(!empty($setexist)){
-                $dataresponse[$category->name] = $this->content->getByAttributes(['category_id' => $category->id],'id','desc')->take(5);
+                // $dataresponse[$category->name] = $this->content->getByAttributes(['category_id' => $category->id],'id','desc')->take(5);
+                $dataresponse[$category->name]=DB::table('content__contents as cc')
+                            ->join('content__multiplecategorycontents as cm','cm.content_id','=','cc.id')
+
+                            ->where('cm.category_id','=',$category->id)
+                            ->groupBy('cc.id')
+                            ->get();
+                            
 
               }else{
                    $dataresponse[$category->name] = array();
