@@ -95,6 +95,7 @@ class StoryController extends BasePublicController
 
                             ->where('cm.category_id','=',$category->id)
                             ->groupBy('cc.id')
+                            ->take(5)
                             ->get();
                             
 
