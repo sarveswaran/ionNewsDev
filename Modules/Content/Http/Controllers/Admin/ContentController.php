@@ -334,23 +334,22 @@ class ContentController extends AdminBaseController
          $data['all_category']=json_encode($data['category_id']);
          $data['category_id']=$sizeofCategories;      
         
-         $categoryID=DB::table('content__multiplecategorycontents')
-                          ->select('category_id')
-                          ->where('content_id','=',$content_id)->get();
-          $categoryID=json_decode($categoryID,true);
-          $categoryIDs=array();
-          $k=0;
+         $categoryID=DB::table('content__multiplecategorycontents')                        
+                          ->where('content_id','=',$content_id)->delete();
+          // $categoryID=json_decode($categoryID,true);
+          // $categoryIDs=array();
+          // $k=0;
 
-          foreach ($categoryID as $value) {            
-            $categoryIDs[$k++]=$value['category_id'];           
-          }
+          // foreach ($categoryID as $value) {            
+          //   $categoryIDs[$k++]=$value['category_id'];           
+          // }
           foreach ($Allcategory as $value) {
-             if(!in_array($value, $categoryIDs))
-             {
+             // if(!in_array($value, $categoryIDs))
+             // {
               $abc['category_id']=$value;
               $abc['content_id']=$content_id;
               $this->multiContCategory->create($abc); 
-            }
+            // }
 
             }
 
