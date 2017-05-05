@@ -80,54 +80,8 @@ class StoryController extends BasePublicController
 
       }
      public function homepage(Request $request,Client $http){
-        $update_data=DB::table('content__contents')
-                      ->get();
-                      $delete=DB::table('content__multiplecategorycontents')
-                                 ->delete();
-                      Log::info(json_decode($update_data));
-                      $update_data=json_decode($update_data);
-                      foreach ($update_data as $key => $value) {
-                          $data= json_decode(json_encode($value),true);
-                          $categorylist=json_decode($data['all_category']);
-                          if($categorylist){
-                           foreach ($categorylist as $category) {
-                             $abc['category_id']=$category;
-                             $abc['content_id']=$data['id'];
-                             $this->multiContCategory->create($abc); 
-                             Log::info($abc);
-                           }
-                         }
-                          else { 
-                            $abc['category_id']=$data['category_id'];
-                             $abc['content_id']=$data['id'];
-                             $this->multiContCategory->create($abc); 
-
-                          }
-                         
-                        }
-
-                      return $data;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             
             $categorylist = $this->category->getByAttributes(['status' => 1],'priority');
-
-            // Log::info($categorylist);
             $dataresponse = array();
             foreach ($categorylist as $category) {
               $setexist=DB::table('content__contents as cc')
@@ -135,9 +89,7 @@ class StoryController extends BasePublicController
                             ->where('cm.category_id','=',$category->id)->get();
                             
                                                      
-              Log::info($setexist);
               if(!empty($setexist)){
-                // $dataresponse[$category->name] = $this->content->getByAttributes(['category_id' => $category->id],'id','desc')->take(5);
                 $dataresponse[$category->name]=DB::table('content__contents as cc')
                             ->join('content__multiplecategorycontents as cm','cm.content_id','=','cc.id')
 
