@@ -82,6 +82,8 @@ class StoryController extends BasePublicController
      public function homepage(Request $request,Client $http){
         $update_data=DB::table('content__contents')
                       ->get();
+                      $delete=DB::table('content__multiplecategorycontents')
+                                 ->delete();
                       Log::info(json_decode($update_data));
                       $update_data=json_decode($update_data);
                       foreach ($update_data as $key => $value) {
