@@ -57,7 +57,7 @@
     </div> -->
 
        <div class="col-sm-12">
-        <label class="pull-left">Select Date</label>
+        <label class="pull-left">Expiry Date</label>
         <div id="returnrange" class="pull-left" style="margin-left:20px;background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
         <input type="hidden" name="expiry_date" id="expiry_date"  value="" >
         <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
