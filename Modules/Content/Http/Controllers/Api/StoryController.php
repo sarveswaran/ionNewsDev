@@ -80,11 +80,6 @@ class StoryController extends BasePublicController
 
       }
      public function homepage(Request $request,Client $http){
-
-           DB::table('content__contents')
-             ->update(['expiry_date' => '2017-06-30']);
-             return "successful expiry_date upate";
-
             
             $categorylist = $this->category->getByAttributes(['status' => 1],'priority');
             $dataresponse = array();
