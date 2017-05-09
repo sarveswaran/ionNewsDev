@@ -78,9 +78,11 @@
             <div class="col-sm-4">
                 <div class="form-group{{ $errors->has('image') ? ' has-error' : '' }}">
                     {!! Form::label('image', trans('Image')) !!}
-                    {!! Form::file('img', old('img'), ['class' => 'form-control', 'placeholder' => trans('image')]) !!}
+                    <!-- {!! Form::file('img', old('img'),['class' => 'form-control', 'placeholder' => trans('image')]) !!} -->
+               
+                    <input name="img" type="file" onchange="previewFile()">
                     {!! $errors->first('image', '<span class="help-block">:message</span>') !!}
-                    <img src="{{ $content->image }}" width="120">
+                    <img  src="{{ $content->image }}" onchange="previewFile()" width="120">
                 </div>
             </div>
       </div>
