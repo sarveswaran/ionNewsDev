@@ -83,21 +83,24 @@ class StoryController extends BasePublicController
             
             $categorylist = $this->category->getByAttributes(['status' => 1],'priority');
             $dataresponse = array();
+            $current_date=date('Y-m-d');
+            // Log::info($current_date);
             foreach ($categorylist as $category) {
               $setexist=DB::table('content__contents as cc')
                             ->join('content__multiplecategorycontents as cm','cm.content_id','=','cc.id')
+                            ->where('cc.expiry_date','>=',$current_date)
                             ->where('cm.category_id','=',$category->id)->get();
                             
                                                      
               if(!empty($setexist)){
                $response=DB::table('content__contents as cc')
                             ->join('content__multiplecategorycontents as cm','cm.content_id','=','cc.id')
-
                             ->where('cm.category_id','=',$category->id)
+                            ->where('cc.expiry_date','>=',$current_date)
                             ->groupBy('cc.id')
                             ->take(5)
                             ->get();
-                            Log::info(count($response));
+                            // Log::info(count($response));
                 if(count($response)!=0)
                 {     
                  foreach ($response as $key => $value) {
@@ -162,10 +165,12 @@ class StoryController extends BasePublicController
         }
         }
         public function getAllLikeStory(Request $request)
-        {       
+        { 
+           $current_date=date('Y-m-d');      
           $dataset=DB::table('content__contents as cc')
                   ->join('content__contentlikestories as ccl', 'cc.id','=','ccl.content_id')
                    ->select('cc.*' )
+                   ->where('cc.expiry_date','>=',$current_date)
                    ->where('ccl.user_id','=',$request->user_id)                        
                    ->paginate(12);
                  foreach ($dataset as $key => $value) {             

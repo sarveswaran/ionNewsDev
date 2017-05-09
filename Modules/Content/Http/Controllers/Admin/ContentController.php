@@ -286,7 +286,6 @@ class ContentController extends AdminBaseController
             else $message['imageUrl']="";
             $message['crawl_url']=$Alldata['crawl_url'];
 
-            // Log::info($message);
             Log::info($device_code);
 
      
@@ -326,6 +325,7 @@ class ContentController extends AdminBaseController
     { 
          $content_data=json_decode($content,true);
          $data=$request->all();
+
          $content_id=$content_data['id'];
 
          $sizeofCategories=sizeof($data['category_id']);
@@ -357,13 +357,14 @@ class ContentController extends AdminBaseController
           if ($request->hasFile('img')){  
           $image_name=$content_id.$_FILES['img']['name'];
           $request->file('img')->move(env('IMG_URL').'/crawle_image',$image_name);
-          $image=env('IMG_URL1').'/crawle_image/'.$image_name;       
+          $image=env('IMG_URL1').'/crawle_image/'.$image_name;   
            }
           else {
             $image = $content->image;
            } 
          
          $request->merge(['image' => $image]);
+         $data['image']=$image;
 
          if(array_key_exists('check', $data))
          {  
@@ -396,7 +397,7 @@ class ContentController extends AdminBaseController
             
 
          }
-          // Log::info($data);
+
 
         $this->content->update($content, $data);
         return redirect()->route('admin.content.content.index')
@@ -430,8 +431,6 @@ class ContentController extends AdminBaseController
           $uncheck_array=array();
           $userData=json_decode($userData,true);
           $j=0;$k=0;
-          // Log::info($userData);
-          // Log::info("Size of ".sizeof($userData));
           $userId=array();
           foreach ($userData as $key => $value) {
                $userId[$key]=$value['id'];
@@ -461,13 +460,9 @@ class ContentController extends AdminBaseController
                  } 
                     
           }
-          // Log::info($check_aray);
-          // Log::info($uncheck_array);
-          $FinalArray['check']=$check_array;
-          $FinalArray['uncheck']=$uncheck_array;
-          // Log::info($FinalArray);
-
          
+          $FinalArray['check']=$check_array;
+          $FinalArray['uncheck']=$uncheck_array;         
            }    
         else {              
               $company_name=array();
@@ -516,8 +511,7 @@ class ContentController extends AdminBaseController
                      
                 } 
                     if($check==0)
-                    {
-                     // Log::info($user_id);
+                    {                     
                      $ContentUser= new ContentUser;
                      $ContentUser->user_id=$user_id;
                      $ContentUser->content_id=$content_id;
@@ -555,7 +549,7 @@ class ContentController extends AdminBaseController
         $result = curl_exec($ch );       
         curl_close( $ch );
         // Log::info($result);
-        // return response($result);
+        return response($result);
       } 
       public function push_notificationsIOS($smg=array(),$registrationIds)
       {

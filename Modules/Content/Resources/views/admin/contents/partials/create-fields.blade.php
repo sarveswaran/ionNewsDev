@@ -47,17 +47,28 @@
                     </div>
                 </div>
 
-          <!-- <div class="col-sm-6">
-              <div class="form-group{{ $errors->has('company_id') ? ' has-error' : '' }}">
-                  {!! Form::label('category_id', trans('Category')) !!}
-                  <select class="form-control" name="category_id">
-                      <?php foreach ($categories as $category): ?>
-                          <option value="{{ $category->id }}">{{ $category->name }}</option>
-                      <?php endforeach; ?>
-                  </select>
-              </div>
-          </div>
-     -->
+
+    <!-- <div class="col-sm-12"> -->
+     <!-- <div class="form-group{{ $errors->has('content') ? ' has-error' : '' }}"> -->
+      <!-- {!! Form::label('content', trans('Select Expiry Date')) !!} -->
+<!--     <label class="pull-left">Select Expiry Date</label>
+    <input type="text" name="date" id="returnrange"  style="margin-left:20px;background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc" value="" class="glyphicon glyphicon-calendar fa fa-calendar">
+        <span></span><b class="caret"></b>
+    </div> -->
+
+       <div class="col-sm-12">
+        <label class="pull-left">Select Date</label>
+        <div id="returnrange" class="pull-left" style="margin-left:20px;background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
+        <input type="hidden" name="expiry_date" id="expiry_date"  value="" >
+        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+        <span></span><b class="caret"></b>
+        </div>
+        </div>
+  
+
+    
+
+
         <div class="col-sm-12">
             <div class="form-group{{ $errors->has('content') ? ' has-error' : '' }}">
                 {!! Form::label('content', trans('Story content')) !!}
