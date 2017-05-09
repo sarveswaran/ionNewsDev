@@ -54,29 +54,27 @@ class StoryController extends BasePublicController
           $this->response->setContent(array('message'=> $message));
         return $this->response->setStatusCode(400,$meserror);
       }else{
-
             $dataset = $this->content->filter('category_id' , $request->category_id);
-            foreach ($dataset as $key => $value) {             
-               $values=json_decode($value,true);
-               $value->islike=$this->checkLikeorNot($value,$user_id);
-               
-            }
+            foreach ($dataset as $key => $value) {    
             
-            
-         
+               $value->like_count=$this->checkLikeorNot($value,$user_id);
+               if($value->like_count)
+               $value->islike=1;
+               else $value->islike=0;               
+            }          
             return $dataset;
-
         }
       }
-      public function checkLikeorNot($data =array(),$user_id)
+      public function checkLikeorNot($data ,$user_id)
       {  
         $likeData=DB::table('content__contentlikestories as cc')
-                      ->where('cc.content_id','=',$data['id'])
+                      ->where('cc.content_id','=',$data->id)
                       ->where('cc.user_id','=',$user_id)
                       ->get();
-                       if(count($likeData))
-                         return 1;
-                       else return 0;         
+                      Log::info($likeData);
+                      $like_count=count($likeData);
+                      return $like_count;
+                               
 
       }
      public function homepage(Request $request,Client $http){
