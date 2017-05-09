@@ -13,11 +13,11 @@
     @foreach($cssFiles as $css)
         <link media="all" type="text/css" rel="stylesheet" href="{{ URL::asset($css) }}">
     @endforeach
-     <link media="all" type="text/css" rel="stylesheet" href="{{ URL::asset('themes/adminlte/css/daterangepicker.css') }}">
+     <!-- <link media="all" type="text/css" rel="stylesheet" href="{{ URL::asset('themes/adminlte/css/daterangepicker.css') }}"> -->
     
     {!! Theme::script('vendor/jquery/jquery.min.js') !!}
-     {!! Theme::script('vendor/jquery/moment.js') !!}
-    {!! Theme::script('vendor/jquery/daterangepicker.js') !!}
+     <!-- {!! Theme::script('vendor/jquery/moment.js') !!} -->
+    <!-- {!! Theme::script('vendor/jquery/daterangepicker.js') !!} -->
    
     @include('partials.asgard-globals')
     @section('styles')
