@@ -78,9 +78,7 @@
         </div>
        </div>
       <div class="row">
-     	<div class="form-group box-body img-info">
-	        <!-- <input  type="hidden" class="btn btn-primary btn-flat" value="Add Image" onclick="addRow('dataTable')" /> -->
-	        <!-- <input type="hidden" class="btn btn-danger btn-flat" value="Delete Image" onclick="deleteRow('dataTable')" /> -->
+     	<div class="form-group box-body img-info">	      
 	        <table id="dataTable" width="350px" border="1" class="imgtable" style="width: 100%;border: 4px solid #ecf0f5;">
                 <thead>
 
@@ -101,9 +99,25 @@
 	            {{--</tr>--}}
 	        </table>
 	    </div>
+       <div class="tab-pane user-types" id="tab_2-2">
+           <div class="box-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                      {!! Form::label('user_group', trans('User Group')) !!}
+                      <select multiple="multiple" class="form-control" name="user_roles[]">
+                      <?php foreach ($user_roles as $user_role): ?>
+                      <option value="{{ $user_role['id'] }}">{{ $user_role['type'] }}</option>
+                      <?php endforeach; ?>
+                      </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+ 
       <div class="form-group user-types">
-
-
            <table class=" data-table table table-bordered table-hover dataTable" id="User_data" role="grid" aria-describedby="DataTables_Table_0_info" >
            <thead>
                <tr>
@@ -121,3 +135,4 @@
       </div>
     </div>
     </div>
+

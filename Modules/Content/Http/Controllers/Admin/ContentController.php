@@ -11,12 +11,15 @@ use Modules\Content\Repositories\MultipleCategoryContentRepository;
 use Modules\Content\Repositories\CategoryRepository;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
 use Modules\User\Repositories\UserRepository;
+use Modules\User\Contracts\Authentication;
+
 use Modules\User\Entities\Sentinel\User;
 use Modules\Content\Entities\ContentImages;
 use Modules\Content\Entities\ContentUser;
 use Modules\Content\Entities\ContentCompany;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Modules\User\Repositories\RoleRepository;
 use Log;
 use DB;
 
@@ -27,13 +30,14 @@ class ContentController extends AdminBaseController
      */
     private $content;
 
-    public function __construct(ContentRepository $content,CategoryRepository $category,ContentUserRepository $contentUser , MultipleCategoryContentRepository $multiContCategory)
+    public function __construct(ContentRepository $content,CategoryRepository $category,ContentUserRepository $contentUser , MultipleCategoryContentRepository $multiContCategory,RoleRepository $role)
     {
         parent::__construct();
         $this->category = $category;
         $this->content = $content;  
         $this->contentUser=$contentUser;
         $this->multiContCategory=$multiContCategory;
+        $this->role=$role;
     }
 
     /**
@@ -58,7 +62,25 @@ class ContentController extends AdminBaseController
     public function create()
     {
         $categories = $this->category->getByAttributes(['status' => 1]);
-        return view('content::admin.contents.create',compact('categories'));
+        $roles=json_decode($this->role->all());
+          
+          $user_roles[-1]['id']=-1;       
+          $user_roles[-1]['type']='All';
+             
+         foreach ($roles as $value) { 
+          if($value->name!='Admin')
+          {                
+          $user_roles[$value->id]['id']=$value->id;        
+          $user_roles[$value->id]['type']=$value->name;
+        
+          }
+         }  
+            $user_roles[0]['id']=0;       
+            $user_roles[0]['type']='default';
+              
+            // Log::info($user_roles); die;
+
+        return view('content::admin.contents.create',compact('categories'),compact('user_roles'));
     }
 
     public function ajaxcall(Request $request)
@@ -420,8 +442,8 @@ class ContentController extends AdminBaseController
     public function getAllUsers(Request $request)
     {   
             
-        $users =json_decode(User::all(),true);  
-        // echo "<pre>";   print_r($users); exit;          
+        $users =json_decode(User::all(),true); 
+
          if (isset($_GET['id'])) {            
             $content_id=$_GET['id']; 
             $userData = DB::table('content__contentusers as cu')->select(\DB::raw('u.*'))
@@ -469,12 +491,23 @@ class ContentController extends AdminBaseController
               $k=0;
               $FinalArray=array();
               foreach ($users as $value) {
-              $FinalArray[$k]['id']=$value['id'];
-              $FinalArray[$k]['name']=$value['first_name'];
-              $FinalArray[$k]['role']=$value['designation'];
-              $FinalArray[$k]['company']=$value['company'];
+              if($value['role'])
+              {
+              $FinalArray[$value['role']][$k]['id']=$value['id'];
+              $FinalArray[$value['role']][$k]['name']=$value['first_name'];
+              $FinalArray[$value['role']][$k]['role']=$value['designation'];
+              $FinalArray[$value['role']][$k]['company']=$value['company'];
+              }
+              else {
+              $FinalArray['default'][$k]['id']=$value['id'];
+              $FinalArray['default'][$k]['name']=$value['first_name'];
+              $FinalArray['default'][$k]['role']=$value['designation'];
+              $FinalArray['default'][$k]['company']=$value['company'];
+
+              }
               $k++;
               }
+              Log::info($FinalArray);
 
      }
      return $FinalArray;

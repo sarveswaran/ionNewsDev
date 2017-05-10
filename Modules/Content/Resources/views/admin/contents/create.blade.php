@@ -78,6 +78,7 @@
 </script> -->
     <script>
         $( document ).ready(function() {
+          var all_users_info="";
           $(".user-types").hide();
           $(".img-info").hide();
 
@@ -329,34 +330,21 @@ function changed(event){
                     $("#user_info").empty();
                     var table = "";
                     var i = 1;
-                   $.each(result, function (key, value) {
-                                                      
+                    all_users_info=result;
+                   $.each(result, function (key, values) {
+                    $.each(values, function(key,value){                     
+
              table+='<tr id="'+value.id+'"><td> <input class="checkbox" type="checkbox" onchange="changed(this);" name="check[]" value="'+value.id+'"></td>'+
                               '<td>'+value.name+'</td>'+
                   '<td>'+value.company+'</td><td>'+value.role+'</td></tr>';
                             i++;
 
                         });
+                      });
+                        
                         $("#user_info").html(table);
 
-                        $("#User_data").DataTable({
-                        "initComplete": function( settings, json ) {
-                            $('.dataTables_filter').find('input[typcd e=search]').attr('type','text');
-                        },
-                        "bPaginate": true,
-                        "bautoWidth": true,
-                        "pagingType": "full_numbers",
-                        "pageLength": 10,
-                        "lengthMenu": [10, 25, 50, 100],
-                        "dom": 'T<"clear">lfrtip',
-                        "initComplete": function( settings, json ) {
-                            $('.dataTables_filter').find('input[type=search]').attr('type','text');
-                        },
-                        tableTools: {
-                            "sSwfPath":"http://cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf",
-                            aButtons: ['csv']
-                        }
-                    });
+                        dataTableAssign();
 
 
 
@@ -370,6 +358,76 @@ function changed(event){
 
         }
 
+      function dataTableAssign(){
+        dt=$("#User_data").DataTable({
+            "initComplete": function( settings, json ) {
+                $('.dataTables_filter').find('input[typcd e=search]').attr('type','text');
+            },
+            "bPaginate": true,
+            "bautoWidth": true,
+             // "destroy" : true,
+            "pagingType": "full_numbers",
+            "pageLength": 10,
+            "lengthMenu": [10, 25, 50, 100],
+            "dom": 'T<"clear">lfrtip',
+            "initComplete": function( settings, json ) {
+                $('.dataTables_filter').find('input[type=search]').attr('type','text');
+            },
+            tableTools: {
+                "sSwfPath":"http://cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf",
+                aButtons: ['csv']
+            }
+        });
+      }
 
+    </script>
+   
+    <script type="text/javascript">
+     var user_roles='<?php echo json_encode($user_roles);?>';
+     var all_users_roles=jQuery.parseJSON(user_roles); 
+
+     
+      function changeorder()
+      { 
+        var roles_data=$( this ).val();
+         var check=roles_data.indexOf("-1");     
+        dt.destroy();        
+        $("#user_info").empty();
+        var table = "";
+
+         if(check==-1)
+         {
+        $.each(roles_data, function (key, values) {          
+          keys=all_users_roles[values]['type'].toLowerCase();
+          var data =all_users_info[keys];         
+          $.each(data ,function(key,new_users){  
+          table+='<tr id="'+new_users.id+'"><td> <input class="checkbox" type="checkbox" onchange="changed(this);" name="check[]" value="'+new_users.id+'"></td>'+
+                              '<td>'+new_users.name+'</td>'+
+                  '<td>'+new_users.company+'</td><td>'+new_users.role+'</td></tr>';     
+            });
+            });
+         }
+          else {
+             $.each(all_users_info, function (key, values) {     
+                
+             $.each(values ,function(key,new_users){ 
+                
+
+             table+='<tr id="'+new_users.id+'"><td> <input class="checkbox" type="checkbox" onchange="changed(this);" name="check[]" value="'+new_users.id+'"></td>'+
+                              '<td>'+new_users.name+'</td>'+
+                  '<td>'+new_users.company+'</td><td>'+new_users.role+'</td></tr>';     
+            });
+            });
+
+          }
+
+                        
+            $("#user_info").html(table);             
+            dataTableAssign();
+
+         
+      }
+      $( "select" ).change( changeorder );
+       changeorder();
     </script>
 @stop

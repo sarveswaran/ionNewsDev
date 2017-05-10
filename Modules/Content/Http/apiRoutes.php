@@ -38,6 +38,11 @@ Route::group(['middleware' => 'cors'], function(Router $router){
         'as' => 'CategoryController.api.categorylist',
         'uses' => 'CategoryController@categorylist'
     ]);
+     $router->get('/user_group', [
+        'as' => 'CategoryController.api.user_group',
+        'uses' => 'CategoryController@getUserGroup'
+    ]);
+
 
 });
 });

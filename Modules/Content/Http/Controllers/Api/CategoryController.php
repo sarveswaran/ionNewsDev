@@ -22,13 +22,14 @@ use Log;
 class CategoryController extends BasePublicController
 {
     protected $guard;
-    public function __construct(Response $response,Guard $guard,UserRepository $user,CategoryRepository $category)
+    public function __construct(Response $response,Guard $guard,UserRepository $user,CategoryRepository $category , RoleRepository $role)
     {
        parent::__construct();
        $this->response = $response;
        $this->guard = $guard;
        $this->user = $user;
        $this->category = $category;
+       $this->role=$role;
 
     }
     public function categorylist(Request $request,Client $http){
@@ -40,4 +41,14 @@ class CategoryController extends BasePublicController
             return $categorylist;
 
         }
+    public function getUserGroup( )
+    {
+       $roles=$this->role->all();
+       foreach ($roles as $key => $value) {
+            unset($value['permissions']);
+       
+       }
+        return $roles;
+
+    }
   }
