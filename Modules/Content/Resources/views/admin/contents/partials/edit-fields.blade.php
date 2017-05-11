@@ -86,6 +86,22 @@
                 </div>
             </div>
       </div>
+        <div class="tab-pane user-types" id="tab_2-2">
+           <div class="box-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                      {!! Form::label('user_group', trans('User Group')) !!}
+                      <select multiple="multiple" class="form-control" name="user_roles[]">
+                      <?php foreach ($user_roles as $user_role): ?>
+                      <option value="{{ $user_role['id'] }}">{{ $user_role['type'] }}</option>
+                      <?php endforeach; ?>
+                      </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           
      <div class="form-group user-types">
            <table class=" data-table table table-bordered table-hover dataTable" id="User_data" role="grid" aria-describedby="DataTables_Table_0_info">

@@ -76,9 +76,7 @@ class ContentController extends AdminBaseController
           }
          }  
             $user_roles[0]['id']=0;       
-            $user_roles[0]['type']='default';
-              
-            // Log::info($user_roles); die;
+            $user_roles[0]['type']='default';             
 
         return view('content::admin.contents.create',compact('categories'),compact('user_roles'));
     }
@@ -331,8 +329,23 @@ class ContentController extends AdminBaseController
     public function edit(Content $content)
     {    
         $categories = $this->category->getByAttributes(['status' => 1]);
+        $roles=json_decode($this->role->all());
+          
+          $user_roles[-1]['id']=-1;       
+          $user_roles[-1]['type']='All';
+             
+         foreach ($roles as $value) { 
+          if($value->name!='Admin')
+          {                
+          $user_roles[$value->id]['id']=$value->id;        
+          $user_roles[$value->id]['type']=$value->name;
+        
+          }
+         }  
+            $user_roles[0]['id']=0;       
+            $user_roles[0]['type']='default';
             
-        return view('content::admin.contents.edit', compact('content','categories'));
+        return view('content::admin.contents.edit', compact('content','categories','user_roles'));
     }
 
     /**
@@ -460,20 +473,39 @@ class ContentController extends AdminBaseController
           $ch=0;
           foreach ($users as $value) {           
             if($ch<sizeof($userData) && in_array($value['id'], $userId))
-            { 
-                $check_array[$k]['id']=$value['id'];
-                $check_array[$k]['name']=$value['first_name'];
-                $check_array[$k]['role']=$value['designation'];
-                $check_array[$k]['company']=$value['company'];
+            {    if($value['role'])
+              {
+                $check_array[$value['role']][$k]['id']=$value['id'];
+                $check_array[$value['role']][$k]['name']=$value['first_name'];
+                $check_array[$value['role']][$k]['role']=$value['designation'];
+                $check_array[$value['role']][$k]['company']=$value['company'];
+              }
+               else {
+                 $check_array['default'][$k]['id']=$value['id'];
+                 $check_array['default'][$k]['name']=$value['first_name'];
+                 $check_array['default'][$k]['role']=$value['designation'];
+                 $check_array['default'][$k]['company']=$value['company'];
+
+               }
 
                 $k++;
                 $ch++;
             }
             else {
-                 $uncheck_array[$j]['id']=$value['id'];
-                 $uncheck_array[$j]['name']=$value['first_name'];
-                 $uncheck_array[$j]['role']=$value['designation'];
-                 $uncheck_array[$j]['company']=$value['company'];
+                 if($value['role'])
+                 {
+                 $uncheck_array[$value['role']][$j]['id']=$value['id'];
+                 $uncheck_array[$value['role']][$j]['name']=$value['first_name'];
+                 $uncheck_array[$value['role']][$j]['role']=$value['designation'];
+                 $uncheck_array[$value['role']][$j]['company']=$value['company'];
+                 }
+                 else {
+                 $uncheck_array['default'][$j]['id']=$value['id'];
+                 $uncheck_array['default'][$j]['name']=$value['first_name'];
+                 $uncheck_array['default'][$j]['role']=$value['designation'];
+                 $uncheck_array['default'][$j]['company']=$value['company'];
+
+                 }
 
 
 
@@ -506,10 +538,10 @@ class ContentController extends AdminBaseController
 
               }
               $k++;
-              }
-              Log::info($FinalArray);
+              }             
 
      }
+
      return $FinalArray;
      }
      public function getAllUsersInfo(Request $request)
