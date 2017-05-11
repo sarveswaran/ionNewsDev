@@ -107,7 +107,9 @@
                       {!! Form::label('user_group', trans('User Group')) !!}
                       <select multiple="multiple" class="user_group form-control" name="user_roles[]">
                       <?php foreach ($user_roles as $user_role): ?>
-                      <option value="{{ $user_role['id'] }}">{{ $user_role['type'] }}</option>
+                      <option value="{{ $user_role['id'] }}" <?php
+                                        if ($user_role['id']==-1) 
+                                        echo "selected"; else echo '';?>>{{ $user_role['type'] }}</option>
                       <?php endforeach; ?>
                       </select>
                   </div>

@@ -312,7 +312,7 @@ $('.checkbox').change(function(){ //".checkbox" change
             }                      
             $("#user_info").html(table);          
          }
-        $( "select" ).change( changeorder );
+        $( "select.user_group" ).change( changeorder );
          changeorder();
     </script>
 @stop
