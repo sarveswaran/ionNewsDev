@@ -394,17 +394,22 @@ function changed(event){
         dt.destroy();        
         $("#user_info").empty();
         var table = "";
-
+          
          if(check==-1)
          {
         $.each(roles_data, function (key, values) {          
           keys=all_users_roles[values]['type'].toLowerCase();
-          var data =all_users_info[keys];         
+          console.log(keys);
+           
+          if (typeof(all_users_info[keys]) != 'undefined') { 
+          var data =all_users_info[keys]; 
+          console.log(data);      
           $.each(data ,function(key,new_users){  
           table+='<tr id="'+new_users.id+'"><td> <input class="checkbox" type="checkbox" onchange="changed(this);" name="check[]" value="'+new_users.id+'"></td>'+
                               '<td>'+new_users.name+'</td>'+
                   '<td>'+new_users.company+'</td><td>'+new_users.role+'</td></tr>';     
             });
+            }
             });
          }
           else {
