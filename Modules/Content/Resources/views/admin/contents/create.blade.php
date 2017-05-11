@@ -432,7 +432,7 @@ function changed(event){
 
          
       }
-      $( "select" ).change( changeorder );
+      $( "select.user_group" ).change( changeorder );
        changeorder();
     </script>
 @stop
