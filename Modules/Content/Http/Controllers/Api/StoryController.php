@@ -54,9 +54,9 @@ class StoryController extends BasePublicController
           $this->response->setContent(array('message'=> $message));
         return $this->response->setStatusCode(400,$meserror);
       }else{
-            $dataset = $this->content->filter('category_id' , $request->category_id);
+            $dataset = $this->content->filter( $request->category_id,$user_id);
             foreach ($dataset as $key => $value) {    
-            
+                unset($value->category_id);
                $value->like_count=$this->checkLikeorNot($value,$user_id);
                if($value->like_count)
                $value->islike=1;
@@ -71,38 +71,44 @@ class StoryController extends BasePublicController
                       ->where('cc.content_id','=',$data->id)
                       ->where('cc.user_id','=',$user_id)
                       ->get();
-                      Log::info($likeData);
                       $like_count=count($likeData);
-                      return $like_count;
-                               
+                      return $like_count;                              
 
       }
-     public function homepage(Request $request,Client $http){
+     public function homepage(Request $request,Client $http){       
             
             $categorylist = $this->category->getByAttributes(['status' => 1],'priority');
             $dataresponse = array();
             $current_date=date('Y-m-d');
-            // Log::info($current_date);
+            $user_id=$request->user_id;       
+
             foreach ($categorylist as $category) {
               $setexist=DB::table('content__contents as cc')
+                            ->join('content__contentusers as cu', 'cu.content_id','=','cc.id')
                             ->join('content__multiplecategorycontents as cm','cm.content_id','=','cc.id')
                             ->where('cc.expiry_date','>=',$current_date)
-                            ->where('cm.category_id','=',$category->id)->get();
+                            ->where('cm.category_id','=',$category->id)
+                            ->where('cu.user_id','=',$user_id)
+                            ->orderBy('cc.id', 'desc')
+                            ->take(5)
+                            ->get();
                             
                                                      
               if(!empty($setexist)){
-               $response=DB::table('content__contents as cc')
-                            ->join('content__multiplecategorycontents as cm','cm.content_id','=','cc.id')
-                            ->where('cm.category_id','=',$category->id)
-                            ->where('cc.expiry_date','>=',$current_date)
-                            ->groupBy('cc.id')
-                            ->take(5)
-                            ->get();
-                            // Log::info(count($response));
+                 $response=$setexist;
+               // $response=DB::table('content__contents as cc')
+               //              ->join('content__multiplecategorycontents as cm','cm.content_id','=','cc.id')
+               //              ->where('cm.category_id','=',$category->id)
+               //              ->where('cc.expiry_date','>=',$current_date)
+               //              ->orderBy('cc.id', 'desc')
+               //              ->take(5)                         
+               //              ->get();
                 if(count($response)!=0)
                 {     
                  foreach ($response as $key => $value) {
+
                                 $value->priority=$category->priority;
+                                // $value->like_count=$this->checkLikeorNot($value,$user_id);
                               
                             }           
                  $dataresponse[$category->name]=$response;  
@@ -112,7 +118,7 @@ class StoryController extends BasePublicController
 
               }else{
                      $priority['priority']=1;
-                   $dataresponse[$category->name] =$priority; //array('priority'=>1);
+                   $dataresponse[$category->name] =$priority; 
                    
               } 
             }
@@ -174,12 +180,8 @@ class StoryController extends BasePublicController
                  foreach ($dataset as $key => $value) {             
                    $value->islike=1;
                
-                  }
-                 
-
-
-       
-           return response($dataset);
+                  }              
+                  return response($dataset);
 
         }
 }

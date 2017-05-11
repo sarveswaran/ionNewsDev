@@ -130,22 +130,45 @@ class ContentController extends AdminBaseController
                              if ($a->nodeValue != NULL)
                             $array[$i]['border'] = $a->nodeValue;
                     }
-
+               }
+               
+                if (!array_key_exists("height",$array[$i])){
+                     $array[$i]['height']=0;
+                }
+                if (!array_key_exists("width",$array[$i])){
+                     $array[$i]['width']=0;
+                }
+                  if (!array_key_exists("img_name",$array[$i])){
+                     $array[$i]['img_name']='Sample_Image';
                 }
                 $i++;
-            }
-          
+            }             
+
+            $all_img_array=array();
+            $k=0;
+             $url_check=array();
+             foreach ($array as $key => $value) {
+                if(!in_array($value['img_url'], $url_check))
+                {
+                $all_img_array[$k]['width']=$value['width'];
+                $all_img_array[$k]['height']=$value['height'];                
+                $all_img_array[$k]['img_url']=$value['img_url'];
+                $all_img_array[$k]['img_name']=$value['img_name'];
+                $url_check[$k]=$value['img_url'];
+                $k++;
+                }             
+                
+             }
+             arsort($all_img_array);          
             $img_array = array();
             $img_url=array();
-         
-            foreach ($array as $value) {
-
+            foreach ($all_img_array as $value) {
                 if(array_key_exists('height',$value) AND array_key_exists('width',$value)){
                 if($value['height']>100 or $value['width']>100) {
                     $split_image = pathinfo($value['img_url']);
                     if (array_key_exists('img_name', $value)){ 
 
-                    if(!in_array('gif', $split_image)){
+                    if(!in_array('gif', $split_image) && !in_array('cms', $split_image)){
 
                     if ($value['img_name'] != NULL){
                         $img_array[] = $value;
@@ -159,7 +182,7 @@ class ContentController extends AdminBaseController
                     }
                    }
                    else { 
-                          if(!in_array('gif', $split_image)){
+                          if(!in_array('gif', $split_image) && !in_array('cms', $split_image)){
                               $value['img_name']='Sample_Image';
                               $img_array[] = $value;
                               $img_url[]=$value['img_url'];
@@ -169,13 +192,15 @@ class ContentController extends AdminBaseController
                 }
                 }
             }
+            // echo "<pre>";
+            // print_r($img_array);  exit;
             if(sizeof($img_array)<5){                
             foreach ($array as $array_data) { 
 
                 $split_image = pathinfo($array_data['img_url']);
 
 
-                if(!in_array('gif', $split_image)){
+                if(!in_array('gif', $split_image) && !in_array('cms', $split_image)){
 
                 if (array_key_exists('img_name', $array_data)){
 
@@ -222,6 +247,9 @@ class ContentController extends AdminBaseController
             }else{  $FinalArray['title'] = $title;
                 $FinalArray['status']=202;
              }
+             // echo "<br>";
+             // echo "<br>";
+             // echo "<br>"; print_r($FinalArray); exit;
         return $FinalArray;
     }
     /**
