@@ -72,54 +72,32 @@ class StoryController extends BasePublicController
             Log::info($categorylist);
             $dataresponse = array();
             $current_date=date('Y-m-d');
-            $user_id=$request->user_id; 
-            Log::info($user_id);      
+            $user_id=$request->user_id;  
+            $user_id=17;       
 
             foreach ($categorylist as $category) {
-               $setexist=DB::table('content__contents as cc')
-                            ->join('content__contentusers as cu', 'cu.content_id','=','cc.id')
-                            ->join('content__multiplecategorycontents as cm','cm.content_id','=','cc.id')
-                            ->where('cc.expiry_date','>=',$current_date)
-                            ->where('cm.category_id','=',$category->id)
-                            ->where('cu.user_id','=',$user_id)
-                            ->orderBy('cc.id', 'desc')
-                            ->take(5)
-                            ->get();
-            
-              Log::info("according to category".$setexist); 
-                                                     
-              if(!empty($setexist)){
-                 $response=DB::table('content__contents as cc')
-                            ->join('content__contentusers as cu', 'cu.content_id','=','cc.id')
-                            ->join('content__multiplecategorycontents as cm','cm.content_id','=','cc.id')
-                            ->where('cc.expiry_date','>=',$current_date)
-                            ->where('cm.category_id','=',$category->id)
-                            ->where('cu.user_id','=',$user_id)
-                            ->orderBy('cc.id', 'desc')
-                            ->take(5)
-                            ->get();
-                if(count($response)!=0)
+               $setexist=$this->content->getStoryByCategory($category->id,$user_id);    
+               if(!empty($setexist)){                
+               if(count($setexist)!=0)
                 {     
-                 foreach ($response as $key => $value) {
+                 foreach ($setexist as $key => $value) {
 
                                 $value->priority=$category->priority;
-                                // $value->like_count=$this->checkLikeorNot($value,$user_id);
-                              
+                           // $value->like_count=$this->checkLikeorNot($value,$user_id);                              
                             }           
-                 $dataresponse[$category->name]=$response;  
-                 }          
+                 $dataresponse[$category->name]=$setexist;  
+                 } 
+                 else {
+                   $priority['priority']=$category->priority;
+                   $dataresponse[$category->name] =array(); 
+                 }    
                 
-                            
-
-              }else{
-                     $priority['priority']=1;
-                   $dataresponse[$category->name] =$priority; 
+                }else{                     
+                   $dataresponse[$category->name] =array(); 
                    
               } 
-            }
-             // Log::info(json_encode($dataresponse));
+            }         
 
-            Log::info($dataresponse);
 
             return response($dataresponse);
 
