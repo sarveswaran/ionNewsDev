@@ -69,26 +69,28 @@ class StoryController extends BasePublicController
      public function homepage(Request $request,Client $http){       
             
             $categorylist = $this->category->getByAttributes(['status' => 1],'priority');
+            Log::info($categorylist);
             $dataresponse = array();
             $current_date=date('Y-m-d');
-            $user_id=$request->user_id;       
+            $user_id=$request->user_id; 
+            Log::info($user_id);      
 
             foreach ($categorylist as $category) {
                $setexist=$this->content->getStoryByCategory($category->id,$user_id);
             
-                            
+              Log::info($setexist); 
                                                      
               if(!empty($setexist)){
-                 $response=$setexist;
-                if(count($response)!=0)
+                 // $response=$setexist;
+                if(count($setexist)!=0)
                 {     
-                 foreach ($response as $key => $value) {
+                 foreach ($setexist as $key => $value) {
 
                                 $value->priority=$category->priority;
                                 // $value->like_count=$this->checkLikeorNot($value,$user_id);
                               
                             }           
-                 $dataresponse[$category->name]=$response;  
+                 $dataresponse[$category->name]=$setexist;  
                  }          
                 
                             
@@ -102,7 +104,7 @@ class StoryController extends BasePublicController
              // Log::info(json_encode($dataresponse));
 
             Log::info(response($dataresponse));
-            
+
             return response($dataresponse);
 
         }
