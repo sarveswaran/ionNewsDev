@@ -76,21 +76,37 @@ class StoryController extends BasePublicController
             Log::info($user_id);      
 
             foreach ($categorylist as $category) {
-               $setexist=$this->content->getStoryByCategory($category->id,$user_id);
+               $setexist=DB::table('content__contents as cc')
+                            ->join('content__contentusers as cu', 'cu.content_id','=','cc.id')
+                            ->join('content__multiplecategorycontents as cm','cm.content_id','=','cc.id')
+                            ->where('cc.expiry_date','>=',$current_date)
+                            ->where('cm.category_id','=',$category->id)
+                            ->where('cu.user_id','=',$user_id)
+                            ->orderBy('cc.id', 'desc')
+                            ->take(5)
+                            ->get();
             
-              Log::info($setexist); 
+              Log::info("according to category".$setexist); 
                                                      
               if(!empty($setexist)){
-                 // $response=$setexist;
-                if(count($setexist)!=0)
+                 $response=DB::table('content__contents as cc')
+                            ->join('content__contentusers as cu', 'cu.content_id','=','cc.id')
+                            ->join('content__multiplecategorycontents as cm','cm.content_id','=','cc.id')
+                            ->where('cc.expiry_date','>=',$current_date)
+                            ->where('cm.category_id','=',$category->id)
+                            ->where('cu.user_id','=',$user_id)
+                            ->orderBy('cc.id', 'desc')
+                            ->take(5)
+                            ->get();
+                if(count($response)!=0)
                 {     
-                 foreach ($setexist as $key => $value) {
+                 foreach ($response as $key => $value) {
 
                                 $value->priority=$category->priority;
                                 // $value->like_count=$this->checkLikeorNot($value,$user_id);
                               
                             }           
-                 $dataresponse[$category->name]=$setexist;  
+                 $dataresponse[$category->name]=$response;  
                  }          
                 
                             
@@ -103,7 +119,7 @@ class StoryController extends BasePublicController
             }
              // Log::info(json_encode($dataresponse));
 
-            Log::info(response($dataresponse));
+            Log::info($dataresponse);
 
             return response($dataresponse);
 
