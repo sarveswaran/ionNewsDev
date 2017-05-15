@@ -101,7 +101,8 @@ class StoryController extends BasePublicController
             }
              // Log::info(json_encode($dataresponse));
 
-            // Log::info(response($dataresponse));
+            Log::info(response($dataresponse));
+            
             return response($dataresponse);
 
         }
