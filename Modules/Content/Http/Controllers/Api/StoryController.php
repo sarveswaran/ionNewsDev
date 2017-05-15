@@ -89,6 +89,9 @@ class StoryController extends BasePublicController
                  }
                }
              }
+              if(sizeof($dataresponse)==0)
+                 $dataresponse["status"]="No Story";
+
                return response($dataresponse); 
 
 
