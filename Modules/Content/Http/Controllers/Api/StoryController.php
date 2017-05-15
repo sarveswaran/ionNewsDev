@@ -66,14 +66,14 @@ class StoryController extends BasePublicController
         }
       }
      
-     public function homepage(Request $request,Client $http){       
-            
+     public function homepage(Request $request,Client $http){            
             $categorylist = $this->category->getByAttributes(['status' => 1],'priority');
-            Log::info($categorylist);
+            // Log::info($categorylist);
             $dataresponse = array();
             $current_date=date('Y-m-d');
             $user_id=$request->user_id;  
-            $user_id=17;       
+            // $user_id=19;
+
 
             foreach ($categorylist as $category) {
                $setexist=$this->content->getStoryByCategory($category->id,$user_id);    
@@ -86,20 +86,11 @@ class StoryController extends BasePublicController
                            // $value->like_count=$this->checkLikeorNot($value,$user_id);                              
                             }           
                  $dataresponse[$category->name]=$setexist;  
-                 } 
-                 else {
-                   $priority['priority']=$category->priority;
-                   $dataresponse[$category->name] =array(); 
-                 }    
-                
-                }else{                     
-                   $dataresponse[$category->name] =array(); 
-                   
-              } 
-            }         
+                 }
+               }
+             }
+               return response($dataresponse); 
 
-
-            return response($dataresponse);
 
         }
 
