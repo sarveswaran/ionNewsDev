@@ -68,11 +68,12 @@ class StoryController extends BasePublicController
      
      public function homepage(Request $request,Client $http){            
             $categorylist = $this->category->getByAttributes(['status' => 1],'priority');
-            // Log::info($categorylist);
+                      
             $dataresponse = array();
             $current_date=date('Y-m-d');
             $user_id=$request->user_id;  
-            // $user_id=19;
+            $user_id=19;
+           
 
 
             foreach ($categorylist as $category) {
@@ -153,4 +154,63 @@ class StoryController extends BasePublicController
                   return response($dataset);
 
         }
+
+    public function updateDatabase(Request $request)
+    {     
+        #this one only purpose of update databse using some query
+      $categorylist = $this->category->getByAttributes(['status' => 1],'priority');
+         $AllContent=$this->content->all();
+            $allusers=DB::table('users')
+                      ->select('id')
+                      ->get();
+                      $now=date("Y-m-d H:i:s");
+                        
+             foreach ($AllContent as $content) {
+                   foreach ($allusers as $users) {
+                      $data1=DB::table('content__contentusers')
+                          ->where('user_id' ,'=' ,$users->id)
+                          ->where('content_id','=' , $content->id)
+                          ->get();
+                          
+                      if(sizeof($data1)==0)
+                      {
+                    DB::table('content__contentusers')->insert(
+                        ['user_id' => $users->id, 'content_id' => $content->id,
+                        'created_at'=>$now,'updated_at'=>$now]
+                       );
+                  }
+                    
+                   }
+                       
+              } 
+             foreach ($categorylist as $category) {
+                  $Allcategory[]=$category->id;
+                   foreach ($AllContent as $content) {
+
+                     $data=DB::table('content__multiplecategorycontents')
+                          ->where('category_id' ,'=' ,$category->id)
+                          ->where('content_id','=' , $content->id)
+                          ->get();
+                      if(sizeof($data)==0)
+                      {
+                    DB::table('content__multiplecategorycontents')->insert(
+                            ['category_id' => $category->id, 'content_id' => $content->id,'created_at'=>$now,'updated_at'=>$now]
+                        );
+                  }
+                    
+                   }                       
+                }
+                Log::info($Allcategory);
+           $Allcategory=json_encode($Allcategory);
+           Log::info($Allcategory);
+            foreach ($AllContent as $value) {
+              DB::table('content__contents')
+            ->where('id', '=',$value->id)
+            ->update(['all_category' => $Allcategory]);                                   
+            }        
+
+            return "successful update"; 
+
+
+    }
 }
