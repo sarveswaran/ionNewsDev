@@ -24,4 +24,20 @@ class EloquentContentRepository extends EloquentBaseRepository implements Conten
          return $story;	
 
 	}
+
+	public function getStoryByCategory($category,$user_id)
+	{     $current_date=date('Y-m-d');
+		  $setexist=DB::table('content__contents as cc')
+                            ->join('content__contentusers as cu', 'cu.content_id','=','cc.id')
+                            ->join('content__multiplecategorycontents as cm','cm.content_id','=','cc.id')
+                            ->where('cc.expiry_date','>=',$current_date)
+                            ->where('cm.category_id','=',$category)
+                            ->where('cu.user_id','=',$user_id)
+                            ->orderBy('cc.id', 'desc')
+                            ->take(5)
+                            ->get();
+                        return $setexist;
+
+	}
+
 }

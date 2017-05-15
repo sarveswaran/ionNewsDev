@@ -21,9 +21,9 @@ use Modules\Content\Repositories\CategoryRepository;
 use Modules\Content\Repositories\ContentLikeStoryRepository;
 use Modules\Content\Entities\ContentLikeStory;
 use Modules\Content\Repositories\MultipleCategoryContentRepository;
-
 use Log;
 use DB;
+
 class StoryController extends BasePublicController
 {
     protected $guard;
@@ -57,7 +57,7 @@ class StoryController extends BasePublicController
             $dataset = $this->content->filter( $request->category_id,$user_id);
             foreach ($dataset as $key => $value) {    
                 unset($value->category_id);
-               $value->like_count=$this->checkLikeorNot($value,$user_id);
+               $value->like_count=$this->likestory->checkLikeorNot($value,$user_id);
                if($value->like_count)
                $value->islike=1;
                else $value->islike=0;               
@@ -65,16 +65,7 @@ class StoryController extends BasePublicController
             return $dataset;
         }
       }
-      public function checkLikeorNot($data ,$user_id)
-      {  
-        $likeData=DB::table('content__contentlikestories as cc')
-                      ->where('cc.content_id','=',$data->id)
-                      ->where('cc.user_id','=',$user_id)
-                      ->get();
-                      $like_count=count($likeData);
-                      return $like_count;                              
-
-      }
+     
      public function homepage(Request $request,Client $http){       
             
             $categorylist = $this->category->getByAttributes(['status' => 1],'priority');
@@ -83,26 +74,12 @@ class StoryController extends BasePublicController
             $user_id=$request->user_id;       
 
             foreach ($categorylist as $category) {
-              $setexist=DB::table('content__contents as cc')
-                            ->join('content__contentusers as cu', 'cu.content_id','=','cc.id')
-                            ->join('content__multiplecategorycontents as cm','cm.content_id','=','cc.id')
-                            ->where('cc.expiry_date','>=',$current_date)
-                            ->where('cm.category_id','=',$category->id)
-                            ->where('cu.user_id','=',$user_id)
-                            ->orderBy('cc.id', 'desc')
-                            ->take(5)
-                            ->get();
+               $setexist=$this->content->getStoryByCategory($category->id,$user_id);
+            
                             
                                                      
               if(!empty($setexist)){
                  $response=$setexist;
-               // $response=DB::table('content__contents as cc')
-               //              ->join('content__multiplecategorycontents as cm','cm.content_id','=','cc.id')
-               //              ->where('cm.category_id','=',$category->id)
-               //              ->where('cc.expiry_date','>=',$current_date)
-               //              ->orderBy('cc.id', 'desc')
-               //              ->take(5)                         
-               //              ->get();
                 if(count($response)!=0)
                 {     
                  foreach ($response as $key => $value) {
@@ -122,9 +99,10 @@ class StoryController extends BasePublicController
                    
               } 
             }
-            
+             // Log::info(json_encode($dataresponse));
 
-            return $dataresponse;
+            // Log::info(response($dataresponse));
+            return response($dataresponse);
 
         }
 
