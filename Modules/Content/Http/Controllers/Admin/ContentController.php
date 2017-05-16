@@ -261,19 +261,35 @@ class ContentController extends AdminBaseController
     public function store(Request $request)
     {
         
-        $Alldata=$request->all();
+        $Alldata=$request->all();           
+        
+          if ($request->hasFile('img')){  
+          $image_name=$_FILES['img']['name'];
+          $request->file('img')->move(env('IMG_URL').'/crawle_image',$image_name);
+          $image=env('IMG_URL1').'/crawle_image/'.$image_name;   
+           }
+          else {
+            $image = "";
+           } 
+         
+        
+
         if(!array_key_exists('image', $Alldata))
-          $Alldata['image']=$Alldata['img1'];
-
-
+        { if(array_key_exists('img1', $Alldata))
+          $Alldata['image']=$Alldata['img1'];        
+          else
+            $Alldata['image']=$image;    
+        }
+       
         $sizeofCategories=sizeof($Alldata['category_id']);
         $multiContCategoryData=$Alldata['category_id'];
 
         $Alldata['all_category']=json_encode($Alldata['category_id']);
         $Alldata['category_id']=$sizeofCategories;      
         
-      
+         Log::info($Alldata);
         $ids=$this->content->create($Alldata);   
+         Log::info("resulting data   ". $ids);
         
         $id=json_decode($ids,true);        
           $id=$ids['id'];
@@ -388,6 +404,7 @@ class ContentController extends AdminBaseController
     { 
          $content_data=json_decode($content,true);
          $data=$request->all();
+         Log::info($data);     
 
          $content_id=$content_data['id'];
 
@@ -399,21 +416,11 @@ class ContentController extends AdminBaseController
         
          $categoryID=DB::table('content__multiplecategorycontents')                        
                           ->where('content_id','=',$content_id)->delete();
-          // $categoryID=json_decode($categoryID,true);
-          // $categoryIDs=array();
-          // $k=0;
-
-          // foreach ($categoryID as $value) {            
-          //   $categoryIDs[$k++]=$value['category_id'];           
-          // }
-          foreach ($Allcategory as $value) {
-             // if(!in_array($value, $categoryIDs))
-             // {
+    
+          foreach ($Allcategory as $value) {           
               $abc['category_id']=$value;
               $abc['content_id']=$content_id;
-              $this->multiContCategory->create($abc); 
-            // }
-
+              $this->multiContCategory->create($abc);        
             }
 
 
@@ -429,29 +436,35 @@ class ContentController extends AdminBaseController
          $request->merge(['image' => $image]);
          $data['image']=$image;
 
-         if(array_key_exists('check', $data))
+         if(array_key_exists('checkedDetails', $data))
          {  
-              $userData = DB::table('content__contentusers')->select(\DB::raw('*'))
+                $checkedArray=json_decode($data['checkedDetails'][0],true);
+            $length=sizeof($checkedArray); 
+
+           
+               $userData = DB::table('content__contentusers')->select(\DB::raw('*'))
                 ->where('content_id','=',$content_id)->get();
                 $deleteId=array();
                 $userData=json_decode($userData,true);
 
+
                  foreach ($userData as $key => $value) {
                                      
-                      if(in_array($value['user_id'], $data['check']))
+                      if(in_array($value['user_id'],$checkedArray))
                          $deleteId[]=$value['user_id'];
                     
                 }
                 DB::table('content__contentusers')->where('content_id', '=', $content_id)
                 ->whereNotIn('user_id',$deleteId)->delete();
                
-                $length=sizeof($data['check']);
+                
                 for ($i=0;$i<$length;$i++) { 
 
-                 if(!in_array($data['check'][$i], $deleteId)){
+                 if(!in_array($checkedArray[$i], $deleteId)){
 
-                        $abc['user_id']=$data['check'][$i];
+                        $abc['user_id']=$checkedArray[$i];
                         $abc['content_id']=$content_id;
+
                         $this->contentUser->create($abc);                 
 
                }

@@ -16,7 +16,7 @@
 @stop
 
 @section('content')
-    {!! Form::open(['route' => ['admin.content.content.update', $content->id], 'method' => 'put','enctype' => 'multipart/form-data' ,'onsubmit'=>'return formValidator()']) !!}
+    {!! Form::open(['route' => ['admin.content.content.update', $content->id], 'method' => 'put','enctype' => 'multipart/form-data' ,'onsubmit'=>'return formValidator()' ,'id' => 'userListing']) !!}
     <div class="row">
         <div class="col-md-12">
             <div class="nav-tabs-custom">
@@ -155,49 +155,71 @@
        }
   }
 
-  // previewFile();  //calls the function named previewFile()
   </script>
     <script language="javascript">    
     var form_checker=0;
 
      function formValidator() {
-         $('.checkbox').each(function(){ //iterate all listed checkbox items
-            if(this.checked)
-            {
-              form_checker=1;
-            }
-        
-       
-    });
-            if(form_checker==1)
-            return true;
-           else{ alert("Please Add Atleast One User");
-            return false;
-          }
+         if(checkedArray.length==0){
+          alert("Select atleast one user.");
+          return false;
+         }
+         $("#userListing").append("<input type='hidden' name='checkedDetails[]' value='"+JSON.stringify(checkedArray)+"'/>");
+         return true;
     }
 
-    $("#select_all").change(function(){
-    var status = this.checked;    
-    if(status){
-        $("#select_all").val(1);
-    }
-     else $("#select_all").val(0);
-    $('.checkbox').each(function(){ 
+
+//     $("#select_all").change(function(){
+//     var status = this.checked;    
+//     if(status){
+//         $("#select_all").val(1);
+//     }
+//      else $("#select_all").val(0);
+//     $('.checkbox').each(function(){ 
+//         this.checked = status; 
+//     });
+   
+// });
+          checkedArray = [];
+      $("#select_all").change(function(){   
+         
+    
+       var status = this.checked; 
+       if(status){
+        checkedArray = [];
+      $('.checkbox').each(function(){ 
+        
         this.checked = status; 
-    });
-   
-});
-$('.checkbox').change(function(){ //".checkbox" change
-    //uncheck "select all", if one of the listed checkbox item is unchecked
-    if(this.checked == false){ //if this item is unchecked
-        $("#select_all")[0].checked = false; //change "select all" checked status to false
+        checkedArray.push(this.value);  
+        console.log(checkedArray);     
+        
+       });
+    }else { $('.checkbox').each(function(){ 
+            this.checked = status; 
+            var a = checkedArray.indexOf(this.value);
+            checkedArray.splice(a, 1);
+            console.log(checkedArray);
+  });
+
     }
+
    
-    //check "select all" if all checkbox items are checked
-    if ($('.checkbox:checked').length == $('.checkbox').length ){
-        $("#select_all")[0].checked = true; //change "select all" checked status to true
-    }
-});
+      });
+
+  
+function changed(event){
+  if(event.checked){
+    checkedArray.push(event.value);
+    console.log(checkedArray);
+
+  }else{
+    var a = checkedArray.indexOf(event.value);
+    // console.log(a);
+    checkedArray.splice(a, 1);
+  }
+  console.log(checkedArray);
+}
+
      
             $.ajax({
                 type: 'GET',
@@ -213,17 +235,17 @@ $('.checkbox').change(function(){ //".checkbox" change
                     $.each(values, function(key,value)
                     {
                                                       
-             table+='<tr id="'+value.id+'"><td> <input class="checkbox" type="checkbox" name="check[]" value="'+value.id+'" checked></td>'+
-                              '<td>'+value.name+'</td>'+
-                  '<td>'+value.company+'</td><td>'+value.role+'</td></tr>';
+                table+='<tr id="'+value.id+'"><td> <input class="checkbox" type="checkbox" onchange="changed(this);" name="check[]" value="'+value.id+'" checked></td>'+'<td>'+value.name+'</td>'+'<td>'+value.company+'</td><td>'+value.role+'</td></tr>';
+                checkedArray.push(value.id+"");  
+                // console.log(checkedArray);
                             i++;
 
-                        });
+                      });
                 });
                     $.each(uncheck_result, function (key, values) {
                     $.each(values, function(key,value){
                                                       
-             table+='<tr id="'+value.id+'"><td> <input class="checkbox" type="checkbox" name="check[]" value="'+value.id+'"></td>'+
+             table+='<tr id="'+value.id+'"><td> <input class="checkbox" type="checkbox" onchange="changed(this);" name="check[]" value="'+value.id+'"></td>'+
                               '<td>'+value.name+'</td>'+
                   '<td>'+value.company+'</td><td>'+value.role+'</td></tr>';
                             i++;

@@ -81,6 +81,7 @@
           var all_users_info="";
           $(".user-types").hide();
           $(".img-info").hide();
+          $(".custom_img").hide();
 
 
         var a;
@@ -167,6 +168,46 @@
 
 
       checkedArray = [];
+      $("#select_all_page").change(function(){
+        var status = this.checked;
+          dt.destroy();        
+           $("#user_info").empty();
+            var table = "";
+            checkedArray=[];
+            if(status)
+            { 
+              $( "#select_all" ).prop( "disabled", true );
+            $.each(all_users_info, function (key, values) {
+                    $.each(values, function(key,value){                     
+
+             table+='<tr id="'+value.id+'"><td> <input class="checkbox" type="checkbox" onchange="changed(this);" name="check[]" value="'+value.id+'" checked></td>'+
+                              '<td>'+value.name+'</td>'+
+                  '<td>'+value.company+'</td><td>'+value.role+'</td></tr>';
+                     checkedArray.push(value.id+"");
+                     console.log(checkedArray);   
+
+                        });
+                      });
+          }
+          else {
+              $( "#select_all" ).prop( "disabled", false );
+              checkedArray=[];
+              console.log(checkedArray);
+              $.each(all_users_info, function (key, values) {
+                    $.each(values, function(key,value){                     
+
+             table+='<tr id="'+value.id+'"><td> <input class="checkbox" type="checkbox" onchange="changed(this);" name="check[]" value="'+value.id+'"></td>'+
+                              '<td>'+value.name+'</td>'+
+                  '<td>'+value.company+'</td><td>'+value.role+'</td></tr>';
+                        
+
+                        });
+                      });
+          }
+             $("#user_info").html(table);
+              dataTableAssign();     
+
+      })
 
       $("#select_all").change(function(){   
     
@@ -183,7 +224,7 @@
       this.checked = status; 
       var a = checkedArray.indexOf(this.value);
     checkedArray.splice(a, 1);
-     // console.log(checkedArray);
+     console.log(checkedArray);
   });
 
     }
@@ -197,6 +238,7 @@ function changed(event){
     checkedArray.push(event.value);
   }else{
     var a = checkedArray.indexOf(event.value);
+    console.log(a);
     checkedArray.splice(a, 1);
   }
   console.log(checkedArray);
@@ -273,8 +315,7 @@ function changed(event){
         }
         function crawl() {
              var urls=$(".form-control").val();
-             $(".user-types").show();
-             $(".img-info").show();
+           
 
 
             // var APP_URLs = '{{ env('APP_URL') }}';              
@@ -288,6 +329,8 @@ function changed(event){
                 data: {url: urls},
                 url: '{{ env('APP_URL') }}/contents/ajaxcall',
                 success: function(result) {
+                     $(".user-types").show();
+                     $(".img-info").show();
                     results = result;
                     $('#sub_title').val(result.sub_title);
                     $('#title').val(result.title);
@@ -344,6 +387,7 @@ function changed(event){
                         
                         $("#user_info").html(table);
 
+
                         dataTableAssign();
 
 
@@ -370,6 +414,7 @@ function changed(event){
             "pageLength": 10,
             "lengthMenu": [10, 25, 50, 100],
             "dom": 'T<"clear">lfrtip',
+            "order": [[ 1, "desc" ]],
             "initComplete": function( settings, json ) {
                 $('.dataTables_filter').find('input[type=search]').attr('type','text');
             },
@@ -435,4 +480,61 @@ function changed(event){
       $( "select.user_group" ).change( changeorder );
        changeorder();
     </script>
+    <script type="text/javascript">
+         function Custom() {
+          $(".user-types").show();
+          $(".custom_img").show();
+          $.ajax({
+                type: 'GET',
+                url: '{{ env('APP_URL') }}/users',
+                success: function(result) {
+                    $("#user_info").empty();
+                    var table = "";
+                    var i = 1;
+                    all_users_info=result;
+                   $.each(result, function (key, values) {
+                    $.each(values, function(key,value){                     
+
+             table+='<tr id="'+value.id+'"><td> <input class="checkbox" type="checkbox" onchange="changed(this);" name="check[]" value="'+value.id+'"></td>'+
+                              '<td>'+value.name+'</td>'+
+                  '<td>'+value.company+'</td><td>'+value.role+'</td></tr>';
+                            i++;
+
+                        });
+                      });
+                        
+                        $("#user_info").html(table);
+
+                        dataTableAssign();
+
+
+
+              
+                },
+                error: function(xhr, desc, err) {
+                    console.log(xhr);}
+
+                
+              });         
+         };
+    </script>
+     <script>
+   function previewFile(){
+    
+       var preview = document.querySelector('img'); //selects the query named img
+       var file    = document.querySelector('input[type=file]').files[0]; //sames as here
+       var reader  = new FileReader();
+
+       reader.onloadend = function () {
+           preview.src = reader.result;
+       }
+
+       if (file) {
+           reader.readAsDataURL(file); //reads the data as a URL
+       } else {
+           preview.src = "";
+       }
+  }
+
+  </script>
 @stop

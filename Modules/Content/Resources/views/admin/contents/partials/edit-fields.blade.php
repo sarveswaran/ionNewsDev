@@ -23,7 +23,15 @@
             </div>
         </div>
      
-
+        <div class="col-sm-12">
+            <div class="form-group{{ $errors->has('tags') ? ' has-error' : '' }}">
+                {!! Form::label('tags', trans('Tags')) !!}
+                {!! Form::text('tags', $content->tags, ['class' => 'form-control', 'placeholder' => trans('tags')]) !!}
+                {!! $errors->first('tags', '<span class="help-block">:message</span>') !!}
+            </div>
+        </div>
+     
+          
 
           <div class="tab-pane" id="tab_2-2">
                     <div class="box-body">
@@ -93,8 +101,10 @@
                   <div class="form-group">
                       {!! Form::label('user_group', trans('User Group')) !!}
                       <select multiple="multiple" class=" user_group form-control" name="user_roles[]">
-                      <?php foreach ($user_roles as $user_role): ?>
-                      <option value="{{ $user_role['id'] }}">{{ $user_role['type'] }}</option>
+                      <?php foreach ($user_roles as $user_role): ?>                     
+                      <option value="{{ $user_role['id'] }}" <?php
+                                        if ($user_role['id']==-1) 
+                                        echo "selected"; else echo '';?>>{{ $user_role['type'] }}</option>
                       <?php endforeach; ?>
                       </select>
                   </div>
@@ -107,7 +117,8 @@
            <table class=" data-table table table-bordered table-hover dataTable" id="User_data" role="grid" aria-describedby="DataTables_Table_0_info">
            <thead>
                <tr>
-                  <th><input type="checkbox"  id="select_all" value=0 name="che" />Select</th>
+                  <th data-sortable="false" style="width: 70px;">
+                  <input type="checkbox"  id="select_all" value=0 name="che" />Select</th>
                   <th>Name</th>
                   <th>Company Name </th>
                   <th>Designation</th>

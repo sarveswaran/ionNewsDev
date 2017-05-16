@@ -7,10 +7,14 @@
                 {!! $errors->first('name', '<span class="help-block">:message</span>') !!}
             </div>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-3">
         <label></label><br>
         <input  type="button" class="btn btn-primary btn-flat" value="Crawl Content" onclick="crawl()" />
         </div>
+        <!-- <div class="col-sm-3">
+        <label></label> <br>
+        <input  type="button" class="btn btn-primary btn-flat" value="Custom Content" onclick="Custom()" />
+        </div> -->
     </div>
 
       <div class="row">
@@ -26,6 +30,13 @@
                 {!! Form::label('sub_titzle', trans('Subtitle')) !!}
                 {!! Form::text('sub_title', old('sub_title'), ['class' => 'form-control','id' =>'sub_title', 'placeholder' => trans('subtitle')]) !!}
                 {!! $errors->first('sub_title', '<span class="help-block">:message</span>') !!}
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <div class="form-group{{ $errors->has('tags') ? ' has-error' : '' }}">
+                {!! Form::label('tags', trans('Tags')) !!}
+                {!! Form::text('tags', old('tags'), ['class' => 'form-control','id' =>'tags', 'placeholder' => trans('tags')]) !!}
+                {!! $errors->first('tags', '<span class="help-block">:message</span>') !!}
             </div>
         </div>
 
@@ -48,13 +59,7 @@
                 </div>
 
 
-    <!-- <div class="col-sm-12"> -->
-     <!-- <div class="form-group{{ $errors->has('content') ? ' has-error' : '' }}"> -->
-      <!-- {!! Form::label('content', trans('Select Expiry Date')) !!} -->
-<!--     <label class="pull-left">Select Expiry Date</label>
-    <input type="text" name="date" id="returnrange"  style="margin-left:20px;background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc" value="" class="glyphicon glyphicon-calendar fa fa-calendar">
-        <span></span><b class="caret"></b>
-    </div> -->
+ 
 
        <div class="col-sm-12">
         <label class="pull-left">Expiry Date</label>
@@ -78,8 +83,10 @@
         </div>
        </div>
       <div class="row">
-     	<div class="form-group box-body img-info">	      
+     	<div class="form-group box-body img-info">
+
 	        <table id="dataTable" width="350px" border="1" class="imgtable" style="width: 100%;border: 4px solid #ecf0f5;">
+          <col width="30">
                 <thead>
 
                 <tr>
@@ -99,8 +106,24 @@
 	            {{--</tr>--}}
 	        </table>
 	    </div>
+            
+        
+            <div class="col-sm-12 custom_img">
+                <div class="form-group{{ $errors->has('image') ? ' has-error' : '' }}">
+                    {!! Form::label('image', trans('Image')) !!}
+                    <!-- {!! Form::file('img', old('img'),['class' => 'form-control', 'placeholder' => trans('image')]) !!} -->
+               
+                    <input name="img" type="file" onchange="previewFile()">
+                    {!! $errors->first('image', '<span class="help-block">:message</span>') !!}
+                    <img  src="" onchange="previewFile()" width="120">
+
+                </div>
+            </div>
+    
        <div class="tab-pane user-types" id="tab_2-2">
+
            <div class="box-body">
+
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group ">
@@ -119,21 +142,31 @@
           </div>
 
  
-      <div class="form-group user-types">
-           <table class=" data-table table table-bordered table-hover dataTable" id="User_data" role="grid" aria-describedby="DataTables_Table_0_info" >
+      <div class="form-group user-types form_grp_relative" style="">
+
+           <table class=" data-table table table-bordered table-hover dataTable" id="User_data" role="grid" aria-describedby="DataTables_Table_0_info" >          
+            <label class="btn btn-primary " style="position: relative; top: 71px;    margin-left: 5px;height: 32px;width: 83px;" >
+              <input type="checkbox" id="select_all_page"><span style="position: relative;
+              top: -2px;">SelectAll</span>
+            </label>
+       
+
            <thead>
                <tr>
-                  <th><input type="checkbox"  id="select_all"/>Select</th>
+                  <th data-sortable="false" style="width: 70px;">
+                  <input type="checkbox"  id="select_all">Select</th>
                   <th>Name</th>
                   <th>Company Name </th>
                   <th>Designation</th>
               </tr>  
               </thead>
               <tbody id = "user_info">  
+
          
                 </tbody>
-               </tbody> 
-           </table>      
+              
+           </table>  
+             
       </div>
     </div>
     </div>
