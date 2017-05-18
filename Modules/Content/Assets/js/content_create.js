@@ -17,6 +17,11 @@ var form_checker=0;
       alert("Select atleast one user.");
       return false;
      }
+     if(category_check.length==0)
+     {
+      alert("Please Assign at least one category");
+      return false;
+     }
      $("#userListing").append("<input type='hidden' name='checkedDetails[]' value='"+JSON.stringify(checkedArray)+"'/>");
      return true;
 }

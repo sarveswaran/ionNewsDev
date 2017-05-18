@@ -73,21 +73,21 @@
       var roles_data=[];
       var crawlUrl = '{{ env('APP_URL') }}/contents/ajaxcall';
       var userUrl = '{{ env('APP_URL') }}/users';
-      var results='';  
+      var results=''; 
+      var select_flag=0 
+      var category_check=[];
       
-      $("#select_all_page").change(function(){
-        var status = this.checked;
-        // console.log(roles_data);
+      $("#select_all_page").on('click',function(){
+
         var check=roles_data.indexOf("-1");  
-        // console.log(check);   
 
         dt.destroy();        
         $("#user_info").empty();
         var table = "";
         checkedArray=[];
         // console.log(all_users_info);
-        if(status)
-        {  
+        if(select_flag==0)
+        {   select_flag=1; 
           $( "#select_all" ).prop( "disabled", true );
          if(check==-1 && roles_data.length){
 
@@ -121,7 +121,7 @@
         });
       }
         }
-        else {
+        else { select_flag=0;
           $( "#select_all" ).prop( "disabled", false );
               checkedArray=[];
               // console.log(checkedArray);
@@ -183,11 +183,23 @@
     
       $( "select.user_group" ).change( changeorder );
           changeorder();
+
+
+      function selectCategory(event)
+      {   
+          category_check=$("select").val();        
+      }
+    
      
-    </script>
+</script>
 
   
 @stop
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript" src="{{ Module::asset('content:js/content_create.js') }}?rv={{ env('RV') }}"></script>
 <script type="text/javascript" src="{{ Module::asset('content:js/datepicker.js') }}?rv={{ env('RV') }}"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $(".content-wrapper").css({"min-height":"100%"});
+  })
+</script>

@@ -17,6 +17,8 @@ use Modules\User\Entities\Sentinel\User;
 use Modules\Content\Entities\ContentImages;
 use Modules\Content\Entities\ContentUser;
 use Modules\Content\Entities\ContentCompany;
+use Modules\Content\Http\Requests\CreateContentRequest;
+
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Modules\User\Repositories\RoleRepository;
@@ -225,13 +227,31 @@ class ContentController extends AdminBaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  Request $request
+     * @param Request $request
      * @return Response
      */
-    public function store(Request $request)
+    public function store(Request  $request)
     {
         
-        $Alldata=$request->all();           
+        $Alldata=$request->all();               
+        $category_name=DB::table('content__categories')
+              ->select('name')
+              ->whereIn('id',$Alldata['category_id'])->get();
+        $i=0;
+        $category_name=json_decode($category_name,true);
+        $tags="";
+        if(sizeof($category_name)){
+          $tags=$tags."# ";
+          foreach ( $category_name as $value) {
+              $tags=$tags."".$value['name']." ";
+              if($i==2)
+                break;
+               $i++;          
+          }
+          $tags=$tags."News";
+        }
+         $Alldata['tags']=$tags;
+         $Alldata['content']=trim( $Alldata['content']);   
         
           if ($request->hasFile('img')){  
           $image_name=$_FILES['img']['name'];
@@ -256,8 +276,6 @@ class ContentController extends AdminBaseController
 
         $Alldata['all_category']=json_encode($Alldata['category_id']);
         $Alldata['category_id']=$sizeofCategories;      
-        
-         Log::info($Alldata);
         $ids=$this->content->create($Alldata);   
       
         

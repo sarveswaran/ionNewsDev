@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="col-sm-3">
-        <label></label><br>
+        <label></label><br><br>
         <input  type="button" class="btn btn-primary btn-flat" value="Crawl Content" onclick="crawl()" />
         </div>
         <!-- <div class="col-sm-3">
@@ -47,7 +47,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                   {!! Form::label('category_id', trans('Category')) !!}
-                                    <select multiple="" class="form-control" name="category_id[]">
+                                    <select multiple="" class="form-control category_select" onchange="selectCategory(this.value)" name="category_id[]">
                                         <?php foreach ($categories as $category): ?>
                           <option value="{{ $category->id }}">{{ $category->name }}</option>
                       <?php endforeach; ?>
@@ -145,10 +145,13 @@
       <div class="form-group user-types form_grp_relative" style="">
 
            <table class=" data-table table table-bordered table-hover dataTable" id="User_data" role="grid" aria-describedby="DataTables_Table_0_info" >          
-            <label class="btn btn-primary " style="position: relative; top: 71px;    margin-left: 5px;height: 32px;width: 83px;" >
+            <!-- <label class="btn btn-primary " style="position: relative; top: 71px;    margin-left: 5px;height: 32px;width: 83px;" >
               <input type="checkbox" id="select_all_page"><span style="position: relative;
               top: -2px;">SelectAll</span>
-            </label>
+            </label> -->
+              <button type="button" class="btn btn-primary" id="select_all_page" style="position: relative; top: 71px;    margin-left: 5px;height: 32px;width: 83px;"><span style="position: relative;
+              top: -2px;">SelectAll</span></button>
+
        
 
            <thead>
