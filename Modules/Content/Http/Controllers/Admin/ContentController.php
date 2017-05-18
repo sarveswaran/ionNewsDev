@@ -83,7 +83,8 @@ class ContentController extends AdminBaseController
 
     public function ajaxcall(Request $request)
     {  
-        $url=$_GET['url'];        
+        $url=$_GET['url']; 
+        $img_extenstion=['gif','cms','js','html'] ;            
         $ch=curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, false);
@@ -103,141 +104,111 @@ class ContentController extends AdminBaseController
              $sub_title = $title;
             }
               
-           if(strpos($result,"<img")>0) {
-            $img = $dom->getElementsByTagName('img');
-            $i = 0;
-            $array = array();
-            foreach ($img as $value) {
-                $aa = $value->attributes;
-                foreach ($aa as $a) {                   
-                    if ($a->name == 'alt') {
-                        if ($a->nodeValue != NULL)
-                            $array[$i]['img_name'] = $a->nodeValue;
-                    }
-                    else if ($a->name == 'src') {
-                        $array[$i]['img_url'] = $a->nodeValue;
+               $img1=$dom->getElementsByTagName("*");//
+               $k=0; $j=0;
+               $baseUrl="";   
+               $url=explode("/",$url); 
+               $baseUrl="http://".$url[2];  
+                foreach ($img1 as $item) {
+                  if($item->getAttribute('data-src'))
+                  {
+                    $img_array['data-src'][$j++]['img_url']= $item->getAttribute('data-src');
+                    
+                 
+                  }
+                  else if($item->getAttribute('src'))
+                  {                    
+                    if($item->getAttribute('width'))
+                    $img_array['src'][$k]['width']= $item->getAttribute('width');
+                    else $img_array['src'][$k]['width']=0;
+                    if($item->getAttribute('height'))
+                    $img_array['src'][$k]['height']= $item->getAttribute('height');
+                    else $img_array['src'][$k]['height']=0;
+                    $img_array['src'][$k]['img_url']= $item->getAttribute('src');
+                    if($item->getAttribute('alt'))
+                       $img_array['src'][$k]['img_name']= $item->getAttribute('src');
+                     else $img_array['src'][$k]['img_name']="sample";
+                    $k++;                    
+                  }
+                }
 
-                    }
-                    else if($a->name == 'width'){
-                             if ($a->nodeValue != NULL)
-                            $array[$i]['width'] = $a->nodeValue;
-                    }
-                    else if($a->name =='height'){
-                             if ($a->nodeValue != NULL)
-                            $array[$i]['height'] = $a->nodeValue;
-                    }
-                     else if($a->name =='border'){
-                             if ($a->nodeValue != NULL)
-                            $array[$i]['border'] = $a->nodeValue;
-                    }
-               }
-               
-                if (!array_key_exists("height",$array[$i])){
-                     $array[$i]['height']=0;
-                }
-                if (!array_key_exists("width",$array[$i])){
-                     $array[$i]['width']=0;
-                }
-                  if (!array_key_exists("img_name",$array[$i])){
-                     $array[$i]['img_name']='Sample_Image';
-                }
-                $i++;
-            }             
-
+           if(sizeof($img_array)>0)
+           {        
             $all_img_array=array();
             $k=0;
-             $url_check=array();
-             foreach ($array as $key => $value) {
-                if(!in_array($value['img_url'], $url_check))
-                {
-                $all_img_array[$k]['width']=$value['width'];
-                $all_img_array[$k]['height']=$value['height'];                
-                $all_img_array[$k]['img_url']=$value['img_url'];
-                $all_img_array[$k]['img_name']=$value['img_name'];
-                $url_check[$k]=$value['img_url'];
-                $k++;
-                }             
-                
-             }
-             arsort($all_img_array);          
-            $img_array = array();
-            $img_url=array();
-            foreach ($all_img_array as $value) {
-                if(array_key_exists('height',$value) AND array_key_exists('width',$value)){
-                if($value['height']>100 or $value['width']>100) {
-                    $split_image = pathinfo($value['img_url']);
-                    if (array_key_exists('img_name', $value)){ 
+            $url_check=array();
+            arsort($img_array['src']);
+               if(array_key_exists('data-src', $img_array)  && sizeof($img_array['data-src']))
+               {
+               foreach ($img_array['data-src'] as $value) {
+                $split_image = pathinfo($value['img_url']);
+                if(!in_array($split_image['dirname'], $url_check)){             
 
-                    if(!in_array('gif', $split_image) && !in_array('cms', $split_image)){
+                    if(array_key_exists('extension',$split_image) && strlen($split_image['extension'])>=2 && strlen($split_image['extension'])<=4)
+                   {
+                    if(!in_array($split_image['extension'], $img_extenstion) ){
+                    if(substr($value['img_url'], 0,1)=="/")
+                    {
+                    $all_img_array[$k]['img_url']=$baseUrl.$value['img_url'];
+                    $all_img_array[$k]['img_name']="sample";
 
-                    if ($value['img_name'] != NULL){
-                        $img_array[] = $value;
-                         $img_url[]=$value['img_url'];
-                    }
-                    else  {
-                          $value['img_name']='Sample_Image';
-                          $img_array[] = $value;
-                           $img_url[]=$value['img_url'];
-                          }
-                    }
-                   }
-                   else { 
-                          if(!in_array('gif', $split_image) && !in_array('cms', $split_image)){
-                              $value['img_name']='Sample_Image';
-                              $img_array[] = $value;
-                              $img_url[]=$value['img_url'];
-                          }
-                         }
-
-                }
-                }
-            }
-            // echo "<pre>";
-            // print_r($img_array);  exit;
-            if(sizeof($img_array)<5){                
-            foreach ($array as $array_data) { 
-
-                $split_image = pathinfo($array_data['img_url']);
-
-
-                if(!in_array('gif', $split_image) && !in_array('cms', $split_image)){
-
-                if (array_key_exists('img_name', $array_data)){
-
-                    if ($array_data['img_name'] != NULL){
-                        if (!in_array($array_data['img_url'], $img_url)) 
-                        $img_array[] = $array_data;
+                    $url_check[$k]=$split_image['dirname']; 
                     }
                     else{
-                          $array_data['img_name']='Sample_Image';
-                          if (!in_array($array_data['img_url'], $img_url)) 
-                          $img_array[] = $array_data;
-                    }
-                    }else{
-                          $array_data['img_name']='Sample_Image';
-                          if (!in_array($array_data['img_url'], $img_url)) 
-                          $img_array[] = $array_data;
-                    }
-
-                   if(sizeof($img_array)==6)
-                    break;
+                      $all_img_array[$k]['img_url']=$value['img_url'];
+                      $all_img_array[$k]['img_name']="sample";
+                      $url_check[$k]=$value['img_url']; 
+                    }  
+                    $k++;              
+                   }
+                 }
+                }
+              }
             }
-            }           
-            } 
-           // echo "<pre>"; print_r($img_array);exit;
              
-           
+             foreach ($img_array['src'] as $key => $value) {
+                if(!in_array($value['img_url'], $url_check))
+                {
+                  $split_image = pathinfo($value['img_url']);
+
+
+                  if(array_key_exists('extension',$split_image) && strlen($split_image['extension'])>=2 && strlen($split_image['extension'])<=4)
+                  {
+                  if(!in_array($split_image['extension'], $img_extenstion)){
+                  $all_img_array[$k]['width']=$value['width'];
+                  $all_img_array[$k]['height']=$value['height'];                
+                  $all_img_array[$k]['img_url']=$value['img_url'];
+                  $all_img_array[$k]['img_name']=$value['img_name'];
+                  $url_check[$k]=$value['img_url'];
+                  $k++;
+                } 
+              } 
+              }          
+             } 
+               
             $paragraph = $dom->getElementsByTagName('p');
             $paraarray = array();
+            
             foreach ($paragraph as $pdata){
                 $paraarray[] = $pdata->nodeValue;
             }
-            $FinalArray = array();
-            for ($i = 0; $i < sizeof($img_array); $i++){
-                $FinalArray[$i]['img_name'] = $img_array[$i]['img_name'];
-                $FinalArray[$i]['img_url'] = $img_array[$i]['img_url'];
-                if ($i < sizeof($paraarray))
-                    $FinalArray[$i]['desc'] = $paraarray[$i];
+             $parasize=sizeof($paraarray);
+              if($paraarray>20)
+              {
+                $paracount=15;
+              }
+               else {
+                $paracount=0;
+               }
+            for ($i = 0; $i <sizeof($all_img_array); $i++){
+                $FinalArray[$i]['img_name'] = $all_img_array[$i]['img_name'];
+                $FinalArray[$i]['img_url'] = $all_img_array[$i]['img_url'];
+                if ($paracount<$parasize)
+                    $FinalArray[$i]['desc'] = $paraarray[$paracount++];
+                  else{
+                     $paracount=0;
+                     $FinalArray[$i]['desc'] = $paraarray[$paracount++];
+                  }
             }
             $count = sizeof($FinalArray);
             $FinalArray['title'] = $title;
@@ -247,9 +218,8 @@ class ContentController extends AdminBaseController
             }else{  $FinalArray['title'] = $title;
                 $FinalArray['status']=202;
              }
-             // echo "<br>";
-             // echo "<br>";
-             // echo "<br>"; print_r($FinalArray); exit;
+
+            // echo "<pre>"; echo "<br>"; print_r($FinalArray); exit;
         return $FinalArray;
     }
     /**
@@ -289,7 +259,7 @@ class ContentController extends AdminBaseController
         
          Log::info($Alldata);
         $ids=$this->content->create($Alldata);   
-         Log::info("resulting data   ". $ids);
+      
         
         $id=json_decode($ids,true);        
           $id=$ids['id'];
