@@ -123,6 +123,7 @@
 
           var optionSet2 = {
           singleDatePicker:true,
+           minDate: moment(),
           startDate:moment.utc(Date.parse(datetime)),
           endDate: moment.utc(Date.parse(datetime))
         }
@@ -160,181 +161,31 @@
     var form_checker=0;
 
      function formValidator() {
-         if(checkedArray.length==0){
-          alert("Select atleast one user.");
-          return false;
-         }
-         $("#userListing").append("<input type='hidden' name='checkedDetails[]' value='"+JSON.stringify(checkedArray)+"'/>");
+       
+       
          return true;
     }
-
-
-//     $("#select_all").change(function(){
-//     var status = this.checked;    
-//     if(status){
-//         $("#select_all").val(1);
-//     }
-//      else $("#select_all").val(0);
-//     $('.checkbox').each(function(){ 
-//         this.checked = status; 
-//     });
-   
-// });
           checkedArray = [];
-      $("#select_all").change(function(){   
-         
-    
-       var status = this.checked; 
-       if(status){
-        checkedArray = [];
-      $('.checkbox').each(function(){ 
-        
-        this.checked = status; 
-        checkedArray.push(this.value);  
-        console.log(checkedArray);     
-        
-       });
-    }else { $('.checkbox').each(function(){ 
-            this.checked = status; 
-            var a = checkedArray.indexOf(this.value);
-            checkedArray.splice(a, 1);
-            console.log(checkedArray);
-  });
-
-    }
-
    
-      });
+
 
   
 function changed(event){
   if(event.checked){
     checkedArray.push(event.value);
-    console.log(checkedArray);
+    // console.log(checkedArray);
 
   }else{
     var a = checkedArray.indexOf(event.value);
     // console.log(a);
     checkedArray.splice(a, 1);
   }
-  console.log(checkedArray);
+  // console.log(checkedArray);
 }
 
-     
-            $.ajax({
-                type: 'GET',
-                url: '{{ env('APP_URL') }}/users?id=<?php echo $content->id;?>',
-                success: function(result) {
-                    checked_result=result.check;
-                    uncheck_result=result.uncheck;   
 
-                    $("#user_info").empty();
-                    var table = "";
-                    var i = 1;
-                   $.each(checked_result, function (key, values) {
-                    $.each(values, function(key,value)
-                    {
-                                                      
-                table+='<tr id="'+value.id+'"><td> <input class="checkbox" type="checkbox" onchange="changed(this);" name="check[]" value="'+value.id+'" checked></td>'+'<td>'+value.name+'</td>'+'<td>'+value.company+'</td><td>'+value.role+'</td></tr>';
-                checkedArray.push(value.id+"");  
-                // console.log(checkedArray);
-                            i++;
-
-                      });
-                });
-                    $.each(uncheck_result, function (key, values) {
-                    $.each(values, function(key,value){
-                                                      
-             table+='<tr id="'+value.id+'"><td> <input class="checkbox" type="checkbox" onchange="changed(this);" name="check[]" value="'+value.id+'"></td>'+
-                              '<td>'+value.name+'</td>'+
-                  '<td>'+value.company+'</td><td>'+value.role+'</td></tr>';
-                            i++;
-
-                        });
-                       });
-
-                        $("#user_info").html(table);
-
-                        $("#User_data").DataTable({
-                        "initComplete": function( settings, json ) {
-                            $('.dataTables_filter').find('input[typcd e=search]').attr('type','text');
-                        },
-                        "bPaginate": true,
-                        "bautoWidth": true,
-                        "pagingType": "full_numbers",
-                        "pageLength": 25,
-                        "lengthMenu": [10, 25, 50, 100],
-                        "dom": 'T<"clear">lfrtip',
-                        "initComplete": function( settings, json ) {
-                            $('.dataTables_filter').find('input[type=search]').attr('type','text');
-                        },
-                        tableTools: {
-                            "sSwfPath":"http://cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf",
-                            aButtons: ['csv']
-                        }
-                    });
-
-
-
-              
-                },
-                error: function(xhr, desc, err) {
-                    console.log(xhr);}
-
-                
-              });       
+       
    </script>
 
-<script type="text/javascript">
-      var user_roles='<?php echo json_encode($user_roles);?>';
-      var all_users_roles=jQuery.parseJSON(user_roles);    
-      function changeorder()
-      { 
-       var roles_data=$( this ).val();
-       var check=roles_data.indexOf("-1");            
-        $("#user_info").empty();
-        var table = "";
-         if(check==-1){
-            $.each(roles_data, function (key, values) {          
-            keys=all_users_roles[values]['type'].toLowerCase();           
-            if (typeof(checked_result[keys]) != 'undefined') {
-            var checked_data =checked_result[keys];               
-            $.each(checked_data ,function(key,new_users){  
-            table+='<tr id="'+new_users.id+'"><td> <input class="checkbox" type="checkbox" name="check[]" value="'+new_users.id+'" checked></td>'+
-                              '<td>'+new_users.name+'</td>'+
-                  '<td>'+new_users.company+'</td><td>'+new_users.role+'</td></tr>';   
-            });
-            }  
 
-          if (typeof(uncheck_result[keys]) != 'undefined') {                 
-            var unchecked_data =uncheck_result[keys]; 
-            $.each(unchecked_data ,function(key,new_users){  
-            table+='<tr id="'+new_users.id+'"><td> <input class="checkbox" type="checkbox" onchange="changed(this);" name="check[]" value="'+new_users.id+'"></td>'+
-                              '<td>'+new_users.name+'</td>'+
-                  '<td>'+new_users.company+'</td><td>'+new_users.role+'</td></tr>';     
-            });
-            }           
-            });
-         }
-          else{
-            $.each(checked_result, function (key, values) {
-            $.each(values, function(key,value){                                     
-            table+='<tr id="'+value.id+'"><td> <input class="checkbox" type="checkbox" name="check[]" value="'+value.id+'" checked></td>'+
-                              '<td>'+value.name+'</td>'+
-                  '<td>'+value.company+'</td><td>'+value.role+'</td></tr>';
-            });
-            });
-            $.each(uncheck_result, function (key, values) {
-            $.each(values, function(key,value){
-            table+='<tr id="'+value.id+'"><td> <input class="checkbox" type="checkbox" name="check[]" value="'+value.id+'"></td>'+
-                              '<td>'+value.name+'</td>'+
-                  '<td>'+value.company+'</td><td>'+value.role+'</td></tr>';
-            });
-            });
-            }                      
-            $("#user_info").html(table);          
-         }
-        $( "select.user_group" ).change( changeorder );
-         changeorder();
-    </script>
 @stop

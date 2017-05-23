@@ -10,19 +10,14 @@ function readURL(input) {
     }
 }
 
-var form_checker=0;
 
  function formValidator() {
-     if(checkedArray.length==0){
-      alert("Select atleast one user.");
-      return false;
-     }
+     
      if(category_check.length==0)
      {
       alert("Please Assign at least one category");
       return false;
      }
-     $("#userListing").append("<input type='hidden' name='checkedDetails[]' value='"+JSON.stringify(checkedArray)+"'/>");
      return true;
 }
 function dataTableAssign(){
@@ -76,6 +71,7 @@ function crawl() {
     success: function(result) {
          $(".user-types").show();
          $(".img-info").show();
+         $(".custom_img").show();
         results = result;
         $('#sub_title').val(result.sub_title);
         $('#title').val(result.title);
@@ -196,22 +192,7 @@ function crawl() {
       }
      
 
-      function previewFile(){
-    
-       var preview = document.querySelector('img'); //selects the query named img
-       var file    = document.querySelector('input[type=file]').files[0]; //sames as here
-       var reader  = new FileReader();
 
-       reader.onloadend = function () {
-           preview.src = reader.result;
-       }
-
-       if (file) {
-           reader.readAsDataURL(file); //reads the data as a URL
-       } else {
-           preview.src = "";
-       }
-  }
 
 	function Custom() {
 		$(".user-types").show();

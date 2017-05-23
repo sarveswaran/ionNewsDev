@@ -33,7 +33,9 @@
         };
 
         var optionSet2 = {
-          singleDatePicker:true
+          singleDatePicker:true,
+          minDate: moment()
+
         }
 
         var cb = function(start, end, label) {
@@ -53,6 +55,30 @@
                 radioClass: 'iradio_flat-blue'
             });
         }
+
+
+        function dataTableAssign(){
+        dt=$("#User_data").DataTable({
+        "initComplete": function( settings, json ) {
+            $('.dataTables_filter').find('input[typcd e=search]').attr('type','text');
+        },
+        "bPaginate": true,
+        "bautoWidth": true,
+         // "destroy" : true,
+        "pagingType": "full_numbers",
+        "pageLength": 10,
+        "lengthMenu": [10, 25, 50, 100],
+        "dom": 'T<"clear">lfrtip',
+        "order": [[ 1, "desc" ]],
+        "initComplete": function( settings, json ) {
+            $('.dataTables_filter').find('input[type=search]').attr('type','text');
+        },
+        tableTools: {
+            "sSwfPath":"http://cdn.datatables.net/tabletools/2.2.2/swf/copy_csv_xls_pdf.swf",
+            aButtons: ['csv']
+        }
+    });
+}
 
 
       

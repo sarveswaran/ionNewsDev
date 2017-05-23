@@ -86,8 +86,7 @@
             <div class="col-sm-4">
                 <div class="form-group{{ $errors->has('image') ? ' has-error' : '' }}">
                     {!! Form::label('image', trans('Image')) !!}
-                    <!-- {!! Form::file('img', old('img'),['class' => 'form-control', 'placeholder' => trans('image')]) !!} -->
-               
+                
                     <input name="img" type="file" onchange="previewFile()">
                     {!! $errors->first('image', '<span class="help-block">:message</span>') !!}
                     <img  src="{{ $content->image }}" onchange="previewFile()" width="120">
@@ -103,7 +102,7 @@
                       <select multiple="multiple" class=" user_group form-control" name="user_roles[]">
                       <?php foreach ($user_roles as $user_role): ?>                     
                       <option value="{{ $user_role['id'] }}" <?php
-                                        if ($user_role['id']==-1) 
+                                        if ($user_role['checked']==1) 
                                         echo "selected"; else echo '';?>>{{ $user_role['type'] }}</option>
                       <?php endforeach; ?>
                       </select>
@@ -111,28 +110,10 @@
                 </div>
               </div>
             </div>
-          </div>
-          
-     <div class="form-group user-types">
-           <table class=" data-table table table-bordered table-hover dataTable" id="User_data" role="grid" aria-describedby="DataTables_Table_0_info">
-           <thead>
-               <tr>
-                  <th data-sortable="false" style="width: 70px;">
-                  <input type="checkbox"  id="select_all" value=0 name="che" />Select</th>
-                  <th>Name</th>
-                  <th>Company Name </th>
-                  <th>Designation</th>
-              </tr>  
-              </thead>
-              <tbody id = "user_info">  
-         
-                </tbody>
-               </tbody> 
-           </table>      
-      </div>
-	    </div>
-    
+          </div>         
+ 
+	    </div> 
       
 
     </div>
-</div>
+

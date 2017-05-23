@@ -11,10 +11,7 @@
         <label></label><br><br>
         <input  type="button" class="btn btn-primary btn-flat" value="Crawl Content" onclick="crawl()" />
         </div>
-        <!-- <div class="col-sm-3">
-        <label></label> <br>
-        <input  type="button" class="btn btn-primary btn-flat" value="Custom Content" onclick="Custom()" />
-        </div> -->
+
     </div>
 
       <div class="row">
@@ -107,15 +104,13 @@
 	        </table>
 	    </div>
             
-        
+             
             <div class="col-sm-12 custom_img">
                 <div class="form-group{{ $errors->has('image') ? ' has-error' : '' }}">
-                    {!! Form::label('image', trans('Image')) !!}
-                    <!-- {!! Form::file('img', old('img'),['class' => 'form-control', 'placeholder' => trans('image')]) !!} -->
-               
+                    {!! Form::label('image', trans('Image')) !!}                
                     <input name="img" type="file" onchange="previewFile()">
                     {!! $errors->first('image', '<span class="help-block">:message</span>') !!}
-                    <img  src="" onchange="previewFile()" width="120">
+                    <img  class="select_img" src="" onchange="previewFile()" width="120">
 
                 </div>
             </div>
@@ -142,13 +137,9 @@
           </div>
 
  
-      <div class="form-group user-types form_grp_relative" style="">
+<!--       <div class="form-group user-types form_grp_relative" style="">
 
            <table class=" data-table table table-bordered table-hover dataTable" id="User_data" role="grid" aria-describedby="DataTables_Table_0_info" >          
-            <!-- <label class="btn btn-primary " style="position: relative; top: 71px;    margin-left: 5px;height: 32px;width: 83px;" >
-              <input type="checkbox" id="select_all_page"><span style="position: relative;
-              top: -2px;">SelectAll</span>
-            </label> -->
               <button type="button" class="btn btn-primary" id="select_all_page" style="position: relative; top: 71px;    margin-left: 5px;height: 32px;width: 83px;"><span style="position: relative;
               top: -2px;">SelectAll</span></button>
 
@@ -170,7 +161,7 @@
               
            </table>  
              
-      </div>
+      </div> -->
     </div>
     </div>
 

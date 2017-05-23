@@ -77,8 +77,7 @@ class ContentController extends AdminBaseController
         
           }
          }  
-            $user_roles[0]['id']=0;       
-            $user_roles[0]['type']='default';             
+             
 
         return view('content::admin.contents.create',compact('categories'),compact('user_roles'));
     }
@@ -233,122 +232,131 @@ class ContentController extends AdminBaseController
     public function store(Request  $request)
     {
         
-        $Alldata=$request->all();               
-        $category_name=DB::table('content__categories')
-              ->select('name')
-              ->whereIn('id',$Alldata['category_id'])->get();
-        $i=0;
-        $category_name=json_decode($category_name,true);
-        $tags="";
-        if(sizeof($category_name)){
-          $tags=$tags."# ";
-          foreach ( $category_name as $value) {
-              $tags=$tags."".$value['name']." ";
-              if($i==2)
-                break;
-               $i++;          
+      $Alldata=$request->all(); 
+      $tags="";
+      $Alldata['all_users']=json_encode($Alldata['user_roles']);
+
+      if(!$Alldata['tags']){
+          $category_name=$this->category->find($Alldata['category_id']);    
+          $i=0; 
+          $category_name=json_decode($category_name,true);
+          if(sizeof($category_name)){
+              $tags=$tags."# ";
+              foreach ( $category_name as $value) {
+                  $tags=$tags."".$value['name']." ";
+                  if($i==2)
+                  break;
+                  $i++;          
+              }
+            $tags=$tags."News";
           }
-          $tags=$tags."News";
-        }
-         $Alldata['tags']=$tags;
-         $Alldata['content']=trim( $Alldata['content']);   
-        
-          if ($request->hasFile('img')){  
-          $image_name=$_FILES['img']['name'];
-          $request->file('img')->move(env('IMG_URL').'/crawle_image',$image_name);
-          $image=env('IMG_URL1').'/crawle_image/'.$image_name;   
-           }
-          else {
-            $image = "";
-           } 
-         
-        
+          $Alldata['tags']=$tags;
+      }
 
-        if(!array_key_exists('image', $Alldata))
-        { if(array_key_exists('img1', $Alldata))
-          $Alldata['image']=$Alldata['img1'];        
-          else
-            $Alldata['image']=$image;    
-        }
-       
-        $sizeofCategories=sizeof($Alldata['category_id']);
-        $multiContCategoryData=$Alldata['category_id'];
+      $users =json_decode(User::all(),true);  
+      $role_ids=$Alldata['user_roles'];
+      $final_users=array();
+      if(!in_array(-1,$role_ids) ){  
+          $user_roll=$this->role->find($role_ids);
+          $all_roles=json_decode($user_roll,true);
 
-        $Alldata['all_category']=json_encode($Alldata['category_id']);
-        $Alldata['category_id']=$sizeofCategories;      
-        $ids=$this->content->create($Alldata);   
-      
-        
-        $id=json_decode($ids,true);        
-          $id=$ids['id'];
-          if(sizeof($multiContCategoryData))
-          {
-             foreach ($multiContCategoryData as $value) {
-                $abc['category_id']=$value;
-                $abc['content_id']=$id;         
-
-                $this->multiContCategory->create($abc); 
-                
+          foreach ($all_roles as $key => $value) {
+              $find[]=$value['slug'];             
+          }    
+          foreach ($users as $key => $value) { 
+              if(in_array($value['role'], $find)){
+                  $final_users[]=$value;
               }
           }
-          
+      }
+      else {
+          $final_users =$users; 
+      }
 
-        if(array_key_exists('checkedDetails', $Alldata))
-        {   
-         $checkedArray=json_decode($Alldata['checkedDetails'][0],true);
-            $length=sizeof($checkedArray); 
+      $Alldata['content']=trim( $Alldata['content']); 
+      $image="";
 
-            for ($i=0;$i<$length;$i++) { 
-          
-                $abc['user_id']=$checkedArray[$i];
-                $abc['content_id']=$id;
-                $this->contentUser->create($abc);           
-            }
-        }
+      if ($request->hasFile('img')){  
+          $image_name=$_FILES['img']['name'];
+          $request->file('img')->move(env('IMG_URL').'/crawle_image',$image_name);
+          $image=env('IMG_URL1').'/crawle_image/'.$image_name;  
+          $Alldata['image']=$image;
+      }
+      else {
+          if(!array_key_exists('image', $Alldata)){
+              if(array_key_exists('img1', $Alldata))
+              $Alldata['image']=$Alldata['img1'];        
+              else
+              $Alldata['image']=$image;
+          }
+      }
+
+      $sizeofCategories=sizeof($Alldata['category_id']);
+      $multiContCategoryData=$Alldata['category_id'];
+
+      $Alldata['all_category']=json_encode($Alldata['category_id']);
+      $Alldata['category_id']=$sizeofCategories;      
+      $ids=$this->content->create($Alldata); 
+
+      $id=json_decode($ids,true);        
+      $id=$ids['id'];
+
+      if(sizeof($final_users)){ 
+          foreach ($final_users as $key => $value) {
+              $abc['user_id']=$value['id'];
+              $abc['content_id']=$id;
+              $this->contentUser->create($abc);
+          }    
+      }
+
+      if(sizeof($multiContCategoryData)){
+          foreach ($multiContCategoryData as $value) {
+              $abc['category_id']=$value;
+              $abc['content_id']=$id;       
+              $this->multiContCategory->create($abc); 
+          }
+      }        
+
+      $company_name=array();
+      $i=0;  
+      $device_code=array();      
+      foreach ($users as $key => $value) {
+          if($value['id']==$final_users[$i]['id']){
+              $company_name[]=$value['company'];
+              $i++;
+              $device_code[$value['id']]=$value['device_code'];
+          }
+          if($i>=sizeof($final_users))
+              break;
+      }
+
+      for ($i=0;$i<sizeof($company_name);$i++) {               
+          $ContentCompany= new ContentCompany;
+          $ContentCompany->content_id=$id;
+          $ContentCompany->company_name=$company_name[$i];
+          $ContentCompany->save();
+      }
+      $message=array();
 
 
-          $users =json_decode(User::all(),true);
-          $company_name=array();
-          $i=0;  
-          $device_code=array();      
-          foreach ($users as $key => $value) {
-             if($value['id']==$Alldata['check'][$i])
-                {
-                    $company_name[]=$value['company'];
-                    $i++;
-                    $device_code[$value['id']]=$value['device_code'];
+      $message['title']=$Alldata['title'];
+      $message['message']=$Alldata['content'];
+      if(array_key_exists('image', $Alldata))
+          $message['imageUrl']=$Alldata['image'];
+      else $message['imageUrl']="";
+          $message['crawl_url']=$Alldata['crawl_url'];
 
-                }
-                if($i>=sizeof($Alldata['check']))
-                    break;
-            }
-          for ($i=0;$i<sizeof($company_name);$i++) {               
-                 $ContentCompany= new ContentCompany;
-                 $ContentCompany->content_id=$id;
-                 $ContentCompany->company_name=$company_name[$i];
-                 $ContentCompany->save();
-            }
-            $message=array();
-            
-             
-            $message['title']=$Alldata['title'];
-             $message['message']=$Alldata['content'];
-            if(array_key_exists('image', $Alldata))
-            $message['imageUrl']=$Alldata['image'];
-            else $message['imageUrl']="";
-            $message['crawl_url']=$Alldata['crawl_url'];
+      Log::info($device_code);
 
-            Log::info($device_code);
 
-     
-            foreach ($device_code as $value) {
-              if($value)
+      foreach ($device_code as $value) {
+          if($value)
               $this->push_notifications($message,$value);
-            }
+      }
 
            
 
-        return redirect()->route('admin.content.content.index')
+      return redirect()->route('admin.content.content.index')
             ->withSuccess(trans('core::core.messages.resource created', ['name' => trans('content::contents.title.contents')]));
     }
 
@@ -360,6 +368,10 @@ class ContentController extends AdminBaseController
      */
     public function edit(Content $content)
     {    
+         $find_group_type=$this->content->find($content->id);
+         $find_group_type=$find_group_type->all_users;
+         $user_type=json_decode($find_group_type,true);
+
         $categories = $this->category->getByAttributes(['status' => 1]);
         $roles=json_decode($this->role->all());
           
@@ -373,9 +385,18 @@ class ContentController extends AdminBaseController
           $user_roles[$value->id]['type']=$value->name;
         
           }
-         }  
-            $user_roles[0]['id']=0;       
-            $user_roles[0]['type']='default';
+         } 
+
+         foreach ($user_roles as $key => $value) {
+           if(in_array($value['id'], $user_type))
+            $user_roles[$value['id']]['checked']=1;
+           else $user_roles[$value['id']]['checked']=0;
+
+         }
+          // Log::info($user_roles); die;
+
+
+
             
         return view('content::admin.contents.edit', compact('content','categories','user_roles'));
     }
@@ -392,8 +413,7 @@ class ContentController extends AdminBaseController
     { 
          $content_data=json_decode($content,true);
          $data=$request->all();
-         Log::info($data);     
-
+         $data['all_users']=json_encode($data['user_roles']);
          $content_id=$content_data['id'];
 
          $sizeofCategories=sizeof($data['category_id']);
@@ -404,7 +424,7 @@ class ContentController extends AdminBaseController
         
          $categoryID=DB::table('content__multiplecategorycontents')                        
                           ->where('content_id','=',$content_id)->delete();
-    
+
           foreach ($Allcategory as $value) {           
               $abc['category_id']=$value;
               $abc['content_id']=$content_id;
@@ -421,46 +441,80 @@ class ContentController extends AdminBaseController
             $image = $content->image;
            } 
          
-         $request->merge(['image' => $image]);
-         $data['image']=$image;
+           $request->merge(['image' => $image]);
+           $data['image']=$image;
 
-         if(array_key_exists('checkedDetails', $data))
-         {  
-                $checkedArray=json_decode($data['checkedDetails'][0],true);
-            $length=sizeof($checkedArray); 
+            $users =json_decode(User::all(),true);  
+            $role_ids=$data['user_roles'];
+            $final_users=array();
+            if(!in_array(-1,$role_ids) ){  
+                $user_roll=$this->role->find($role_ids);
+                $all_roles=json_decode($user_roll,true);
+
+                foreach ($all_roles as $key => $value) {
+                    $find[]=$value['slug'];             
+                }    
+                foreach ($users as $key => $value) { 
+                    if(in_array($value['role'], $find)){
+                        $final_users[]=$value;
+                     }
+                }
+            }
+            else {
+                $final_users =$users; 
+              }
+            if(sizeof($final_users)){
+
+                DB::table('content__contentusers')
+                ->where('content_id','=',$content_id)->delete();
+                foreach ($final_users as $key => $value) {
+                    $abc['user_id']=$value['id'];
+                    $abc['content_id']=$content_id;
+                    $this->contentUser->create($abc);
+                 }    
+            }
+
+
+ 
+
+            
+         // if(array_key_exists('checkedDetails', $data))
+         // {  
+         //        $checkedArray=json_decode($data['checkedDetails'][0],true);
+         //    $length=sizeof($checkedArray); 
 
            
-               $userData = DB::table('content__contentusers')->select(\DB::raw('*'))
-                ->where('content_id','=',$content_id)->get();
-                $deleteId=array();
-                $userData=json_decode($userData,true);
+         //       $userData = DB::table('content__contentusers')->select(\DB::raw('*'))
+         //        ->where('content_id','=',$content_id)->get();
+         //        $deleteId=array();
+         //        $userData=json_decode($userData,true);
 
 
-                 foreach ($userData as $key => $value) {
+         //         foreach ($userData as $key => $value) {
                                      
-                      if(in_array($value['user_id'],$checkedArray))
-                         $deleteId[]=$value['user_id'];
+         //              if(in_array($value['user_id'],$checkedArray))
+         //                 $deleteId[]=$value['user_id'];
                     
-                }
-                DB::table('content__contentusers')->where('content_id', '=', $content_id)
-                ->whereNotIn('user_id',$deleteId)->delete();
+         //        }
+         //        DB::table('content__contentusers')->where('content_id', '=', $content_id)
+         //        ->whereNotIn('user_id',$deleteId)->delete();
                
                 
-                for ($i=0;$i<$length;$i++) { 
+         //        for ($i=0;$i<$length;$i++) { 
 
-                 if(!in_array($checkedArray[$i], $deleteId)){
+         //         if(!in_array($checkedArray[$i], $deleteId)){
 
-                        $abc['user_id']=$checkedArray[$i];
-                        $abc['content_id']=$content_id;
+         //                $abc['user_id']=$checkedArray[$i];
+         //                $abc['content_id']=$content_id;
 
-                        $this->contentUser->create($abc);                 
+         //                $this->contentUser->create($abc);                 
 
-               }
-            }  
+         //       }
+         //    }  
                             
             
 
-         }
+         // }
 
 
         $this->content->update($content, $data);
