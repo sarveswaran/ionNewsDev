@@ -14,7 +14,7 @@ class UpdateContentallusers extends Migration
     public function up()
     {
         Schema::table('content__contents', function (Blueprint $table) {
-            $table->string('all_users');
+            //$table->string('all_users');
 
         });
     }
