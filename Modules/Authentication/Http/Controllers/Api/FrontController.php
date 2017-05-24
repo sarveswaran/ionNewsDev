@@ -93,6 +93,7 @@ class FrontController extends BasePublicController
                if(!empty($authicated_user['profileImg']))
                $response['profileImg']=$authicated_user['profileImg'];
                else  $response['profileImg']="";
+               
                $response['token']=$authicated_user['token'];
 
 
@@ -378,8 +379,126 @@ class FrontController extends BasePublicController
 
      public function push_notifications(Request $request)
       {
-          $registrationIds=$request->device_code;       
-          define( 'API_ACCESS_KEY',env("API_ACCESS_KEY"));      
+        $apnsHost = env('apnsHost');
+        $apnsCert = env('apnsCert');
+        $apnsPort = env('apnsPort');
+        $apnsPass = env('apnsPass');
+        $token ='e1e960c635806be9b95aa2116b879f73bc78768f48549646e2a62611477459aa';    
+
+        $story='IBM NEWS';
+        $title='ION NEWS';
+        $url="http://assets.myntassets.com.jpg";
+        $output='{
+"aps": {
+"alert": {
+"title": "123456789012345678901\n23456789012345766737373\n12345678901234",
+"body": "titi"
+}
+},
+"mediaUrl": "https://www.w3schools.com/html/pic_mountain.jpg",
+"mediaType": "image"}';
+
+
+
+//         $output='{
+// "aps" : {
+// "alert" : {
+// "title" : "TITLE ",
+// "body" : "12345678901234567890123456789012345766737373 12345678901234  TITLE TITLE TITLE TITLE TITLE TITLE TITLE"}
+// },
+
+// "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/loorGoban.JPG/1024px-FloorGoban.jpg",
+// "mediaType": "image"
+// }';
+
+        Log::info($payload['acme2']=['abab','bababa']);
+        Log::info($output);
+        $token = pack('H*', str_replace(' ', '', $token));
+        $apnsMessage = chr(0).chr(0).chr(32).$token.chr(0).chr(strlen($output)).$output;
+
+        $streamContext = stream_context_create();
+        stream_context_set_option($streamContext, 'ssl', 'local_cert', $apnsCert);
+        stream_context_set_option($streamContext, 'ssl', 'passphrase', $apnsPass);
+
+        $apns = stream_socket_client('ssl://'.$apnsHost.':'.$apnsPort, $error, $errorString, 2, STREAM_CLIENT_CONNECT, $streamContext);
+        // print_r($apns);
+        Log::info($apns);
+
+        if (!$apns)
+         exit("Failed to connect: $err $errstr" . PHP_EOL);
+        echo 'Connected to APNS' . PHP_EOL;
+
+        fwrite($apns, $apnsMessage);
+        fclose($apns);
+         return response("successfully");
+
+
+
+
+
+
+
+
+$url = 'https://gateway.sandbox.push.apple.com:2195';
+// // $cert = '/var/www/html/ion_news/Modules/Authentication/Http/Api/ion_Certificates.pem';
+
+//           $cert=env('cert');
+
+// $ch = curl_init();
+
+// curl_setopt($ch, CURLOPT_URL,$url);
+// curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+// curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+// curl_setopt($ch, CURLOPT_HEADER, 1);
+// curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+// curl_setopt($ch, CURLOPT_POST, 1);
+// curl_setopt($ch, CURLOPT_SSLCERT, $cert);
+// curl_setopt($ch, CURLOPT_SSLCERTPASSWD, "ionnews");
+// curl_setopt($ch, CURLOPT_POSTFIELDS, '{"device_tokens": ["e81501fe263de9cea8a1657920cc5ceb669868cb2eb7909e3d93c027a31a398d"], "aps": {"alert": "test message one!"}}');
+
+// $result = curl_exec($ch);
+// print_r($result);
+// echo "string";
+// print_r(curl_getinfo($ch));
+$apnsHost = 'gateway.sandbox.push.apple.com';
+$apnsCert = '/var/www/html/ion_news/Development_cert.pem';
+$apnsPort = 2195;
+$apnsPass = 'ionnews';
+$token = 'e81501fe263de9cea8a1657920cc5ceb669868cb2eb7909e3d93c027a31a398d';
+
+$payload['aps'] = array('alert' => 'Oh hai!', 'badge' => 1, 'sound' => 'default');
+$output = json_encode($payload);
+$token = pack('H*', str_replace(' ', '', $token));
+$apnsMessage = chr(0).chr(0).chr(32).$token.chr(0).chr(strlen($output)).$output;
+
+$streamContext = stream_context_create();
+stream_context_set_option($streamContext, 'ssl', 'local_cert', $apnsCert);
+stream_context_set_option($streamContext, 'ssl', 'passphrase', $apnsPass);
+
+$apns = stream_socket_client('ssl://'.$apnsHost.':'.$apnsPort, $error, $errorString, 2, STREAM_CLIENT_CONNECT, $streamContext);
+print_r($apns);
+
+if (!$apns)
+ exit("Failed to connect: $err $errstr" . PHP_EOL);
+echo 'Connected to APNS' . PHP_EOL;
+
+fwrite($apns, $apnsMessage);
+fclose($apns);
+echo "hahhaa";
+
+return response("successfully");
+
+
+
+
+
+
+
+
+
+
+
+
        
         $msg = array
         (
