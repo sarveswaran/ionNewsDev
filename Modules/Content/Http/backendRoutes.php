@@ -280,7 +280,41 @@ $router->group(['prefix' =>'/content'], function (Router $router) {
         'uses' => 'MultipleCategoryContentController@destroy',
         'middleware' => 'can:content.multiplecategorycontents.destroy'
     ]);
+    $router->bind('custom_contentstory', function ($id) {
+        return app('Modules\Content\Repositories\Custom_ContentStoryRepository')->find($id);
+    });
+    $router->get('custom_contentstories', [
+        'as' => 'admin.content.custom_contentstory.index',
+        'uses' => 'Custom_ContentStoryController@index',
+        'middleware' => 'can:content.custom_contentstories.index'
+    ]);
+    $router->get('custom_contentstories/create', [
+        'as' => 'admin.content.custom_contentstory.create',
+        'uses' => 'Custom_ContentStoryController@create',
+        'middleware' => 'can:content.custom_contentstories.create'
+    ]);
+    $router->post('custom_contentstories', [
+        'as' => 'admin.content.custom_contentstory.store',
+        'uses' => 'Custom_ContentStoryController@store',
+        'middleware' => 'can:content.custom_contentstories.create'
+    ]);
+    $router->get('custom_contentstories/{custom_contentstory}/edit', [
+        'as' => 'admin.content.custom_contentstory.edit',
+        'uses' => 'Custom_ContentStoryController@edit',
+        'middleware' => 'can:content.custom_contentstories.edit'
+    ]);
+    $router->put('custom_contentstories/{custom_contentstory}', [
+        'as' => 'admin.content.custom_contentstory.update',
+        'uses' => 'Custom_ContentStoryController@update',
+        'middleware' => 'can:content.custom_contentstories.edit'
+    ]);
+    $router->delete('custom_contentstories/{custom_contentstory}', [
+        'as' => 'admin.content.custom_contentstory.destroy',
+        'uses' => 'Custom_ContentStoryController@destroy',
+        'middleware' => 'can:content.custom_contentstories.destroy'
+    ]);
 // append
+
 
 
 

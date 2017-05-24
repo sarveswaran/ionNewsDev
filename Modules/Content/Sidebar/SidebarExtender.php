@@ -101,7 +101,17 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender
                         $this->auth->hasAccess('content.multiplecategorycontents.index')
                     );
                 });
+                $item->item(trans('content::custom_contentstories.title.custom_contentstories'), function (Item $item) {
+                    $item->icon('fa fa-copy');
+                    $item->weight(0);
+                    $item->append('admin.content.custom_contentstory.create');
+                    $item->route('admin.content.custom_contentstory.index');
+                    $item->authorize(
+                        $this->auth->hasAccess('content.custom_contentstories.index')
+                    );
+                });
 // append
+
 
 
 

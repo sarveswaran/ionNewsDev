@@ -44,7 +44,14 @@ return [
         'edit' => 'content::multiplecategorycontents.edit resource',
         'destroy' => 'content::multiplecategorycontents.destroy resource',
     ],
+    'content.custom_contentstories' => [
+        'index' => 'content::custom_contentstories.list resource',
+        'create' => 'content::custom_contentstories.create resource',
+        'edit' => 'content::custom_contentstories.edit resource',
+        'destroy' => 'content::custom_contentstories.destroy resource',
+    ],
 // append
+
 
 
 
