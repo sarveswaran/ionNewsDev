@@ -166,23 +166,23 @@ class StoryController extends BasePublicController
     {     
         #this one only purpose of update databse using some query
 
-        $update=DB::table('users')
-                  ->get();
-       $update=json_decode($update,true);
-            foreach ($update as $key => $value) {
-              if($value['role'])
-              {
-                DB::table("users")
-                  ->where('role', '=','user')
-                  ->update(['role' => 'user','role_id'=>2]);  
-              }
+       //  $update=DB::table('users')
+       //            ->get();
+       // $update=json_decode($update,true);
+       //      foreach ($update as $key => $value) {
+       //        if($value['role'])
+       //        {
+       //          DB::table("users")
+       //            ->where('role', '=','user')
+       //            ->update(['role' => 'user','role_id'=>2]);  
+       //        }
              
-            }
+       //      }
 
-            DB::table("users")
-                  ->where('id', '=',1)
-                  ->update(['role' => 'admin','role_id'=>1]);  
-        return $update;
+       //      DB::table("users")
+       //            ->where('id', '=',1)
+       //            ->update(['role' => 'admin','role_id'=>1]);  
+       //  return $update;
 
 
 
@@ -192,23 +192,33 @@ class StoryController extends BasePublicController
 
 
       $categorylist = $this->category->getByAttributes(['status' => 1],'priority');
+
          $AllContent=$this->content->all();
-            $allusers=DB::table('users')
-                      ->select('id')
-                      ->get();
-                      $now=date("Y-m-d H:i:s");
+         $now=date("Y-m-d H:i:s");
+         $allRoles=DB::table('roles')
+                  ->get();
+                  
+          foreach ($allRoles as $key => $value) {
+             if($value->id!=1)
+              $roles[]=$value->id;
+          }
+      
+
+    
+  
+       
                         
              foreach ($AllContent as $content) {
-                   foreach ($allusers as $users) {
-                      $data1=DB::table('content__contentusers')
-                          ->where('user_id' ,'=' ,$users->id)
+                   foreach ($roles as $role) {
+                      $data1=DB::table('content__usergroups')
+                          ->where('role_id' ,'=' ,$role)
                           ->where('content_id','=' , $content->id)
                           ->get();
-                          
+                         
                       if(sizeof($data1)==0)
                       {
-                    DB::table('content__contentusers')->insert(
-                        ['user_id' => $users->id, 'content_id' => $content->id,
+                    DB::table('content__usergroups')->insert(
+                        ['role_id' => $role, 'content_id' => $content->id,
                         'created_at'=>$now,'updated_at'=>$now]
                        );
                   }
@@ -233,14 +243,7 @@ class StoryController extends BasePublicController
                     
                    }                       
                 }
-                Log::info($Allcategory);
-           $Allcategory=json_encode($Allcategory);
-           Log::info($Allcategory);
-            foreach ($AllContent as $value) {
-              DB::table('content__contents')
-            ->where('id', '=',$value->id)
-            ->update(['all_category' => $Allcategory]);                                   
-            }        
+        
 
             return "successful update"; 
 
