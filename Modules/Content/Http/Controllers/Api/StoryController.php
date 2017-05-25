@@ -167,14 +167,18 @@ class StoryController extends BasePublicController
                   ->get();
        $update=json_decode($update,true);
             foreach ($update as $key => $value) {
-              if(!$value['role'])
+              if($value['role'])
               {
                 DB::table("users")
-                  ->where('id', '=',$value['id'])
+                  ->where('role', '=','user')
                   ->update(['role' => 'user','role_id'=>2]);  
               }
              
             }
+
+            DB::table("users")
+                  ->where('id', '=',1)
+                  ->update(['role' => 'admin','role_id'=>1]);  
         return $update;
 
 
