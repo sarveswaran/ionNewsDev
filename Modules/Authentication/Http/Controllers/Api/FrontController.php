@@ -77,6 +77,8 @@ class FrontController extends BasePublicController
                $response['updated_at']=$authicated_user['updated_at'];
                $response['phone']=$authicated_user['phone'];
                $response['address']=$authicated_user['address'];
+               $response['role']=$authicated_user['role'];
+               $response['role_id']=$authicated_user['role_id'];
 
                if(!empty($authicated_user['device_code']))
                $response['device_code']=$authicated_user['device_code'];             
@@ -163,6 +165,7 @@ class FrontController extends BasePublicController
           
             $role_id = '';
             $roledetails = $roles->all();
+            Log::info($request->all()); 
             foreach ($roledetails as $roledetail) {
                 if(ucfirst($request->role) != 'Admin'){
                   if(ucfirst($request->role) == ucfirst($roledetail->name)){
@@ -379,6 +382,68 @@ class FrontController extends BasePublicController
 
      public function push_notifications(Request $request)
       {
+
+        $message['title']="https://www.google.co.in/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&ved=0ahUKEwibvueq74rUAhUJLY8KHcZOBaYQjRwIBw&url=https%3A%2F%2Fmadeby.google.com%2Fphone%2F&psig=AFQjCNF5QEC8J5piftgFBH2pcbASMTXfkw&ust=1495795695209453";
+        $message['message']="https://www.google.co.in/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&ved=0ahUKEwibvueq74rUAhUJLY8KHcZOBaYQjRwIBw&url=https%3A%2F%2Fmadeby.google.com%2Fphone%2F&psig=AFQjCNF5QEC8J5piftgFBH2pcbASMTXfkw&ust=1495795695209453https://www.google.co.in/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&ved=0ahUKEwibvueq74rUAhUJLY8KHcZOBaYQjRwIBw&url=https%3A%2F%2Fmadeby.google.com%2Fphone%2F&psig=AFQjCNF5QEC8J5piftgFBH2pcbASMTXfkw&ust=1495795695209453https://www.google.co.in/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&ved=0ahUKEwibvueq74rUAhUJLY8KHcZOBaYQjRwIBw&url=https%3A%2F%2Fmadeby.google.com%2Fphone%2F&psig=AFQjCNF5QEC8J5piftgFBH2pcbASMTXfkw&ust=1495795695209453";
+        $message['imageUrl']="https://www.google.co.in/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&ved=0ahUKEwibvueq74rUAhUJLY8KHcZOBaYQjRwIBw&url=https%3A%2F%2Fmadeby.google.com%2Fphone%2F&psig=AFQjCNF5QEC8J5piftgFBH2pcbASMTXfkw&ust=1495795695209453";
+        $message['crawl_url']='http://git.mantralabsglobal.com/bharath/cms-project/blob/master/Modules/Content/Http/Controllers/Admin/ContentController.php';
+        $device_code="eBASB4uQpNU:APA91bEvHoXfdP1T29X1J2YJSn2z4wN21CROcjTsTRGRqk6ig3Tpg3tZAAuuxeJdX5HOtBAI0ctbWV6IVcJOPjAixzLGuevkMTVgbuq_ovFi75slWhDHoDZiTCqCy0cNCSnp41_h3cgX";
+
+        $API_ACCESS_KEY = env("API_ACCESS_KEY");
+        $registrationIds=$device_code;
+        $msg=$message;      
+       
+      
+        $fields = array
+        (
+          'registration_ids'  =>array($registrationIds),
+          'data'      => $msg
+        );
+         
+        $headers = array
+        (
+          'Authorization: key=' . $API_ACCESS_KEY,
+          'Content-Type: application/json'
+        );
+        $url='https://fcm.googleapis.com/fcm/send';
+         
+        $ch = curl_init();
+        curl_setopt( $ch,CURLOPT_URL, 'http://android.googleapis.com/gcm/send');
+        curl_setopt( $ch,CURLOPT_POST, true );
+        curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+        curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+        curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+        curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode($fields) );
+        $result = curl_exec($ch );       
+        curl_close( $ch );
+        // Log::info($result);
+        return response($result);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         $apnsHost = env('apnsHost');
         $apnsCert = env('apnsCert');
         $apnsPort = env('apnsPort');
@@ -397,20 +462,6 @@ class FrontController extends BasePublicController
 },
 "mediaUrl": "https://www.w3schools.com/html/pic_mountain.jpg",
 "mediaType": "image"}';
-
-
-
-//         $output='{
-// "aps" : {
-// "alert" : {
-// "title" : "TITLE ",
-// "body" : "12345678901234567890123456789012345766737373 12345678901234  TITLE TITLE TITLE TITLE TITLE TITLE TITLE"}
-// },
-
-// "mediaUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/loorGoban.JPG/1024px-FloorGoban.jpg",
-// "mediaType": "image"
-// }';
-
         Log::info($payload['acme2']=['abab','bababa']);
         Log::info($output);
         $token = pack('H*', str_replace(' ', '', $token));
@@ -431,108 +482,5 @@ class FrontController extends BasePublicController
         fwrite($apns, $apnsMessage);
         fclose($apns);
          return response("successfully");
-
-
-
-
-
-
-
-
-$url = 'https://gateway.sandbox.push.apple.com:2195';
-// // $cert = '/var/www/html/ion_news/Modules/Authentication/Http/Api/ion_Certificates.pem';
-
-//           $cert=env('cert');
-
-// $ch = curl_init();
-
-// curl_setopt($ch, CURLOPT_URL,$url);
-// curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-// curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-// curl_setopt($ch, CURLOPT_HEADER, 1);
-// curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
-// curl_setopt($ch, CURLOPT_POST, 1);
-// curl_setopt($ch, CURLOPT_SSLCERT, $cert);
-// curl_setopt($ch, CURLOPT_SSLCERTPASSWD, "ionnews");
-// curl_setopt($ch, CURLOPT_POSTFIELDS, '{"device_tokens": ["e81501fe263de9cea8a1657920cc5ceb669868cb2eb7909e3d93c027a31a398d"], "aps": {"alert": "test message one!"}}');
-
-// $result = curl_exec($ch);
-// print_r($result);
-// echo "string";
-// print_r(curl_getinfo($ch));
-$apnsHost = 'gateway.sandbox.push.apple.com';
-$apnsCert = '/var/www/html/ion_news/Development_cert.pem';
-$apnsPort = 2195;
-$apnsPass = 'ionnews';
-$token = 'e81501fe263de9cea8a1657920cc5ceb669868cb2eb7909e3d93c027a31a398d';
-
-$payload['aps'] = array('alert' => 'Oh hai!', 'badge' => 1, 'sound' => 'default');
-$output = json_encode($payload);
-$token = pack('H*', str_replace(' ', '', $token));
-$apnsMessage = chr(0).chr(0).chr(32).$token.chr(0).chr(strlen($output)).$output;
-
-$streamContext = stream_context_create();
-stream_context_set_option($streamContext, 'ssl', 'local_cert', $apnsCert);
-stream_context_set_option($streamContext, 'ssl', 'passphrase', $apnsPass);
-
-$apns = stream_socket_client('ssl://'.$apnsHost.':'.$apnsPort, $error, $errorString, 2, STREAM_CLIENT_CONNECT, $streamContext);
-print_r($apns);
-
-if (!$apns)
- exit("Failed to connect: $err $errstr" . PHP_EOL);
-echo 'Connected to APNS' . PHP_EOL;
-
-fwrite($apns, $apnsMessage);
-fclose($apns);
-echo "hahhaa";
-
-return response("successfully");
-
-
-
-
-
-
-
-
-
-
-
-
-       
-        $msg = array
-        (
-          'message'   => 'here is a message. message',
-          'title'   => 'This is a title. title',
-          'subtitle'  => 'This is a subtitle. subtitle',
-          'tickerText'  => 'Ticker text here...Ticker text here...Ticker text here',
-          'vibrate' => 1,
-          'sound'   => 1,
-          'largeIcon' => 'large_icon',
-          'smallIcon' => 'small_icon'
-        );
-        $fields = array
-        (
-          'registration_ids'  =>array($registrationIds),
-          'data'      => $msg
-        );
-         
-        $headers = array
-        (
-          'Authorization: key=' . API_ACCESS_KEY,
-          'Content-Type: application/json'
-        );
-        $url='https://fcm.googleapis.com/fcm/send';
-         
-        $ch = curl_init();
-        curl_setopt( $ch,CURLOPT_URL, 'http://android.googleapis.com/gcm/send');
-        curl_setopt( $ch,CURLOPT_POST, true );
-        curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
-        curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
-        curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
-        curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode($fields) );
-        $result = curl_exec($ch );       
-        curl_close( $ch );
-        return response($result);
       }
 }
