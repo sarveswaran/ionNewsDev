@@ -56,6 +56,7 @@ class StoryController extends BasePublicController
       }else{
             $users= $this->user->find($request->user_id);
             $user_groupId=$users->role_id;
+            Log::info($user_groupId);
             $dataset = $this->content->filter( $request->category_id,$user_groupId);
             foreach ($dataset as $key => $value) {    
                 unset($value->category_id);
@@ -73,7 +74,7 @@ class StoryController extends BasePublicController
 
             $users= $this->user->find($request->user_id);
             $user_groupId=$users->role_id;
-
+            Log::info($user_groupId);
             $dataresponse = array();
             $current_date=date('Y-m-d');
             $user_id=$request->user_id;          
