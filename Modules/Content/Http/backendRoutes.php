@@ -313,7 +313,41 @@ $router->group(['prefix' =>'/content'], function (Router $router) {
         'uses' => 'Custom_ContentStoryController@destroy',
         'middleware' => 'can:content.custom_contentstories.destroy'
     ]);
+    $router->bind('usergroup', function ($id) {
+        return app('Modules\Content\Repositories\UserGroupRepository')->find($id);
+    });
+    $router->get('usergroups', [
+        'as' => 'admin.content.usergroup.index',
+        'uses' => 'UserGroupController@index',
+        'middleware' => 'can:content.usergroups.index'
+    ]);
+    $router->get('usergroups/create', [
+        'as' => 'admin.content.usergroup.create',
+        'uses' => 'UserGroupController@create',
+        'middleware' => 'can:content.usergroups.create'
+    ]);
+    $router->post('usergroups', [
+        'as' => 'admin.content.usergroup.store',
+        'uses' => 'UserGroupController@store',
+        'middleware' => 'can:content.usergroups.create'
+    ]);
+    $router->get('usergroups/{usergroup}/edit', [
+        'as' => 'admin.content.usergroup.edit',
+        'uses' => 'UserGroupController@edit',
+        'middleware' => 'can:content.usergroups.edit'
+    ]);
+    $router->put('usergroups/{usergroup}', [
+        'as' => 'admin.content.usergroup.update',
+        'uses' => 'UserGroupController@update',
+        'middleware' => 'can:content.usergroups.edit'
+    ]);
+    $router->delete('usergroups/{usergroup}', [
+        'as' => 'admin.content.usergroup.destroy',
+        'uses' => 'UserGroupController@destroy',
+        'middleware' => 'can:content.usergroups.destroy'
+    ]);
 // append
+
 
 
 

@@ -23,7 +23,8 @@ class User extends EloquentUser implements UserInterface
         'designation',
         'profileImg',
         'device_code',
-        'device_type'
+        'device_type',
+        'role_id'
 
     ];
 

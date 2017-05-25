@@ -50,7 +50,14 @@ return [
         'edit' => 'content::custom_contentstories.edit resource',
         'destroy' => 'content::custom_contentstories.destroy resource',
     ],
+    'content.usergroups' => [
+        'index' => 'content::usergroups.list resource',
+        'create' => 'content::usergroups.create resource',
+        'edit' => 'content::usergroups.edit resource',
+        'destroy' => 'content::usergroups.destroy resource',
+    ],
 // append
+
 
 
 

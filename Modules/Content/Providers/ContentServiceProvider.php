@@ -138,7 +138,20 @@ class ContentServiceProvider extends ServiceProvider
                 return new \Modules\Content\Repositories\Cache\CacheCustom_ContentStoryDecorator($repository);
             }
         );
+        $this->app->bind(
+            'Modules\Content\Repositories\UserGroupRepository',
+            function () {
+                $repository = new \Modules\Content\Repositories\Eloquent\EloquentUserGroupRepository(new \Modules\Content\Entities\UserGroup());
+
+                if (! config('app.cache')) {
+                    return $repository;
+                }
+
+                return new \Modules\Content\Repositories\Cache\CacheUserGroupDecorator($repository);
+            }
+        );
 // add bindings
+
 
 
 
