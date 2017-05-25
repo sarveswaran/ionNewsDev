@@ -54,7 +54,9 @@ class StoryController extends BasePublicController
           $this->response->setContent(array('message'=> $message));
         return $this->response->setStatusCode(400,$meserror);
       }else{
-            $dataset = $this->content->filter( $request->category_id,$user_id);
+            $users= $this->user->find($request->user_id);
+            $user_groupId=$users->role_id;
+            $dataset = $this->content->filter( $request->category_id,$user_groupId);
             foreach ($dataset as $key => $value) {    
                 unset($value->category_id);
                $value->like_count=$this->likestory->checkLikeorNot($value,$user_id);
@@ -68,16 +70,17 @@ class StoryController extends BasePublicController
      
      public function homepage(Request $request,Client $http){            
             $categorylist = $this->category->getByAttributes(['status' => 1],'priority');
-                      
+
+            $users= $this->user->find($request->user_id);
+            $user_groupId=$users->role_id;
+
             $dataresponse = array();
             $current_date=date('Y-m-d');
-            $user_id=$request->user_id;  
-            $user_id=19;
-           
+            $user_id=$request->user_id;          
 
 
             foreach ($categorylist as $category) {
-               $setexist=$this->content->getStoryByCategory($category->id,$user_id);    
+               $setexist=$this->content->getStoryByCategory($category->id,$user_groupId);    
                if(!empty($setexist)){                
                if(count($setexist)!=0)
                 {     
@@ -140,7 +143,7 @@ class StoryController extends BasePublicController
         }
         public function getAllLikeStory(Request $request)
         { 
-           $current_date=date('Y-m-d');      
+          $current_date=date('Y-m-d');      
           $dataset=DB::table('content__contents as cc')
                   ->join('content__contentlikestories as ccl', 'cc.id','=','ccl.content_id')
                    ->select('cc.*' )
@@ -158,6 +161,28 @@ class StoryController extends BasePublicController
     public function updateDatabase(Request $request)
     {     
         #this one only purpose of update databse using some query
+
+        $update=DB::table('users')
+                  ->get();
+       $update=json_decode($update,true);
+            foreach ($update as $key => $value) {
+              if(!$value['role'])
+              {
+                DB::table("users")
+                  ->where('id', '=',$value['id'])
+                  ->update(['role' => 'user','role_id'=>2]);  
+              }
+             
+            }
+        return $update;
+
+
+
+
+
+
+
+
       $categorylist = $this->category->getByAttributes(['status' => 1],'priority');
          $AllContent=$this->content->all();
             $allusers=DB::table('users')

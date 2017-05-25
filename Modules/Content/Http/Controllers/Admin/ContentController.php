@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Modules\Content\Entities\Content;
 use Modules\Content\Repositories\ContentRepository;
 use Modules\Content\Repositories\ContentUserRepository;
+use Modules\Content\Repositories\UserGroupRepository;
 use Modules\Content\Repositories\MultipleCategoryContentRepository;
 use Modules\Content\Repositories\CategoryRepository;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
@@ -32,7 +33,7 @@ class ContentController extends AdminBaseController
      */
     private $content;
 
-    public function __construct(ContentRepository $content,CategoryRepository $category,ContentUserRepository $contentUser , MultipleCategoryContentRepository $multiContCategory,RoleRepository $role)
+    public function __construct(ContentRepository $content,CategoryRepository $category,ContentUserRepository $contentUser , MultipleCategoryContentRepository $multiContCategory,RoleRepository $role , UserGroupRepository $userGroup)
     {
         parent::__construct();
         $this->category = $category;
@@ -40,6 +41,7 @@ class ContentController extends AdminBaseController
         $this->contentUser=$contentUser;
         $this->multiContCategory=$multiContCategory;
         $this->role=$role;
+        $this->userGroup=$userGroup;
     }
 
     /**
@@ -234,8 +236,8 @@ class ContentController extends AdminBaseController
         
       $Alldata=$request->all(); 
       $tags="";
-      $Alldata['all_users']=json_encode($Alldata['user_roles']);
-
+      $user_roles=$Alldata['user_roles'];     
+      $Alldata['all_users']=json_encode($user_roles);
       if(!$Alldata['tags']){
           $category_name=$this->category->find($Alldata['category_id']);    
           $i=0; 
@@ -253,25 +255,6 @@ class ContentController extends AdminBaseController
           $Alldata['tags']=$tags;
       }
 
-      $users =json_decode(User::all(),true);  
-      $role_ids=$Alldata['user_roles'];
-      $final_users=array();
-      if(!in_array(-1,$role_ids) ){  
-          $user_roll=$this->role->find($role_ids);
-          $all_roles=json_decode($user_roll,true);
-
-          foreach ($all_roles as $key => $value) {
-              $find[]=$value['slug'];             
-          }    
-          foreach ($users as $key => $value) { 
-              if(in_array($value['role'], $find)){
-                  $final_users[]=$value;
-              }
-          }
-      }
-      else {
-          $final_users =$users; 
-      }
 
       $Alldata['content']=trim( $Alldata['content']); 
       $image="";
@@ -300,14 +283,28 @@ class ContentController extends AdminBaseController
 
       $id=json_decode($ids,true);        
       $id=$ids['id'];
-
-      if(sizeof($final_users)){ 
-          foreach ($final_users as $key => $value) {
-              $abc['user_id']=$value['id'];
-              $abc['content_id']=$id;
-              $this->contentUser->create($abc);
-          }    
+   
+      
+      if(!in_array(-1,$user_roles) ){           
+          foreach ($user_roles as $key => $value){
+              $abc['role_id']=$value;
+              $abc['content_id']=$id;       
+              $this->userGroup->create($abc); 
+          }
       }
+      else{
+          $all_roles=json_decode($this->role->all(),true);
+              foreach ($all_roles as $key => $value){
+                  if($value['id']!=1)
+                  {
+                      $abc['role_id']=$value['id'];
+                      $abc['content_id']=$id;       
+                      $this->userGroup->create($abc); 
+                  }
+                }
+          }
+
+    
 
       if(sizeof($multiContCategoryData)){
           foreach ($multiContCategoryData as $value) {
@@ -319,7 +316,30 @@ class ContentController extends AdminBaseController
 
       $company_name=array();
       $i=0;  
-      $device_code=array();      
+      $device_code=array(); 
+      $users =json_decode(User::all(),true); 
+
+      $role_ids=$Alldata['user_roles'];
+      $final_users=array();
+      
+      if(!in_array(-1,$role_ids) ){  
+          $user_roll=$this->role->find($role_ids);
+          $all_roles=json_decode($user_roll,true);
+
+          foreach ($all_roles as $key => $value) {
+              $find[]=$value['slug'];             
+          }    
+          foreach ($users as $key => $value) { 
+              if(in_array($value['role'], $find)){
+                  $final_users[]=$value;
+              }
+          }
+      }
+      else {
+          $final_users =$users; 
+      }
+     
+
       foreach ($users as $key => $value) {
           if($value['id']==$final_users[$i]['id']){
               $company_name[]=$value['company'];
@@ -345,6 +365,7 @@ class ContentController extends AdminBaseController
           $message['imageUrl']=$Alldata['image'];
       else $message['imageUrl']="";
           $message['crawl_url']=$Alldata['crawl_url'];
+
 
       Log::info($device_code);
 
