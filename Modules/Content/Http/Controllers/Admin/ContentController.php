@@ -243,12 +243,11 @@ class ContentController extends AdminBaseController
           $i=0; 
           $category_name=json_decode($category_name,true);
           if(sizeof($category_name)){
-              $tags=$tags."# ";
+              
               foreach ( $category_name as $value) {
-                  $tags=$tags."".$value['name']." ";
-                  if($i==2)
+                  $tags=$tags."#".$value['name'];                 
                   break;
-                  $i++;          
+                        
               }
             $tags=$tags."News";
           }
