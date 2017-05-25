@@ -249,7 +249,7 @@ class ContentController extends AdminBaseController
                   break;
                         
               }
-            $tags=$tags."News";
+           
           }
           $Alldata['tags']=$tags;
       }
