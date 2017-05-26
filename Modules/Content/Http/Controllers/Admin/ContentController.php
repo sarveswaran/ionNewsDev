@@ -432,7 +432,8 @@ class ContentController extends AdminBaseController
     public function update(Content $content, Request $request,ContentUser $contentUser )
     { 
          $content_data=json_decode($content,true);
-         $data=$request->all();
+         $data=$request->all();   
+
          $data['all_users']=json_encode($data['user_roles']);
          $content_id=$content_data['id'];
 
@@ -464,78 +465,36 @@ class ContentController extends AdminBaseController
            $request->merge(['image' => $image]);
            $data['image']=$image;
 
-            $users =json_decode(User::all(),true);  
+           DB::table('content__usergroups')
+                ->where('content_id','=',$content_id)->delete();
             $role_ids=$data['user_roles'];
             $final_users=array();
             if(!in_array(-1,$role_ids) ){  
-                $user_roll=$this->role->find($role_ids);
-                $all_roles=json_decode($user_roll,true);
+             $user_roll=$this->role->find($role_ids);
 
+                $all_roles=json_decode($user_roll,true);
+                Log::info($all_roles);
                 foreach ($all_roles as $key => $value) {
-                    $find[]=$value['slug'];             
+                   $abc['role_id']=$value['id'];
+                   $abc['content_id']=$content_id;
+                   $this->userGroup->create($abc);
                 }    
-                foreach ($users as $key => $value) { 
-                    if(in_array($value['role'], $find)){
-                        $final_users[]=$value;
-                     }
-                }
+            
             }
             else {
-                $final_users =$users; 
-              }
-            if(sizeof($final_users)){
-
-                DB::table('content__contentusers')
-                ->where('content_id','=',$content_id)->delete();
-                foreach ($final_users as $key => $value) {
-                    $abc['user_id']=$value['id'];
-                    $abc['content_id']=$content_id;
-                    $this->contentUser->create($abc);
-                 }    
-            }
-
-
- 
-
-            
-         // if(array_key_exists('checkedDetails', $data))
-         // {  
-         //        $checkedArray=json_decode($data['checkedDetails'][0],true);
-         //    $length=sizeof($checkedArray); 
-
-           
-         //       $userData = DB::table('content__contentusers')->select(\DB::raw('*'))
-         //        ->where('content_id','=',$content_id)->get();
-         //        $deleteId=array();
-         //        $userData=json_decode($userData,true);
-
-
-         //         foreach ($userData as $key => $value) {
-                                     
-         //              if(in_array($value['user_id'],$checkedArray))
-         //                 $deleteId[]=$value['user_id'];
-                    
-         //        }
-         //        DB::table('content__contentusers')->where('content_id', '=', $content_id)
-         //        ->whereNotIn('user_id',$deleteId)->delete();
-               
+                 $user_roll=$this->role->all();
+                 Log::info(json_decode($user_roll,true));
+                 foreach ($user_roll as $key => $value) {
+                 if($value->id!=1)
+                 {
+                   $abc['role_id']=$value->id;
+                   $abc['content_id']=$content_id;
+                   $this->userGroup->create($abc);
+                }
                 
-         //        for ($i=0;$i<$length;$i++) { 
-
-         //         if(!in_array($checkedArray[$i], $deleteId)){
-
-         //                $abc['user_id']=$checkedArray[$i];
-         //                $abc['content_id']=$content_id;
-
-         //                $this->contentUser->create($abc);                 
-
-         //       }
-         //    }  
-                            
-            
-
-         // }
-
+              }
+              }
+          
 
         $this->content->update($content, $data);
         return redirect()->route('admin.content.content.index')
@@ -558,8 +517,7 @@ class ContentController extends AdminBaseController
     public function getAllUsers(Request $request)
     {   
             
-        $users =json_decode(User::all(),true); 
-
+         $users =json_decode(User::all(),true);
          if (isset($_GET['id'])) {            
             $content_id=$_GET['id']; 
             $userData = DB::table('content__contentusers as cu')->select(\DB::raw('u.*'))
