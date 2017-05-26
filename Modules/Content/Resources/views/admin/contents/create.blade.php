@@ -38,6 +38,19 @@
             </div> {{-- end nav-tabs-custom --}}
         </div>
     </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="width: 100%">
+    <div class="modal-dialog" role="document">
+       
+
+            <div id='contain_textbox' class="container table-responsive" style="width: 100%;">
+              
+                       <img id="imgview" src="" style="width: 100%;height: 100%;"></img>                 
+            </div>
+           
+        
+    </div>
+</div>
     {!! Form::close() !!}
 @stop
 
@@ -74,6 +87,10 @@
       var category_check=[];
       var crawlUrl = '{{ env('APP_URL') }}/contents/ajaxcall';
       // var userUrl = '{{ env('APP_URL') }}/users';
+         $(".imageview").on("click",function () {
+
+
+         });
      
 
       
@@ -93,6 +110,12 @@
           category_check=$("select").val(); 
           console.log(category_check); 
 
+
+      }
+      function fullViews(event)
+      {
+        console.log(event.src);
+         $('#imgview').attr('src', event.src);
       }
 
       function previewFile(){

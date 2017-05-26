@@ -7,11 +7,11 @@ return [
     'destroy resource' => 'Destroy custom_contentstories',
     'title' => [
         'custom_contentstories' => 'Custom_ContentStory',
-        'create custom_contentstory' => 'Create a custom_contentstory',
-        'edit custom_contentstory' => 'Edit a custom_contentstory',
+        'create custom_contentstory' => 'Create a Custom Content',
+        'edit custom_contentstory' => 'Edit a  Custom Content',
     ],
     'button' => [
-        'create custom_contentstory' => 'Create a custom_contentstory',
+        'create custom_contentstory' => 'Create a Custom Content',
     ],
     'table' => [
     ],

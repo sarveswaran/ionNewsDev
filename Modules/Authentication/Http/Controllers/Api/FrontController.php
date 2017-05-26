@@ -255,6 +255,7 @@ class FrontController extends BasePublicController
                           );
             $details = $this->user->update($find_user,$user_Detail);
 
+
             $response['id']=$details->id;
             $response['email']=$details->email;
             $response['first_name']=$details->first_name;
@@ -263,6 +264,8 @@ class FrontController extends BasePublicController
             $response['updated_at']=$details->updated_at;
             $response['phone']=$details->phone;
             $response['address']=$details->address;
+            $response['role']=$details->role;
+            $response['role_id']=$details->role_id;
             $response['status']=$details->status;
             $response['company']=$details->company;
             $response['designation']=$details->designation;
