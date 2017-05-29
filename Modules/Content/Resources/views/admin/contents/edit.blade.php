@@ -173,7 +173,7 @@
 function changed(event){
   if(event.checked){
     checkedArray.push(event.value);
-    // console.log(checkedArray);
+    console.log(checkedArray);
 
   }else{
     var a = checkedArray.indexOf(event.value);

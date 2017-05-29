@@ -16,7 +16,7 @@
 @stop
 
 @section('content')
-    {!! Form::open(['route' => ['admin.content.custom_contentstory.update', $custom_contentstory->id], 'method' => 'put']) !!}
+    {!! Form::open(['route' => ['admin.content.custom_contentstory.update', $custom_contentstory->id], 'method' => 'put', 'enctype' => 'multipart/form-data']) !!}
     <div class="row">
         <div class="col-md-12">
             <div class="nav-tabs-custom">
@@ -68,5 +68,21 @@
                 radioClass: 'iradio_flat-blue'
             });
         });
+
+    function previewFile(){    
+       var preview = document.querySelector('img'); //selects the query named img
+       var file    = document.querySelector('input[type=file]').files[0]; //sames as here
+       var reader  = new FileReader();
+
+       reader.onloadend = function () {
+           preview.src = reader.result;
+       }
+
+       if (file) {
+           reader.readAsDataURL(file); //reads the data as a URL
+       } else {
+           preview.src = "";
+       }
+  }
     </script>
 @stop

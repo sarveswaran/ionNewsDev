@@ -13,6 +13,24 @@
 @section('content')
     <div class="row">
         <div class="col-xs-12">
+        <div>
+        <level> select story Possition </level><br>
+        <select class="btn btn-primary btn-flat selectpicker" id="slectPossition">
+
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+        <option>6</option>
+        <option>7</option>
+        <option>8</option>
+        <option>9</option>
+        <option>10</option>
+        </select>
+         
+       
+        </div>
+
             <div class="row">
                 <div class="btn-group pull-right" style="margin: 0 15px 15px 0;">
                     <a href="{{ route('admin.content.custom_contentstory.create') }}" class="btn btn-primary btn-flat" style="padding: 4px 10px;">
@@ -29,10 +47,10 @@
                         <table class="data-table table table-bordered table-hover">
                             <thead>
                             <tr>
-                            <th data-sortable="false"><input type="checkbox"  id="select_all"/></th>
+                            <!-- <th data-sortable="false"><input type="checkbox"  id="select_all"/></th> -->
                                 <th>{{ trans('ID') }}</th>
                                 <th>{{ trans('Title') }}</th>
-                                <th>{{ trans('Category') }}</th>
+                               <th>{{ trans('core::core.table.created at') }}</th>
                                 <th data-sortable="false">{{ trans('core::core.table.actions') }}</th>
 
 
@@ -43,11 +61,11 @@
                             <?php foreach ($custom_contentstories as $custom_contentstory): ?>
                             <tr>
 
-                                <td>
+                                <!-- <td>
                                         <input class="checkbox" type="checkbox" onchange="changed(this);" name="check[]" value="{{ $custom_contentstory->id }}"> 
                                         
                                        
-                                </td>
+                                </td> -->
                                 <td>
                                         {{ $custom_contentstory->id }}
                                         
@@ -73,6 +91,10 @@
                             </tbody>
                             <tfoot>
                             <tr>
+                               <!-- <th data-sortable="false"></th> -->
+                                <th>{{ trans('ID') }}</th>
+                                <th>{{ trans('Title') }}</th>
+                                
                                 <th>{{ trans('core::core.table.created at') }}</th>
                                 <th>{{ trans('core::core.table.actions') }}</th>
                             </tr>
@@ -124,5 +146,34 @@
                 }
             });
         });
+        var flag=0;
+        $position=<?php echo $position ?>;
+        
+        for(var i=2;i<11;i++)
+        {
+            if(i==$position)
+            {
+                 $('select>option:eq('+(i-2)+')').prop('selected', true);
+                 break;
+            }
+         
+        }
+       
+        $( "select" ).change( changeorder );
+        
+
+        function  changeorder() {          
+            var position=$(this).val();
+            $.ajax({
+            type: 'POST',
+            data: {position: position},
+            url: '{{ env('APP_URL') }}/set_positions',
+            success: function(result){              
+                
+
+            }
+        })      
+
+        }
     </script>
 @stop

@@ -202,8 +202,7 @@ class FrontController extends BasePublicController
           $validator = Validator::make($request->all(), [        
           'first_name' => 'required|max:25',
           'last_name' => 'required|max:25',
-          'company' => 'required',
-          'designation' => 'required',
+          'role' => 'required',
       ]);  
            
           if ($validator->fails()) {

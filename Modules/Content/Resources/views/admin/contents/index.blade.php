@@ -60,12 +60,24 @@
                                    {  $all_categories=json_decode($content->all_category);
 
                                     foreach ($all_categories as $value) {
-                                         $all_category=$all_category."".$value." ";
+                                        foreach ($categories as $category) {
+                                            
+                                         if($category->id==$value)
+                                         $all_category=$all_category."".$category->name.", ";
+                                     }
                                     }
                                    }
-                                    else $all_category=$content->category_id;
+                                    else {
+                                        foreach ($categories as $category) {
+                                            
+                                         if($category->id==$value)
+                                         $all_category=$all_category."".$category->name.", ";
+                                     }                                    
+                                    }
 
-                                   rtrim($all_category,",");
+                                   rtrim($all_category,',');
+
+                                   Log::info( mb_substr($all_category, 0, -1));
 
 
                              ?>

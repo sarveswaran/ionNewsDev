@@ -52,7 +52,9 @@ class ContentController extends AdminBaseController
     public function index()
     {   
         $categories = $this->category->getByAttributes(['status' => 1]);
+        Log::info(json_decode($categories,true)); 
         $contents = $this->content->all(); 
+        // Log::info(json_decode($contents,true)); die;
         
 
         return view('content::admin.contents.index', compact('contents','categories'));
@@ -473,7 +475,7 @@ class ContentController extends AdminBaseController
              $user_roll=$this->role->find($role_ids);
 
                 $all_roles=json_decode($user_roll,true);
-                Log::info($all_roles);
+                // Log::info($all_roles);
                 foreach ($all_roles as $key => $value) {
                    $abc['role_id']=$value['id'];
                    $abc['content_id']=$content_id;
@@ -483,7 +485,7 @@ class ContentController extends AdminBaseController
             }
             else {
                  $user_roll=$this->role->all();
-                 Log::info(json_decode($user_roll,true));
+                 // Log::info(json_decode($user_roll,true));
                  foreach ($user_roll as $key => $value) {
                  if($value->id!=1)
                  {

@@ -16,7 +16,8 @@
 @stop
 
 @section('content')
-    {!! Form::open(['route' => ['admin.content.custom_contentstory.store'], 'method' => 'post']) !!}
+    {!! Form::open(['route' => ['admin.content.custom_contentstory.store'], 'method' => 'post','enctype' => 'multipart/form-data']) !!}
+
     <div class="row">
         <div class="col-md-12">
             <div class="nav-tabs-custom">
@@ -84,5 +85,10 @@
            preview.src = "";
        }
   }
+  
+  $(".select").change(function(){
+    alert("hello");
+
+  })
     </script>
 @stop

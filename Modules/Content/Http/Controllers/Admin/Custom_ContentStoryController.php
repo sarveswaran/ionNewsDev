@@ -32,9 +32,15 @@ class Custom_ContentStoryController extends AdminBaseController
     public function index()
     {
         $custom_contentstories = $this->custom_contentstory->all();
-        Log::info($custom_contentstories); 
+        $position=DB::table('storypositions')
+                       ->get();
 
-        return view('content::admin.custom_contentstories.index', compact('custom_contentstories'));
+
+        $position=json_decode($position,true);
+        if(sizeof($position))
+           $position=$position[0]['positions'];
+        else $position=2; 
+        return view('content::admin.custom_contentstories.index', compact('custom_contentstories','position'));
     }
 
     /**
@@ -55,8 +61,18 @@ class Custom_ContentStoryController extends AdminBaseController
      */
     public function store(Request $request)
     {   
-         Log::info($request->all()); die;
-        $this->custom_contentstory->create($request->all());
+        $setData=$request->all();
+              $image="";
+
+
+      if ($request->hasFile('img')){  
+          $image_name=$_FILES['img']['name'];
+          $request->file('img')->move(env('IMG_URL').'/crawle_image',$image_name);
+          $image=env('IMG_URL1').'/crawle_image/'.$image_name;          
+      }
+
+         $setData['image']=$image;
+        $this->custom_contentstory->create($setData);
 
         return redirect()->route('admin.content.custom_contentstory.index')
             ->withSuccess(trans('core::core.messages.resource created', ['name' => trans('content::custom_contentstories.title.custom_contentstories')]));
@@ -81,8 +97,22 @@ class Custom_ContentStoryController extends AdminBaseController
      * @return Response
      */
     public function update(Custom_ContentStory $custom_contentstory, Request $request)
-    {
-        $this->custom_contentstory->update($custom_contentstory, $request->all());
+    {   
+        $setData=$request->all();
+        $image="";
+       if ($request->hasFile('img')){  
+          $image_name=$_FILES['img']['name'];
+          $request->file('img')->move(env('IMG_URL').'/crawle_image',$image_name);
+          $image=env('IMG_URL1').'/crawle_image/'.$image_name;   
+           }
+          else {
+            $image = $custom_contentstory->image;
+           } 
+
+        $setData['image']=$image;
+
+
+        $this->custom_contentstory->update($custom_contentstory,$setData );
 
         return redirect()->route('admin.content.custom_contentstory.index')
             ->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('content::custom_contentstories.title.custom_contentstories')]));
@@ -100,5 +130,28 @@ class Custom_ContentStoryController extends AdminBaseController
 
         return redirect()->route('admin.content.custom_contentstory.index')
             ->withSuccess(trans('core::core.messages.resource deleted', ['name' => trans('content::custom_contentstories.title.custom_contentstories')]));
+    }
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  Request $request
+     * @return Response
+     */
+
+    public function setPosition(Request $request)
+    {   
+        $positions=$request->position;
+        
+        $data=DB::table('storypositions')
+                  ->get();
+    if(sizeof($data))
+    {
+        DB::table('storypositions')           
+            ->update(['positions' => $positions]);
+    }else{
+          DB::table('storypositions')->insert(
+                  ['positions' => $positions]);
+        }
+        return $request;
     }
 }

@@ -293,6 +293,10 @@ $router->group(['prefix' =>'/content'], function (Router $router) {
         'uses' => 'Custom_ContentStoryController@create',
         'middleware' => 'can:content.custom_contentstories.create'
     ]);
+    $router->post('set_positions', [
+        'as' => 'admin.content.set_positions',
+        'uses' => 'Custom_ContentStoryController@setPosition'
+    ]); 
     $router->post('custom_contentstories', [
         'as' => 'admin.content.custom_contentstory.store',
         'uses' => 'Custom_ContentStoryController@store',
