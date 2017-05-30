@@ -7,6 +7,8 @@ use Illuminate\Http\Response;
 use Modules\Content\Entities\Custom_ContentStory;
 use Modules\Content\Repositories\Custom_ContentStoryRepository;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
+use Modules\Content\Repositories\CategoryRepository;
+
 use DB;
 use Log;
 
@@ -17,11 +19,13 @@ class Custom_ContentStoryController extends AdminBaseController
      */
     private $custom_contentstory;
 
-    public function __construct(Custom_ContentStoryRepository $custom_contentstory)
+    public function __construct(Custom_ContentStoryRepository $custom_contentstory,CategoryRepository $category)
     {
         parent::__construct();
 
         $this->custom_contentstory = $custom_contentstory;
+        $this->category = $category;
+
     }
 
     /**
@@ -50,7 +54,9 @@ class Custom_ContentStoryController extends AdminBaseController
      */
     public function create()
     {
-        return view('content::admin.custom_contentstories.create');
+        $categories = $this->category->getByAttributes(['status' => 1]);
+        Log::info($categories);
+        return view('content::admin.custom_contentstories.create',compact('categories'));
     }
 
     /**
@@ -62,6 +68,7 @@ class Custom_ContentStoryController extends AdminBaseController
     public function store(Request $request)
     {   
         $setData=$request->all();
+        // Log::info($setData); die;
               $image="";
 
 
@@ -85,8 +92,9 @@ class Custom_ContentStoryController extends AdminBaseController
      * @return Response
      */
     public function edit(Custom_ContentStory $custom_contentstory)
-    {
-        return view('content::admin.custom_contentstories.edit', compact('custom_contentstory'));
+    { 
+        $categories = $this->category->getByAttributes(['status' => 1]);
+        return view('content::admin.custom_contentstories.edit', compact('custom_contentstory','categories'));
     }
 
     /**

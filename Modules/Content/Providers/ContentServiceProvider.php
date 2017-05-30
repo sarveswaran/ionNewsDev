@@ -150,7 +150,20 @@ class ContentServiceProvider extends ServiceProvider
                 return new \Modules\Content\Repositories\Cache\CacheUserGroupDecorator($repository);
             }
         );
+        $this->app->bind(
+            'Modules\Content\Repositories\CustomMultiCategoryRepository',
+            function () {
+                $repository = new \Modules\Content\Repositories\Eloquent\EloquentCustomMultiCategoryRepository(new \Modules\Content\Entities\CustomMultiCategory());
+
+                if (! config('app.cache')) {
+                    return $repository;
+                }
+
+                return new \Modules\Content\Repositories\Cache\CacheCustomMultiCategoryDecorator($repository);
+            }
+        );
 // add bindings
+
 
 
 

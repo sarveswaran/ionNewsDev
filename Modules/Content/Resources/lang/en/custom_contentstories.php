@@ -6,7 +6,7 @@ return [
     'edit resource' => 'Edit custom_contentstories',
     'destroy resource' => 'Destroy custom_contentstories',
     'title' => [
-        'custom_contentstories' => 'Custom ContentStory',
+        'custom_contentstories' => 'Custom Content',
         'create custom_contentstory' => 'Create a Custom Content',
         'edit custom_contentstory' => 'Edit a  Custom Content',
     ],

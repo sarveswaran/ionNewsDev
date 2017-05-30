@@ -350,7 +350,41 @@ $router->group(['prefix' =>'/content'], function (Router $router) {
         'uses' => 'UserGroupController@destroy',
         'middleware' => 'can:content.usergroups.destroy'
     ]);
+    $router->bind('custommulticategory', function ($id) {
+        return app('Modules\Content\Repositories\CustomMultiCategoryRepository')->find($id);
+    });
+    $router->get('custommulticategories', [
+        'as' => 'admin.content.custommulticategory.index',
+        'uses' => 'CustomMultiCategoryController@index',
+        'middleware' => 'can:content.custommulticategories.index'
+    ]);
+    $router->get('custommulticategories/create', [
+        'as' => 'admin.content.custommulticategory.create',
+        'uses' => 'CustomMultiCategoryController@create',
+        'middleware' => 'can:content.custommulticategories.create'
+    ]);
+    $router->post('custommulticategories', [
+        'as' => 'admin.content.custommulticategory.store',
+        'uses' => 'CustomMultiCategoryController@store',
+        'middleware' => 'can:content.custommulticategories.create'
+    ]);
+    $router->get('custommulticategories/{custommulticategory}/edit', [
+        'as' => 'admin.content.custommulticategory.edit',
+        'uses' => 'CustomMultiCategoryController@edit',
+        'middleware' => 'can:content.custommulticategories.edit'
+    ]);
+    $router->put('custommulticategories/{custommulticategory}', [
+        'as' => 'admin.content.custommulticategory.update',
+        'uses' => 'CustomMultiCategoryController@update',
+        'middleware' => 'can:content.custommulticategories.edit'
+    ]);
+    $router->delete('custommulticategories/{custommulticategory}', [
+        'as' => 'admin.content.custommulticategory.destroy',
+        'uses' => 'CustomMultiCategoryController@destroy',
+        'middleware' => 'can:content.custommulticategories.destroy'
+    ]);
 // append
+
 
 
 

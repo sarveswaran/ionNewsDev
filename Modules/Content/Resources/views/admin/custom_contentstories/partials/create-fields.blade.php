@@ -36,6 +36,22 @@
                 {!! $errors->first('tags', '<span class="help-block">:message</span>') !!}
             </div>
         </div>
+        <div class="tab-pane" id="tab_2-2">
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                              {!! Form::label('category_id', trans('Category')) !!}
+                                <select multiple="" class="form-control category_select" onchange="selectCategory(this.value)" name="category_id[]">
+                                    <?php foreach ($categories as $category): ?>
+                      <option value="{{ $category->id }}">{{ $category->name }}</option>
+                  <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
   
 

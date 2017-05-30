@@ -119,7 +119,17 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender
                         $this->auth->hasAccess('content.usergroups.index')
                     );
                 });
+                $item->item(trans('content::custommulticategories.title.custommulticategories'), function (Item $item) {
+                    $item->icon('fa fa-copy');
+                    $item->weight(0);
+                    $item->append('admin.content.custommulticategory.create');
+                    $item->route('admin.content.custommulticategory.index');
+                    $item->authorize(
+                        $this->auth->hasAccess('content.custommulticategories.index')
+                    );
+                });
 // append
+
 
 
 

@@ -80,7 +80,7 @@
                                 <th>{{ trans('ID') }}</th>
                                 <th>{{ trans('Name') }}</th>
                                 <th>{{ trans('Slug Name') }}</th>
-                                <th>{{ trans('Priority') }} &nbsp <button type="button" class="btn btn-primary btn-flat" id="updatepriority" hidden="hide"> update</button></th>
+                                <th>{{ trans('Priority') }} &nbsp <button type="button" class="btn btn-primary btn-flat" id="updatepriority" hidden="hidden"> update</button></th>
                                 <th>{{ trans('Status') }} </th>
                                 <th>{{ trans('core::core.table.actions') }}</th>
                             </tr>
@@ -180,9 +180,13 @@
         // });
         actualData = 0;
         function readData(event){
+            console.log("actualData"+actualData);
             actualData = event.value;
+            console.log("actualData1"+actualData);
+
         }
       function changeDetailsDiv(event) { 
+
           event_class= $(event).attr("class");
           new_value = $("."+event_class).val();          
           var categories_id=$("."+event_class).attr('orderId');
@@ -242,6 +246,7 @@
             $("#"+className).css({display:"none"});
             $("."+className).attr("type","number");
          }
+         $("#updatepriority").hide();
          function rollBackDiv(event){
             $("#updatepriority").show(); 
             var className = $(event).attr("class");

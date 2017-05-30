@@ -56,7 +56,14 @@ return [
         'edit' => 'content::usergroups.edit resource',
         'destroy' => 'content::usergroups.destroy resource',
     ],
+    'content.custommulticategories' => [
+        'index' => 'content::custommulticategories.list resource',
+        'create' => 'content::custommulticategories.create resource',
+        'edit' => 'content::custommulticategories.edit resource',
+        'destroy' => 'content::custommulticategories.destroy resource',
+    ],
 // append
+
 
 
 
