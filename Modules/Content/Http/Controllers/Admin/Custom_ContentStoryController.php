@@ -8,6 +8,9 @@ use Modules\Content\Entities\Custom_ContentStory;
 use Modules\Content\Repositories\Custom_ContentStoryRepository;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
 use Modules\Content\Repositories\CategoryRepository;
+use Modules\User\Repositories\RoleRepository;
+use Modules\Content\Repositories\CustomMultiCategoryRepository;
+
 
 use DB;
 use Log;
@@ -19,12 +22,14 @@ class Custom_ContentStoryController extends AdminBaseController
      */
     private $custom_contentstory;
 
-    public function __construct(Custom_ContentStoryRepository $custom_contentstory,CategoryRepository $category)
+    public function __construct(Custom_ContentStoryRepository $custom_contentstory,CategoryRepository $category, RoleRepository $role, CustomMultiCategoryRepository $multiCustomCategory)
     {
         parent::__construct();
 
         $this->custom_contentstory = $custom_contentstory;
         $this->category = $category;
+        $this->role=$role;
+        $this->multiCustomCategory=$multiCustomCategory;
 
     }
 
@@ -68,10 +73,17 @@ class Custom_ContentStoryController extends AdminBaseController
     public function store(Request $request)
     {   
         $setData=$request->all();
-        // Log::info($setData); die;
-              $image="";
+        $image="";
+        if(array_key_exists('category_id', $setData))
+        {
+            $multiContCategoryData=$setData['category_id'];
+            $setData['all_category']=json_encode($multiContCategoryData);            
+        }
+        else
+            $multiContCategoryData="";      
 
-
+        
+       
       if ($request->hasFile('img')){  
           $image_name=$_FILES['img']['name'];
           $request->file('img')->move(env('IMG_URL').'/crawle_image',$image_name);
@@ -79,7 +91,27 @@ class Custom_ContentStoryController extends AdminBaseController
       }
 
          $setData['image']=$image;
-        $this->custom_contentstory->create($setData);
+        $story=$this->custom_contentstory->create($setData);
+        $story_id=$story->id;      
+
+        if(!$multiContCategoryData)
+        {
+            $categories = $this->category->getByAttributes(['status' => 1]);
+            $categories=json_decode($categories,true);
+            foreach ($categories as $key => $value) {
+              $abc['category_id']=$value['id'];
+              $abc['custom_content_id']=$story_id;       
+              $this->multiCustomCategory->create($abc); 
+                
+            }
+        } else{
+          foreach ($multiContCategoryData as $value) {
+              Log::info($value);
+              $abc['category_id']=$value;
+              $abc['custom_content_id']=$story_id;       
+              $this->multiCustomCategory->create($abc); 
+          }
+      }  
 
         return redirect()->route('admin.content.custom_contentstory.index')
             ->withSuccess(trans('core::core.messages.resource created', ['name' => trans('content::custom_contentstories.title.custom_contentstories')]));
