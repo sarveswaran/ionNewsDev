@@ -60,6 +60,7 @@ class StoryController extends BasePublicController
 
             Log::info($dataset);
             Log::info($dataset->total());
+            Log::info("i think every things is OK");
              
             $positions=DB::table('storypositions')
                          ->select('positions')
@@ -82,6 +83,8 @@ class StoryController extends BasePublicController
                         ->get();
 
             Log::info(count($custom_story));
+
+            Log::info("i Think again every things is ok");
             if(!count($custom_story))
             {
               $custom_story=DB::table('content__custom_contentstories as cus')
@@ -109,10 +112,10 @@ class StoryController extends BasePublicController
                  $custom[$i]=$value;
                 if($key==$positions-1)
                 { 
-                  if($k>=sizeof($custom_story))
+                  if($k>=count($custom_story))
                      $k=0;
-
-                  $custom[$i++]=$custom_story[$k++];
+                  $custom[$i++]=$custom_story[$k];
+                  $k=$k+1;
                   $custom[$i]=$value; 
                   $positions=$position*$mul; 
                   Log::info("mul value".$mul."  postions   ". $positions);
@@ -124,7 +127,7 @@ class StoryController extends BasePublicController
                 $i++;              
             }
              $dataset['all_data']=$custom;
-             
+
             Log::info("custom info");
             Log::info($dataset); 
             return $dataset;
