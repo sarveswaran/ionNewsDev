@@ -55,20 +55,85 @@ class StoryController extends BasePublicController
         return $this->response->setStatusCode(400,$meserror);
       }else{
             $users= $this->user->find($request->user_id);
-            $user_groupId=$users->role_id;
-            Log::info($user_groupId);
-            Log::info($request->category_id);
+            $user_groupId=$users->role_id;          
             $dataset = $this->content->filter( $request->category_id,$user_groupId);
-            Log::info($dataset);
+            Log::info($dataset->total());
 
-            foreach ($dataset as $key => $value) {    
-                unset($value->category_id);
-               $value->like_count=$this->likestory->checkLikeorNot($value,$user_id);
-               if($value->like_count)
-               $value->islike=1;
-               else $value->islike=0;               
-            }          
+             
+            $positions=DB::table('storypositions')
+                         ->select('positions')
+                         ->get();
+            $positions=json_decode($positions,true);
+            $position=$positions[0]['positions'];
+            // Log::inf0($dataset->total());
+            Log::info($position);
+            $limit=12/$position;
+            if($request->has('page'))
+            {
+              $pageno=$request->page;
+              $offset=$limit*($pageno-1); 
+            }else $offset=0;
+
+            $custom_story=DB::table('content__custom_contentstories as cus')
+                        ->join('content__custommulticategories as cuc', 'cuc.custom_content_id','=','cus.id')
+                        ->where('cuc.category_id','=',$request->category_id)
+                        ->offset($offset)
+                        ->limit($limit)
+                        ->get();
+            if(!sizeof($custom_story))
+            {
+              $custom_story=DB::table('content__custom_contentstories as cus')
+                        ->join('content__custommulticategories as cuc', 'cuc.custom_content_id','=','cus.id')
+                        ->where('cuc.category_id','=',$request->category_id)
+                        ->offset(0)
+                        ->limit($limit)
+                        ->get();
+
+            }
+            $custom_story=json_decode($custom_story,true);   
+
+            $custom=array();
+            $i=0;$k=0;
+            $mul=2;
+            $positions= $position;
+            Log::info("Positions  ".$position);
+            
+            foreach ($dataset as $key => $value) {             
+                unset($value->category_id);              
+                $value->like_count=$this->likestory->checkLikeorNot($value,$user_id);
+                if($value->like_count)
+                $value->islike=1;
+                else $value->islike=0; 
+                 $custom[$i]=$value;
+                if($key==$positions-1)
+                { 
+                  if($k>=sizeof($custom_story))
+                     $k=0;
+
+                  $custom[$i++]=$custom_story[$k++];
+                  $custom[$i]=$value; 
+                  $positions=$position*$mul; 
+                  Log::info("mul value".$mul."  postions   ". $positions);
+                  $mul+=1; 
+                } 
+
+                unset($dataset[$key]);
+               
+                $i++;              
+            }
+             $dataset['all_data']=$custom;
+            // Log::info("custom info");
+            // Log::info($custom); 
             return $dataset;
+
+          
+   
+            // return response( [
+            //             'products' => $dataset,
+            //             'data'=> $custom
+            //         ]);   
+
+            // return $dataset;
         }
       }
      
