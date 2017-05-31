@@ -89,8 +89,7 @@ class StoryController extends BasePublicController
             {
               $custom_story=DB::table('content__custom_contentstories as cus')
                         ->join('content__custommulticategories as cuc', 'cuc.custom_content_id','=','cus.id')
-                        ->where('cuc.category_id','=',$request->category_id)
-                        ->offset(0)
+                        ->where('cuc.category_id','=',$request->category_id)                   
                         ->limit($limit)
                         ->get();
 
@@ -110,7 +109,7 @@ class StoryController extends BasePublicController
                 $value->islike=1;
                 else $value->islike=0; 
                  $custom[$i]=$value;
-                if($key==$positions-1)
+                if($i==$positions-1 && count($custom_story))
                 { 
                   if($k>=count($custom_story))
                      $k=0;
