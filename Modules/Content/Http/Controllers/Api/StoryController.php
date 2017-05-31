@@ -57,15 +57,15 @@ class StoryController extends BasePublicController
             $users= $this->user->find($request->user_id);
             $user_groupId=$users->role_id;          
             $dataset = $this->content->filter( $request->category_id,$user_groupId);
-            Log::info($dataset->total());
 
+            Log::info($dataset);
+            Log::info($dataset->total());
              
             $positions=DB::table('storypositions')
                          ->select('positions')
                          ->get();
             $positions=json_decode($positions,true);
             $position=$positions[0]['positions'];
-            // Log::inf0($dataset->total());
             Log::info($position);
             $limit=12/$position;
             if($request->has('page'))
@@ -80,7 +80,9 @@ class StoryController extends BasePublicController
                         ->offset($offset)
                         ->limit($limit)
                         ->get();
-            if(!sizeof($custom_story))
+
+            Log::info(count($custom_story));
+            if(!count($custom_story))
             {
               $custom_story=DB::table('content__custom_contentstories as cus')
                         ->join('content__custommulticategories as cuc', 'cuc.custom_content_id','=','cus.id')
@@ -122,8 +124,9 @@ class StoryController extends BasePublicController
                 $i++;              
             }
              $dataset['all_data']=$custom;
-            // Log::info("custom info");
-            // Log::info($custom); 
+             
+            Log::info("custom info");
+            Log::info($dataset); 
             return $dataset;
 
           
