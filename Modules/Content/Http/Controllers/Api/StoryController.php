@@ -58,16 +58,16 @@ class StoryController extends BasePublicController
             $user_groupId=$users->role_id;          
             $dataset = $this->content->filter( $request->category_id,$user_groupId);
 
-            Log::info($dataset);
-            Log::info($dataset->total());
-            Log::info("i think every things is OK");
+            // Log::info($dataset);
+            // Log::info($dataset->total());
+          
              
             $positions=DB::table('storypositions')
                          ->select('positions')
                          ->get();
             $positions=json_decode($positions,true);
             $position=$positions[0]['positions'];
-            Log::info($position);
+            // Log::info($position);
             $limit=12/$position;
             if($request->has('page'))
             {
@@ -82,9 +82,9 @@ class StoryController extends BasePublicController
                         ->limit($limit)
                         ->get();
 
-            Log::info(count($custom_story));
+            // Log::info(count($custom_story));
 
-            Log::info("i Think again every things is ok");
+            // Log::info("i Think again every things is ok");
             if(!count($custom_story))
             {
               $custom_story=DB::table('content__custom_contentstories as cus')
@@ -100,7 +100,7 @@ class StoryController extends BasePublicController
             $i=0;$k=0;
             $mul=2;
             $positions= $position;
-            Log::info("Positions  ".$position);
+            // Log::info("Positions  ".$position);
             
             foreach ($dataset as $key => $value) {             
                 unset($value->category_id);              
@@ -117,7 +117,7 @@ class StoryController extends BasePublicController
                   $k=$k+1;
                   $custom[$i]=$value; 
                   $positions=$position*$mul; 
-                  Log::info("mul value".$mul."  postions   ". $positions);
+                  // Log::info("mul value".$mul."  postions   ". $positions);
                   $mul+=1; 
                 } 
 
@@ -127,8 +127,8 @@ class StoryController extends BasePublicController
             }
              $dataset['all_data']=$custom;
 
-            Log::info("custom info");
-            Log::info($dataset); 
+            // Log::info("custom info");
+            // Log::info($dataset); 
             return $dataset;
 
           
