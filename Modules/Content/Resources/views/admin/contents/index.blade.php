@@ -52,12 +52,12 @@
                             </thead>
                             <tbody>
                             <?php if (isset($contents)): ?>
+
                             <?php foreach ($contents as $content):
-
-                                  $all_category="";
-
+                                    $all_category="";
                                    if($content->all_category)
                                    {  $all_categories=json_decode($content->all_category);
+                                     
 
                                     foreach ($all_categories as $value) {
                                         foreach ($categories as $category) {
@@ -70,17 +70,13 @@
                                     else {
                                         foreach ($categories as $category) {
                                             
-                                         if($category->id==$value)
+                                         if($category->id==$content->category_id)
                                          $all_category=$all_category."".$category->name.", ";
                                      }                                    
                                     }
 
-                                   rtrim($all_category,',');
-
-                                   Log::info( mb_substr($all_category, 0, -1));
-
-
-                             ?>
+                                   $all_category=rtrim($all_category,', ');                             
+                            ?>
                             <tr>
                                 <td>
                                         <input class="checkbox" type="checkbox" onchange="changed(this);" name="check[]" value="{{ $content->id }}"> 

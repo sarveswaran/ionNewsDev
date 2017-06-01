@@ -52,7 +52,7 @@ class ContentController extends AdminBaseController
     public function index()
     {   
         $categories = $this->category->getByAttributes(['status' => 1]);
-        Log::info(json_decode($categories,true)); 
+        // Log::info(json_decode($categories,true)); 
         $contents = $this->content->all(); 
         // Log::info(json_decode($contents,true)); die;
         
