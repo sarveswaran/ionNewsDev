@@ -39,7 +39,9 @@
                             </thead>
                             <tbody>
                             <?php if (isset($categories)): ?>
-                            <?php  foreach ($categories as $value) {
+
+                            <?php $priorityArray=array();
+                                   foreach ($categories as $value) {
                                    $priorityArray[$value->id]=$value->priority;
                             }
 
@@ -135,8 +137,8 @@
     </script>
     <script type="text/javascript">
    
-           var priorityArray = <?php echo json_encode($priorityArray) ;?>;  
-           console.log(priorityArray);
+           var priorityArray = <?php if(count($priorityArray)) echo json_encode($priorityArray) ;?>;  
+            console.log(priorityArray);
             var count = Object.keys(priorityArray).length;
              var max=count;
              var min=1;
