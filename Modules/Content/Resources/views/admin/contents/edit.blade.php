@@ -149,7 +149,7 @@
 
        reader.onloadend = function () {
            // preview.src = reader.result;
-           console.log(reader.result);
+           // console.log(reader.result);
            $(".img_preview").attr("src",reader.result);
        }
 
